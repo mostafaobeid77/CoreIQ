@@ -1,0 +1,69 @@
+@theme {
+	/* Typography */
+	--font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	--font-display: 'Poppins', 'Inter', system-ui, sans-serif;
+	--font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+	/* Core palette */
+	--color-brand: #6366f1;
+	--color-brand-500: #6366f1;
+	--color-brand-400: #7c83ff;
+	--color-brand-300: #a6adff;
+	--color-brand-200: #c7cbff;
+
+	--color-secondary: #22d3ee;
+	--color-surface-dark: #07090f;
+	--color-surface-darker: #05070d;
+	--color-surface: #0d111b;
+	--color-surface-soft: #121827;
+	--color-border: #1f2937;
+	--color-soft-border: rgba(99, 102, 241, 0.2);
+
+	--color-text: #f8fafc;
+	--color-text-muted: #94a3b8;
+	--color-text-inverse: #0f172a;
+
+	/* Light palette */
+	--color-light-bg: #f8fafc;
+	--color-light-surface: #ffffff;
+	--color-light-border: rgba(15, 23, 42, 0.08);
+	--color-light-text: #0f172a;
+	--color-light-muted: #465570;
+
+	/* Gradients */
+	--gradient-hero: radial-gradient(circle at top left, rgba(99, 102, 241, 0.4), transparent 55%),
+		radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.3), transparent 60%);
+	--gradient-callout: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(22, 78, 99, 0.2));
+	--shadow-floating: 0 20px 60px rgba(15, 23, 42, 0.45);
+}
+
+:root {
+	color-scheme: dark light;
+	font-family: var(--font-sans);
+	background-color: var(--color-surface-dark);
+	color: var(--color-text);
+	accent-color: var(--color-brand);
+	text-rendering: optimizeLegibility;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	background: var(--color-surface-dark);
+	color: var(--color-text);
+}
+
+.dark body {
+	background: var(--color-surface-dark);
+	color: var(--color-text);
+}
+
+:root:not(.dark) body {
+	background: var(--color-light-bg);
+	color: var(--color-light-text);
+}
+
+::selection {
+	background: rgba(99, 102, 241, 0.35);
+	color: inherit;
+}

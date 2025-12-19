@@ -1,0 +1,39 @@
+@import './theme.css';
+@import 'tailwindcss';
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+		background-color: transparent;
+	}
+
+	body {
+		@apply antialiased bg-slate-50 text-slate-900 transition-colors duration-500 ease-out;
+	}
+
+	.dark body {
+		@apply bg-slate-950 text-slate-100;
+	}
+
+	::selection {
+		@apply bg-indigo-500/40;
+	}
+}
+
+@layer utilities {
+	.bg-grid-mask {
+		background-image:
+			radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
+		background-size: 40px 40px;
+		mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.6) 0%, transparent 65%);
+	}
+
+	.dark .bg-grid-mask {
+		background-image:
+			radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.12) 1px, transparent 0);
+	}
+
+	.bg-glow {
+		background: radial-gradient(circle at top, rgba(99, 102, 241, 0.18), transparent 55%);
+	}
+}
