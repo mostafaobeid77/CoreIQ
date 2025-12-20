@@ -35,13 +35,18 @@ const createTransporter = () => {
 				user: 'MS_SMTP_USER', // MailerSend uses this generic username
 				pass: MAILERSEND_API_KEY,
 			},
+			connectionTimeout: 10000, // 10 seconds
+			greetingTimeout: 10000,
 		})
 
-		transport.verify().then(() => {
-			console.log('[mailer] MailerSend transporter verified successfully.')
-		}).catch((error) => {
-			console.error('[mailer] Unable to verify MailerSend transporter:', error.message)
-		})
+		// Verify in background - don't block startup
+		transport.verify()
+			.then(() => {
+				console.log('[mailer] MailerSend transporter verified successfully.')
+			})
+			.catch((error) => {
+				console.error('[mailer] MailerSend verification warning (will still try to send):', error.message)
+			})
 
 		return transport
 	}
