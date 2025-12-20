@@ -85,7 +85,7 @@ app.use('/api/submissions', submissionRoutes);
 app.use('/api/workout-templates', workoutTemplatesRoutes);
 app.use('/api/meal-templates', mealTemplateRoutes);
 
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
   maxPoolSize: 10,
   minPoolSize: 1,
   serverSelectionTimeoutMS: 5000,
