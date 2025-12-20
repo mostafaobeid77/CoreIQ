@@ -11,8 +11,10 @@ const MAIL_APP_PASSWORD = sanitize(process.env.MAIL_APP_PASSWORD, { stripSpacesI
 const MAIL_FROM_NAME = sanitize(process.env.MAIL_FROM_NAME) || 'CoreIQ'
 const MAIL_FROM_EMAIL = sanitize(process.env.MAIL_FROM_EMAIL)
 const MAIL_DISABLED = sanitize(process.env.MAIL_DISABLED)
+const SENDGRID_API_KEY = sanitize(process.env.SENDGRID_API_KEY)
+const MAILERSEND_API_KEY = sanitize(process.env.MAILERSEND_API_KEY)
 
-const mailDisabled = MAIL_DISABLED === 'true' || !MAIL_USER || !MAIL_APP_PASSWORD
+const mailDisabled = MAIL_DISABLED === 'true' || (!MAILERSEND_API_KEY && !SENDGRID_API_KEY && (!MAIL_USER || !MAIL_APP_PASSWORD))
 
 let transporter = null
 
@@ -22,6 +24,52 @@ const createTransporter = () => {
 		return null
 	}
 
+	// Prefer MailerSend (easiest signup, 3K emails/month free)
+	if (MAILERSEND_API_KEY) {
+		console.log('[mailer] Using MailerSend for email delivery.')
+		const transport = nodemailer.createTransport({
+			host: 'smtp.mailersend.net',
+			port: 587,
+			secure: false,
+			auth: {
+				user: 'MS_SMTP_USER', // MailerSend uses this generic username
+				pass: MAILERSEND_API_KEY,
+			},
+		})
+
+		transport.verify().then(() => {
+			console.log('[mailer] MailerSend transporter verified successfully.')
+		}).catch((error) => {
+			console.error('[mailer] Unable to verify MailerSend transporter:', error.message)
+		})
+
+		return transport
+	}
+
+	// Fallback to SendGrid
+	if (SENDGRID_API_KEY) {
+		console.log('[mailer] Using SendGrid for email delivery.')
+		const transport = nodemailer.createTransport({
+			host: 'smtp.sendgrid.net',
+			port: 587,
+			secure: false,
+			auth: {
+				user: 'apikey',
+				pass: SENDGRID_API_KEY,
+			},
+		})
+
+		transport.verify().then(() => {
+			console.log('[mailer] SendGrid transporter verified successfully.')
+		}).catch((error) => {
+			console.error('[mailer] Unable to verify SendGrid transporter:', error.message)
+		})
+
+		return transport
+	}
+
+	// Fallback to Gmail SMTP
+	console.log('[mailer] Using Gmail SMTP for email delivery.')
 	const transport = nodemailer.createTransport({
 		host: 'smtp.gmail.com',
 		port: 465,
