@@ -1,0 +1,121 @@
+[
+  {
+    "name": "Walking (Outdoor)",
+    "description": "Low-impact steady state cardio. Great for recovery and burning calories without stress.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Walking Shoes"
+  },
+  {
+    "name": "Treadmill Walking",
+    "description": "Indoor walking with adjustable incline for increased intensity.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Treadmill"
+  },
+  {
+    "name": "Running (Outdoor)",
+    "description": "Classic high-impact cardio for endurance, leg strength, and calorie burn.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Running Shoes"
+  },
+  {
+    "name": "Treadmill Running",
+    "description": "Indoor running with adjustable speed and incline for controlled cardio sessions.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Treadmill"
+  },
+  {
+    "name": "Cycling (Outdoor)",
+    "description": "Low-impact cardio that builds leg endurance and is easy on the joints.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Bicycle"
+  },
+  {
+    "name": "Stationary Bike",
+    "description": "Indoor cycling with adjustable resistance; great for HIIT or steady-state cardio.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Stationary Bike"
+  },
+  {
+    "name": "Rowing Machine",
+    "description": "Full-body cardio that engages legs, back, arms, and core with every stroke.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Rowing Machine"
+  },
+  {
+    "name": "Elliptical Trainer",
+    "description": "Low-impact, full-body motion simulating running without joint stress.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Elliptical Machine"
+  },
+  {
+    "name": "Stair Climber",
+    "description": "Simulates stair climbing to build glute and quad endurance while torching calories.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Stair Climber Machine"
+  },
+  {
+    "name": "Jump Rope",
+    "description": "High-intensity, portable cardio that improves coordination, calves, and stamina.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Jump Rope"
+  },
+  {
+    "name": "Burpees",
+    "description": "Full-body explosive movement combining squat, push-up, and jump; elite calorie burner.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Bodyweight"
+  },
+  {
+    "name": "Mountain Climbers",
+    "description": "Fast-paced plank-based movement that spikes heart rate and engages core.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Bodyweight"
+  },
+  {
+    "name": "High Knees",
+    "description": "Running in place while driving knees high; improves speed, hip flexors, and cardio capacity.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Bodyweight"
+  },
+  {
+    "name": "Sprint Intervals",
+    "description": "Short bursts of all-out running followed by rest; builds power and metabolic conditioning.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Track or Open Space"
+  },
+  {
+    "name": "Swimming",
+    "description": "Zero-impact, full-body cardio that builds lung capacity and muscular endurance.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Swimsuit & Pool"
+  },
+  {
+    "name": "Battle Ropes",
+    "description": "Wave or slam heavy ropes for upper-body dominant cardio and grip endurance.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Battle Ropes"
+  },
+  {
+    "name": "Shadow Boxing",
+    "description": "Boxing movements without a bag; improves footwork, shoulder endurance, and cardio flow.",
+    "category": "Cardio",
+    "muscle_group": "Cardio",
+    "equipment": "Bodyweight (Optional Gloves)"
+  }
+]

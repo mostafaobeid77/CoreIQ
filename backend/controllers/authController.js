@@ -146,16 +146,22 @@ exports.login = async (req, res) => {
     const queryStart = Date.now();
     const normalizedEmail = email.trim().toLowerCase();
 
-    // Optimize: Use lean() for max speed, select needed fields + password
+    // Optimize: Use lean() and select needed fields. profilePhoto REMOVED to prevent massive DB read latency.
     const user = await User.findOne({ email: normalizedEmail })
-      .select('password email username fullName emailVerified profilePhoto birthDate gender')
+      .select('password email username fullName emailVerified birthDate gender updatedAt')
       .lean();
-
-    console.log(`[Login] DB Query took ${Date.now() - queryStart}ms`);
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+
+    // Check if photo exists (lightweight projection)
+    const photoCheck = await User.exists({ _id: user._id, profilePhoto: { $exists: true, $ne: null } });
+    const hasPhoto = !!photoCheck;
+
+    console.log(`[Login] DB Query took ${Date.now() - queryStart}ms`);
+
+
 
     // Check password
     const cryptoStart = Date.now();
@@ -188,17 +194,13 @@ exports.login = async (req, res) => {
         // profilePhoto: user.profilePhoto, // Removed to reduce payload size
         birthDate: user.birthDate,
         gender: user.gender,
-        emailVerified: user.emailVerified
+        emailVerified: user.emailVerified,
+        profilePhoto: hasPhoto ? `/api/users/${user._id}/photo?v=${user.updatedAt ? new Date(user.updatedAt).getTime() : Date.now()}` : null
       }
     };
 
-    const jsonStart = Date.now();
-    const jsonResponse = JSON.stringify(response);
-    console.log(`[Login] JSON serialization took ${Date.now() - jsonStart}ms`);
-    console.log(`[Login] Response payload size: ${Buffer.byteLength(jsonResponse, 'utf8')} bytes`);
-
     console.log(`[Login] Total request time: ${Date.now() - start}ms`);
-    res.send(jsonResponse); // Send pre-serialized JSON
+    return res.json(response);
   } catch (error) {
     console.error('Login error:', error.message);
     res.status(500).json({ message: 'Server error during login', error: error.message });
@@ -214,8 +216,8 @@ exports.forgotPassword = async (req, res) => {
       return res.status(400).json({ message: 'Please provide email' });
     }
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Find user - optimize to avoid loading profilePhoto
+    const user = await User.findOne({ email }).select('_id email emailVerified');
     if (!user) {
       // Don't reveal if email exists (security)
       return res.json({ message: 'If email exists, a reset code has been sent' });
@@ -322,7 +324,7 @@ exports.requestEmailVerification = async (req, res) => {
       return res.status(400).json({ message: 'Please provide email' });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('_id email emailVerified');
     if (!user) {
       // Do not reveal existence
       return res.json({ message: 'If email exists, a verification code has been sent' });
@@ -362,7 +364,7 @@ exports.verifyEmail = async (req, res) => {
       return res.status(400).json({ message: 'Please provide email and code' });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('-profilePhoto');
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or code' });
     }
@@ -399,9 +401,20 @@ exports.getMe = async (req, res) => {
     const queryStart = Date.now();
 
     // Optimize: Use lean() and select only needed fields
+    // Removed 'profilePhoto' to prevent 18s+ load times due to large base64 strings
+    // Removed 'settings' as it's not in the User schema
     const user = await User.findById(req.userId)
-      .select('fullName username email profilePhoto birthDate gender emailVerified settings')
+      .select('fullName username email birthDate gender emailVerified updatedAt')
       .lean();
+
+    // Check if photo exists (lightweight)
+    const photoCheck = await User.exists({ _id: req.userId, profilePhoto: { $exists: true, $ne: null } });
+    const hasPhoto = !!photoCheck;
+
+    if (hasPhoto && user) {
+      const timestamp = user.updatedAt ? new Date(user.updatedAt).getTime() : Date.now();
+      user.profilePhoto = `/api/users/${user._id}/photo?v=${timestamp}`;
+    }
 
     console.log(`[GetMe] DB Query took ${Date.now() - queryStart}ms`);
 

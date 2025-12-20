@@ -46,10 +46,8 @@ const MealPlanItemSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  caloriesPer100g: { type: Number, default: 0 },
-  proteinPer100g: { type: Number, default: 0 },
-  carbsPer100g: { type: Number, default: 0 },
-  fatsPer100g: { type: Number, default: 0 }
+  fatsPer100g: { type: Number, default: 0 },
+  servings: { type: Array, default: [] }
 }, { _id: false });
 
 // Embedded workout plan item schema

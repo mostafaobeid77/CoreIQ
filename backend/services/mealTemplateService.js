@@ -60,9 +60,9 @@ class MealTemplateService {
             console.log(`⚠️ [TEMPLATE] Using template ratio (${proteinRatio * 100}%): ${targetProtein}g P`);
         }
 
-        // 2. Fetch Foods & Buffet
+        // 2. Fetch ALL Foods via Smart Buffet
         const allFoods = await Food.find({});
-        const buffet = createSmartBuffet(allFoods, 150);
+        const buffet = createSmartBuffet(allFoods, 9999); // Use ALL foods (high limit)
 
         // 3. Define Strategy
         // PRIORITY: Use user's actual meal sections if provided
@@ -101,7 +101,7 @@ class MealTemplateService {
                 protein: targetProtein,
                 carbs: targetCarbs,
                 fats: targetFats
-            }, globalUsedIds);
+            }, globalUsedIds, type);
 
             // B. Solve for Grams (Deterministic)
             const solvedDay = solveDayMeals(dayStructure, buffet, solverTargets);
@@ -184,62 +184,92 @@ class MealTemplateService {
         }
     }
 
-    generateDayStructure(buffet, strategy, targets = {}, globalUsedIds = new Set()) {
+    generateDayStructure(buffet, strategy, targets = {}, globalUsedIds = new Set(), templateType = 'balanced') {
         const meals = [];
-        const usedIds = globalUsedIds; // Use global tracker for cross-day variety
+        const usedIds = globalUsedIds;
 
-        // Categorize foods by dominant macro - REALISTIC THRESHOLDS
-        // Most foods don't have 40g+ of any macro per 100g!
-        const proteinFoods = buffet.filter(f => f.protein > 10); // > 10g protein per 100g
-        const carbFoods = buffet.filter(f => f.carbs > 15);      // > 15g carbs per 100g
-        const fatFoods = buffet.filter(f => f.fats > 10);        // > 10g fats per 100g
-        const balancedFoods = buffet.filter(f => f.protein <= 10 && f.carbs <= 15 && f.fats <= 10);
-
-        // Calculate how many meals should be protein/carb/fat focused based on targets
-        const totalMacros = (targets.protein || 150) * 4 + (targets.carbs || 200) * 4 + (targets.fats || 50) * 9;
-        const proteinCalPercent = ((targets.protein || 150) * 4) / totalMacros;
-        const carbCalPercent = ((targets.carbs || 200) * 4) / totalMacros;
-        const fatCalPercent = ((targets.fats || 50) * 9) / totalMacros;
-
-        const numMeals = strategy.sections.length;
-        const numProteinMeals = Math.max(1, Math.round(numMeals * proteinCalPercent));
-        const numCarbMeals = Math.max(1, Math.round(numMeals * carbCalPercent));
-        const numFatMeals = Math.max(0, numMeals - numProteinMeals - numCarbMeals);
-
-        console.log(`🍽️ [FOOD SELECTION] ${numMeals} meals: ${numProteinMeals} protein-focused, ${numCarbMeals} carb-focused, ${numFatMeals} fat-focused`);
-
-        // Create meal allocations
-        const mealAllocations = [];
-        for (let i = 0; i < numProteinMeals; i++) mealAllocations.push('protein');
-        for (let i = 0; i < numCarbMeals; i++) mealAllocations.push('carb');
-        for (let i = 0; i < numFatMeals; i++) mealAllocations.push('fat');
-
-        // Shuffle allocations to distribute randomly across meals
-        for (let i = mealAllocations.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [mealAllocations[i], mealAllocations[j]] = [mealAllocations[j], mealAllocations[i]];
+        // Template-specific protein selection
+        let proteinFoods;
+        if (templateType === 'high_protein') {
+            // Prioritize LEAN proteins for high_protein template
+            proteinFoods = buffet.filter(f =>
+                (f.p > 20 && f.f < 5) || // Very lean (chicken breast, white fish)
+                f.name.toLowerCase().includes('chicken breast') ||
+                f.name.toLowerCase().includes('turkey') ||
+                f.name.toLowerCase().includes('tuna') ||
+                f.name.toLowerCase().includes('cod') ||
+                f.name.toLowerCase().includes('tilapia') ||
+                f.name.toLowerCase().includes('shrimp') ||
+                f.name.toLowerCase().includes('egg white')
+            );
+            // Fallback to any high protein if lean not available
+            if (proteinFoods.length < 20) {
+                proteinFoods = buffet.filter(f => f.p > 15 && !f.name.toLowerCase().includes('powder'));
+            }
+        } else {
+            // Other templates: any high protein food
+            proteinFoods = buffet.filter(f => f.p > 15 && !f.name.toLowerCase().includes('powder'));
         }
 
-        strategy.sections.forEach((section, idx) => {
-            const allocation = mealAllocations[idx] || 'protein';
+        const carbFoods = buffet.filter(f => f.c > 20 && f.p < 10);
 
-            // Pick 2-3 foods per meal for variety
+        // Meal-appropriate foods
+        const breakfastFoods = buffet.filter(f =>
+            f.name.toLowerCase().includes('egg') ||
+            f.name.toLowerCase().includes('oat') ||
+            f.name.toLowerCase().includes('cereal') ||
+            f.name.toLowerCase().includes('toast') ||
+            f.name.toLowerCase().includes('yogurt') ||
+            f.name.toLowerCase().includes('pancake')
+        );
+
+        const snackFoods = buffet.filter(f =>
+            f.name.toLowerCase().includes('bar') ||
+            f.name.toLowerCase().includes('fruit') ||
+            f.name.toLowerCase().includes('apple') ||
+            f.name.toLowerCase().includes('banana') ||
+            f.name.toLowerCase().includes('nut') ||
+            f.name.toLowerCase().includes('shake') ||
+            f.name.toLowerCase().includes('smoothie') ||
+            (f.cal < 300 && f.cal > 100)
+        );
+
+        console.log(`🍽️ [FOOD SELECTION] ${strategy.sections.length} meals (${templateType} template)`);
+
+        strategy.sections.forEach((section, idx) => {
             const mealItems = [];
 
-            // 1. PRIMARY food from allocated pool
-            let primaryPool;
-            if (allocation === 'protein') {
-                primaryPool = proteinFoods.length > 0 ? proteinFoods : balancedFoods;
-            } else if (allocation === 'carb') {
-                primaryPool = carbFoods.length > 0 ? carbFoods : balancedFoods;
+            // Determine meal type
+            const isBreakfast = section.toLowerCase().includes('breakfast');
+            const isSnack = section.toLowerCase().includes('snack');
+            const isLunch = section.toLowerCase().includes('lunch');
+            const isDinner = section.toLowerCase().includes('dinner');
+
+            // Pick 2-3 foods based on meal type
+            let primaryPool, secondaryPool;
+
+            if (isBreakfast) {
+                // Breakfast: eggs/oats + fruit/toast
+                primaryPool = breakfastFoods.length > 10 ? breakfastFoods : proteinFoods;
+                secondaryPool = carbFoods;
+            } else if (isSnack) {
+                // Snack: bar/fruit + nuts/yogurt
+                primaryPool = snackFoods.length > 10 ? snackFoods : carbFoods;
+                secondaryPool = snackFoods.length > 10 ? snackFoods : fatFoods;
+            } else if (isLunch || isDinner) {
+                // Main meals: protein + carb
+                primaryPool = proteinFoods;
+                secondaryPool = carbFoods;
             } else {
-                primaryPool = fatFoods.length > 0 ? fatFoods : balancedFoods;
+                // Default
+                primaryPool = proteinFoods;
+                secondaryPool = carbFoods;
             }
 
+            // Pick primary food
             let availablePool = primaryPool.filter(f => !usedIds.has(f._id));
             if (availablePool.length === 0) availablePool = [...primaryPool];
 
-            // Shuffle and pick primary
             for (let i = availablePool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [availablePool[i], availablePool[j]] = [availablePool[j], availablePool[i]];
@@ -250,23 +280,10 @@ class MealTemplateService {
                 mealItems.push(primary._id);
             }
 
-            // 2. SECONDARY food from different pool (complementary)
-            let secondaryPool;
-            if (allocation === 'protein') {
-                // Protein meal gets carbs secondary
-                secondaryPool = carbFoods.length > 0 ? carbFoods : balancedFoods;
-            } else if (allocation === 'carb') {
-                // Carb meal gets protein secondary  
-                secondaryPool = proteinFoods.length > 0 ? proteinFoods : balancedFoods;
-            } else {
-                // Fat meal gets protein secondary
-                secondaryPool = proteinFoods.length > 0 ? proteinFoods : balancedFoods;
-            }
-
+            // Pick secondary food (different pool)
             availablePool = secondaryPool.filter(f => !usedIds.has(f._id));
             if (availablePool.length === 0) availablePool = [...secondaryPool];
 
-            // Shuffle and pick secondary
             for (let i = availablePool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [availablePool[i], availablePool[j]] = [availablePool[j], availablePool[i]];
@@ -281,7 +298,7 @@ class MealTemplateService {
                 mealType: section,
                 items: mealItems
             });
-            console.log(`  → ${section}: ${mealItems.length} items (${allocation})`);
+            console.log(`  → ${section}: ${mealItems.length} items`);
         });
 
         return { meals };

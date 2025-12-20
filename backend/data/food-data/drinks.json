@@ -1,0 +1,983 @@
+[
+    {
+      "name": "Orange Juice (100% Pure)",
+      "description": "Freshly squeezed or 100% pure orange juice, good source of Vitamin C.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 45,
+        "protein": 0.7,
+        "fat": 0.2,
+        "carbs": 10.4
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 108, "protein": 1.7, "fat": 0.5, "carbs": 25.0 }
+      ]
+    },
+    {
+      "name": "Apple Juice (100% Pure)",
+      "description": "100% pure apple juice, sweet and refreshing.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 46,
+        "protein": 0.1,
+        "fat": 0.1,
+        "carbs": 11.3
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 110, "protein": 0.2, "fat": 0.2, "carbs": 27.1 }
+      ]
+    },
+    {
+      "name": "Cola (Regular)",
+      "description": "Sweetened carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 42,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.6
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 139, "protein": 0, "fat": 0, "carbs": 35.0 }
+      ]
+    },
+    {
+      "name": "Diet Cola",
+      "description": "Artificially sweetened carbonated soft drink, zero calories.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Grape Juice (100% Pure)",
+      "description": "100% pure grape juice, rich flavor.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 0.4,
+        "fat": 0.1,
+        "carbs": 15.2
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 144, "protein": 1.0, "fat": 0.2, "carbs": 36.5 }
+      ]
+    },
+    {
+      "name": "Pineapple Juice (100% Pure)",
+      "description": "100% pure pineapple juice, sweet and tangy.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 50,
+        "protein": 0.4,
+        "fat": 0.1,
+        "carbs": 12.4
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 120, "protein": 1.0, "fat": 0.2, "carbs": 29.8 }
+      ]
+    },
+    {
+      "name": "Cranberry Juice Cocktail",
+      "description": "Sweetened cranberry juice blend.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 46,
+        "protein": 0.1,
+        "fat": 0.1,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 110, "protein": 0.2, "fat": 0.2, "carbs": 28.8 }
+      ]
+    },
+    {
+      "name": "Tomato Juice",
+      "description": "Savory juice made from tomatoes, often seasoned.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 17,
+        "protein": 0.8,
+        "fat": 0.1,
+        "carbs": 3.6
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 41, "protein": 1.9, "fat": 0.2, "carbs": 8.6 }
+      ]
+    },
+    {
+      "name": "Lemonade (Homemade)",
+      "description": "Classic homemade lemonade with fresh lemons, sugar, and water.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 40,
+        "protein": 0.1,
+        "fat": 0.1,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 96, "protein": 0.2, "fat": 0.2, "carbs": 24.0 }
+      ]
+    },
+    {
+      "name": "Iced Tea (Sweetened)",
+      "description": "Brewed black tea, sweetened with sugar.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 30,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 7.5
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 72, "protein": 0, "fat": 0, "carbs": 18.0 }
+      ]
+    },
+    {
+      "name": "Iced Tea (Unsweetened)",
+      "description": "Brewed black tea, unsweetened.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 1,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0.2
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 2, "protein": 0, "fat": 0, "carbs": 0.5 }
+      ]
+    },
+    {
+      "name": "Sparkling Water",
+      "description": "Carbonated water, plain or flavored.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Ginger Ale (Regular)",
+      "description": "Sweetened carbonated soft drink with ginger flavor.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 34,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 8.5
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 112, "protein": 0, "fat": 0, "carbs": 28.0 }
+      ]
+    },
+    {
+      "name": "Lemon-Lime Soda (Regular)",
+      "description": "Sweetened carbonated soft drink with lemon-lime flavor.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 38,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 9.5
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 125, "protein": 0, "fat": 0, "carbs": 31.4 }
+      ]
+    },
+    {
+      "name": "Root Beer (Regular)",
+      "description": "Sweetened carbonated soft drink with root beer flavor.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.8
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 142, "protein": 0, "fat": 0, "carbs": 35.6 }
+      ]
+    },
+    {
+      "name": "Grapefruit Juice (100% Pure)",
+      "description": "100% pure grapefruit juice, tart and refreshing.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 38,
+        "protein": 0.6,
+        "fat": 0.1,
+        "carbs": 9.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 91, "protein": 1.4, "fat": 0.2, "carbs": 21.6 }
+      ]
+    },
+    {
+      "name": "Pomegranate Juice (100% Pure)",
+      "description": "100% pure pomegranate juice, rich in antioxidants.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 68,
+        "protein": 0.3,
+        "fat": 0.3,
+        "carbs": 17.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 163, "protein": 0.7, "fat": 0.7, "carbs": 40.8 }
+      ]
+    },
+    {
+      "name": "Carrot Juice (100% Pure)",
+      "description": "100% pure carrot juice, rich in Vitamin A.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 40,
+        "protein": 0.9,
+        "fat": 0.1,
+        "carbs": 9.2
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 96, "protein": 2.2, "fat": 0.2, "carbs": 22.1 }
+      ]
+    },
+    {
+      "name": "Beetroot Juice (100% Pure)",
+      "description": "100% pure beetroot juice, earthy flavor, rich in nitrates.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 1.6,
+        "fat": 0.2,
+        "carbs": 9.6
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 103, "protein": 3.8, "fat": 0.5, "carbs": 23.0 }
+      ]
+    },
+    {
+      "name": "Celery Juice (100% Pure)",
+      "description": "100% pure celery juice, very low in calories.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 14,
+        "protein": 0.7,
+        "fat": 0.1,
+        "carbs": 3.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 34, "protein": 1.7, "fat": 0.2, "carbs": 7.2 }
+      ]
+    },
+    {
+      "name": "Cucumber Juice (100% Pure)",
+      "description": "100% pure cucumber juice, hydrating and refreshing.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 15,
+        "protein": 0.7,
+        "fat": 0.1,
+        "carbs": 3.6
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 36, "protein": 1.7, "fat": 0.2, "carbs": 8.6 }
+      ]
+    },
+    {
+      "name": "Watermelon Juice (100% Pure)",
+      "description": "100% pure watermelon juice, sweet and hydrating.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 30,
+        "protein": 0.6,
+        "fat": 0.2,
+        "carbs": 7.6
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 72, "protein": 1.4, "fat": 0.5, "carbs": 18.2 }
+      ]
+    },
+    {
+      "name": "Coconut Water (Unsweetened)",
+      "description": "Natural unsweetened coconut water, good source of electrolytes.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 19,
+        "protein": 0.7,
+        "fat": 0.2,
+        "carbs": 3.7
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 46, "protein": 1.7, "fat": 0.5, "carbs": 8.9 }
+      ]
+    },
+    {
+      "name": "Almond Milk (Unsweetened)",
+      "description": "Unsweetened almond milk, low-calorie plant-based milk alternative.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 15,
+        "protein": 0.6,
+        "fat": 1.1,
+        "carbs": 0.8
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 36, "protein": 1.4, "fat": 2.6, "carbs": 1.9 }
+      ]
+    },
+    {
+      "name": "Oat Milk (Unsweetened)",
+      "description": "Unsweetened oat milk, creamy plant-based milk alternative.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 45,
+        "protein": 1.0,
+        "fat": 1.5,
+        "carbs": 7.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 108, "protein": 2.4, "fat": 3.6, "carbs": 16.8 }
+      ]
+    },
+    {
+      "name": "Rice Milk (Unsweetened)",
+      "description": "Unsweetened rice milk, light and slightly sweet plant-based milk alternative.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 47,
+        "protein": 0.3,
+        "fat": 1.0,
+        "carbs": 9.2
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 113, "protein": 0.7, "fat": 2.4, "carbs": 22.1 }
+      ]
+    },
+    {
+      "name": "Soy Milk (Sweetened)",
+      "description": "Sweetened soy milk, plant-based milk alternative.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 3.0,
+        "fat": 1.8,
+        "carbs": 7.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 144, "protein": 7.2, "fat": 4.3, "carbs": 16.8 }
+      ]
+    },
+    {
+      "name": "Lemon Juice (Fresh)",
+      "description": "Freshly squeezed lemon juice, very tart.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 22,
+        "protein": 0.4,
+        "fat": 0.1,
+        "carbs": 6.9
+      },
+      "servings": [
+        { "size": "1 tbsp (15ml)", "calories": 3, "protein": 0.1, "fat": 0.0, "carbs": 1.0 }
+      ]
+    },
+    {
+      "name": "Lime Juice (Fresh)",
+      "description": "Freshly squeezed lime juice, tart and aromatic.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 25,
+        "protein": 0.4,
+        "fat": 0.1,
+        "carbs": 8.4
+      },
+      "servings": [
+        { "size": "1 tbsp (15ml)", "calories": 4, "protein": 0.1, "fat": 0.0, "carbs": 1.3 }
+      ]
+    },
+    {
+      "name": "Orange Soda (Regular)",
+      "description": "Sweetened carbonated soft drink with orange flavor.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 45,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 11.2
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 149, "protein": 0, "fat": 0, "carbs": 37.0 }
+      ]
+    },
+    {
+      "name": "Grape Soda (Regular)",
+      "description": "Sweetened carbonated soft drink with grape flavor.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 48,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 158, "protein": 0, "fat": 0, "carbs": 39.6 }
+      ]
+    },
+    {
+      "name": "Cream Soda (Regular)",
+      "description": "Sweetened carbonated soft drink with vanilla cream flavor.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 40,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 132, "protein": 0, "fat": 0, "carbs": 33.0 }
+      ]
+    },
+    {
+      "name": "Birch Beer (Regular)",
+      "description": "Sweetened carbonated soft drink with birch bark extract.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 40,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 132, "protein": 0, "fat": 0, "carbs": 33.0 }
+      ]
+    },
+    {
+      "name": "Kombucha (Original, Unsweetened)",
+      "description": "Fermented tea drink, slightly tart, contains probiotics.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 15,
+        "protein": 0.2,
+        "fat": 0.1,
+        "carbs": 3.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 36, "protein": 0.5, "fat": 0.2, "carbs": 7.2 }
+      ]
+    },
+    {
+      "name": "Green Smoothie (Fruit & Veggie)",
+      "description": "Blended drink with leafy greens (spinach, kale) and fruits (banana, apple).",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 50,
+        "protein": 1.0,
+        "fat": 0.5,
+        "carbs": 11.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 120, "protein": 2.4, "fat": 1.2, "carbs": 26.4 }
+      ]
+    },
+    {
+      "name": "Vegetable Juice Blend (No Sugar Added)",
+      "description": "Blend of various vegetable juices (e.g., carrot, celery, beet), no added sugar.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 25,
+        "protein": 1.0,
+        "fat": 0.2,
+        "carbs": 5.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 60, "protein": 2.4, "fat": 0.5, "carbs": 12.0 }
+      ]
+    },
+    {
+      "name": "Sparkling Apple Juice",
+      "description": "Carbonated apple juice, refreshing and bubbly.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 48,
+        "protein": 0.1,
+        "fat": 0.1,
+        "carbs": 11.8
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 115, "protein": 0.2, "fat": 0.2, "carbs": 28.3 }
+      ]
+    },
+    {
+      "name": "Sparkling Grape Juice",
+      "description": "Carbonated grape juice, a festive non-alcoholic option.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 62,
+        "protein": 0.4,
+        "fat": 0.1,
+        "carbs": 15.7
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 149, "protein": 1.0, "fat": 0.2, "carbs": 37.7 }
+      ]
+    },
+    {
+      "name": "Tonic Water (Regular)",
+      "description": "Carbonated water with quinine and sweeteners.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 38,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 9.5
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 125, "protein": 0, "fat": 0, "carbs": 31.4 }
+      ]
+    },
+    {
+      "name": "Club Soda",
+      "description": "Carbonated water with added minerals, similar to sparkling water.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Ginger Beer (Regular)",
+      "description": "Stronger ginger flavor than ginger ale, often spicier.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 40,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 132, "protein": 0, "fat": 0, "carbs": 33.0 }
+      ]
+    },
+    {
+      "name": "Cream Soda (Diet)",
+      "description": "Artificially sweetened cream soda.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Lemon-Lime Soda (Diet)",
+      "description": "Artificially sweetened lemon-lime soda.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Root Beer (Diet)",
+      "description": "Artificially sweetened root beer.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Cherry Cola (Regular)",
+      "description": "Sweetened carbonated soft drink with cherry and cola flavors.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.8
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 142, "protein": 0, "fat": 0, "carbs": 35.6 }
+      ]
+    },
+    {
+      "name": "Vanilla Cola (Regular)",
+      "description": "Sweetened carbonated soft drink with vanilla and cola flavors.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.8
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 142, "protein": 0, "fat": 0, "carbs": 35.6 }
+      ]
+    },
+    {
+      "name": "Sparkling Cranberry Juice",
+      "description": "Carbonated cranberry juice, a fizzy and tart drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 48,
+        "protein": 0.1,
+        "fat": 0.1,
+        "carbs": 12.5
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 115, "protein": 0.2, "fat": 0.2, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Sparkling Lemonade",
+      "description": "Carbonated lemonade, light and refreshing.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 42,
+        "protein": 0.1,
+        "fat": 0.1,
+        "carbs": 10.5
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 101, "protein": 0.2, "fat": 0.2, "carbs": 25.2 }
+      ]
+    },
+    {
+      "name": "Sparkling Orange Juice",
+      "description": "Carbonated orange juice, a bubbly take on a classic.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 47,
+        "protein": 0.7,
+        "fat": 0.2,
+        "carbs": 10.9
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 113, "protein": 1.7, "fat": 0.5, "carbs": 26.2 }
+      ]
+    },
+    {
+      "name": "Sparkling Grapefruit Juice",
+      "description": "Carbonated grapefruit juice, tart and effervescent.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 40,
+        "protein": 0.6,
+        "fat": 0.1,
+        "carbs": 9.5
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 96, "protein": 1.4, "fat": 0.2, "carbs": 22.8 }
+      ]
+    },
+    {
+      "name": "Sparkling Pomegranate Juice",
+      "description": "Carbonated pomegranate juice, a fizzy antioxidant boost.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 70,
+        "protein": 0.3,
+        "fat": 0.3,
+        "carbs": 17.5
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 168, "protein": 0.7, "fat": 0.7, "carbs": 42.0 }
+      ]
+    },
+    {
+      "name": "Grapefruit Soda (Regular)",
+      "description": "Sweetened carbonated soft drink with grapefruit flavor.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 40,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 132, "protein": 0, "fat": 0, "carbs": 33.0 }
+      ]
+    },
+    {
+      "name": "Dr. Pepper (Regular)",
+      "description": "Sweetened carbonated soft drink with a unique blend of flavors.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 11.0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 142, "protein": 0, "fat": 0, "carbs": 36.3 }
+      ]
+    },
+    {
+      "name": "Sprite (Regular)",
+      "description": "Sweetened lemon-lime flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 39,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 9.7
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 129, "protein": 0, "fat": 0, "carbs": 32.0 }
+      ]
+    },
+    {
+      "name": "Fanta Orange (Regular)",
+      "description": "Sweetened orange-flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 48,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 158, "protein": 0, "fat": 0, "carbs": 39.6 }
+      ]
+    },
+    {
+      "name": "Mountain Dew (Regular)",
+      "description": "Sweetened citrus-flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 48,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 12.8
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 158, "protein": 0, "fat": 0, "carbs": 42.2 }
+      ]
+    },
+    {
+      "name": "Pepsi (Regular)",
+      "description": "Sweetened carbonated soft drink, similar to Coke.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 42,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 10.6
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 139, "protein": 0, "fat": 0, "carbs": 35.0 }
+      ]
+    },
+    {
+      "name": "7 Up (Regular)",
+      "description": "Sweetened lemon-lime flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 39,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 9.7
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 129, "protein": 0, "fat": 0, "carbs": 32.0 }
+      ]
+    },
+    {
+      "name": "Mirinda Orange (Regular)",
+      "description": "Sweetened orange-flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 48,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 158, "protein": 0, "fat": 0, "carbs": 39.6 }
+      ]
+    },
+    {
+      "name": "Sprite Zero (Diet)",
+      "description": "Artificially sweetened lemon-lime flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Fanta Zero (Diet)",
+      "description": "Artificially sweetened orange-flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Mountain Dew Zero (Diet)",
+      "description": "Artificially sweetened citrus-flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Pepsi Zero (Diet)",
+      "description": "Artificially sweetened cola.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "7 Up Zero (Diet)",
+      "description": "Artificially sweetened lemon-lime flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Mirinda Zero (Diet)",
+      "description": "Artificially sweetened orange-flavored carbonated soft drink.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Sparkling Water (Flavored, Unsweetened)",
+      "description": "Carbonated water with natural fruit flavors, no added sugar.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+      },
+      "servings": [
+        { "size": "1 can (330ml)", "calories": 0, "protein": 0, "fat": 0, "carbs": 0 }
+      ]
+    },
+    {
+      "name": "Coffee (Black, Brewed)",
+      "description": "Plain brewed coffee, no milk or sugar.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 1,
+        "protein": 0.1,
+        "fat": 0.0,
+        "carbs": 0.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 2, "protein": 0.2, "fat": 0.0, "carbs": 0.0 }
+      ]
+    },
+    {
+      "name": "Tea (Black, Brewed)",
+      "description": "Plain brewed black tea, no milk or sugar.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 1,
+        "protein": 0.1,
+        "fat": 0.0,
+        "carbs": 0.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 2, "protein": 0.2, "fat": 0.0, "carbs": 0.0 }
+      ]
+    },
+    {
+      "name": "Green Tea (Brewed)",
+      "description": "Plain brewed green tea, no milk or sugar.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 1,
+        "protein": 0.1,
+        "fat": 0.0,
+        "carbs": 0.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 2, "protein": 0.2, "fat": 0.0, "carbs": 0.0 }
+      ]
+    },
+    {
+      "name": "Herbal Tea (Brewed)",
+      "description": "Plain brewed herbal tea, no milk or sugar.",
+      "category": "drinks",
+      "nutrients_per_100g": {
+        "calories": 0,
+        "protein": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0
+      },
+      "servings": [
+        { "size": "1 cup (240ml)", "calories": 0, "protein": 0.0, "fat": 0.0, "carbs": 0.0 }
+      ]
+    }
+  ]
+  

@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PlanSkeleton from '../components/plans/PlanSkeleton';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../context/themeContext';
 import Colors from '../constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useStats } from '../context/StatsContext';
 import { getMostRecentValues, getStatsForDate, calculateDailyTargets } from '../components/dashboard/dashboardUtils';
@@ -24,10 +25,16 @@ import WorkoutRoutineModal from '../components/plans/WorkoutRoutineModal';
 import CreatePlanWizard from '../components/plans/CreatePlanWizard';
 import AiEditModal from '../components/plans/AiEditModal';
 import { aiService } from '../services/aiService';
+import { useMealSearch } from '../hooks/meals/useMealSearch';
 
 const DAYS = Array.from({ length: 14 }, (_, i) => i + 1);
 
-export default function PlansScreen() {
+interface PlansScreenProps {
+    autoOpenWizard?: boolean;
+    onWizardReset?: () => void;
+}
+
+export default function PlansScreen({ autoOpenWizard, onWizardReset }: PlansScreenProps) {
     const { theme } = useTheme();
     const colors = Colors[theme];
 
@@ -44,11 +51,13 @@ export default function PlansScreen() {
         planId,
         planName,
         planStatus,
+        startDate,
         currentDay,
         planDays,
         hasChanges,
         allPlans,
         setPlanName,
+        setStartDate,
         setCurrentDay,
         setHasChanges,
         loadPlan,
@@ -145,32 +154,56 @@ export default function PlansScreen() {
         }, [loadPlan])
     );
 
+    // Auto-open wizard logic for AI redirection
+    useEffect(() => {
+        if (autoOpenWizard) {
+            console.log('[PLANS] Auto-opening wizard from AI redirection');
+            handleOpenCreateModal();
+            // Reset the flag in parent
+            onWizardReset?.();
+        }
+    }, [autoOpenWizard, handleOpenCreateModal, onWizardReset]);
+
     const handleAiAssist = useCallback(() => {
         setIsAiEditVisible(true);
     }, []);
 
     const handleAiEditSubmit = useCallback(async (instruction: string) => {
         try {
+            console.log('[PLANS] AI Edit Submit called with:', instruction);
             setAiLoading(true);
             const dayData = planDays.find(d => d.day === currentDay);
-            if (!dayData) return;
+            if (!dayData) {
+                console.error('[PLANS] Day data not found for day:', currentDay);
+                alert('Error: Could not find day data');
+                return;
+            }
+
+            console.log('[PLANS] Day data found:', dayData.day);
 
             // Prepare validation context
             const planContext = `Goal: ${stats.goalWeight}. Plan: ${currentPlan.name}. Day: ${currentDay}`;
 
+            console.log('[PLANS] Calling aiService.editPlan...');
             // Call Backend
             const result = await aiService.editPlan(dayData, instruction, planContext);
 
+            console.log('[PLANS] AI Edit result:', result);
+
             if (result.success && result.modifiedDay) {
+                console.log('[PLANS] Success! Updating day...');
                 // Update local state
                 handleUpdateDay(currentDay, result.modifiedDay);
                 setIsAiEditVisible(false);
             } else {
                 // Error handling
-                console.error('AI Edit Failed');
+                console.error('[PLANS] AI Edit Failed:', result);
+                alert('AI Edit failed: ' + (result.message || 'Unknown error'));
             }
-        } catch (error) {
-            console.error('AI Edit Error:', error);
+        } catch (error: any) {
+            console.error('[PLANS] AI Edit Error:', error);
+            console.error('[PLANS] Error details:', error.message, error.stack);
+            alert('Error: ' + (error.message || 'Failed to edit plan'));
         } finally {
             setAiLoading(false);
         }
@@ -192,15 +225,36 @@ export default function PlansScreen() {
         setIsWorkoutDetailsVisible(true);
     }, []);
 
-    const onEditMealPress = useCallback((meal: any, section: string, index: number) => {
-        setSelectedMealSection(section);
-        setSelectedItem({ ...meal, _index: index, _section: section });
-        setIsFoodDetailsVisible(true);
-    }, []);
+    const { searchMeals } = useMealSearch();
 
-    if (loading) {
+    const onEditMealPress = useCallback(async (meal: any, section: string, index: number) => {
+        setSelectedMealSection(section);
+
+        // Try to fetch fresh data for this food to ensure servings are up to date
+        let fullFoodData = { ...meal };
+        try {
+            const results = await searchMeals(meal.name);
+            const exactMatch = results.find(r => r.name.toLowerCase() === meal.name.toLowerCase() || r.id === meal.foodId);
+            if (exactMatch) {
+                // Merge fresh servings data into our editing item
+                fullFoodData = {
+                    ...exactMatch,
+                    ...meal, // Keep saved quantity and unit
+                    servings: exactMatch.servings || [], // Ensure fresh servings are used
+                };
+                console.log('🔄 [EDIT] Fetched fresh food data with servings:', fullFoodData.servings?.length);
+            }
+        } catch (e) {
+            console.warn('Failed to fetch fresh food data for edit', e);
+        }
+
+        setSelectedItem({ ...fullFoodData, _index: index, _section: section });
+        setIsFoodDetailsVisible(true);
+    }, [searchMeals]);
+
+    if (loading && planDays.length === 0) {
         return (
-            <View style={[styles.container, { backgroundColor: '#0f0f0f' }]}>
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
                 <SafeAreaView style={styles.safeArea} edges={['top']}>
                     <PlanSkeleton />
                 </SafeAreaView>
@@ -217,6 +271,7 @@ export default function PlansScreen() {
                     onSave={handleSavePlan}
                     onActivate={handleActivatePlan}
                     onGenerateAI={handleGenerateAI}
+                    onAiAssist={handleAiAssist}
                     onOpenPlansList={() => setIsPlansListVisible(true)}
                     onDelete={() => handleDeletePlan()}
                     onChooseWorkoutRoutine={() => setIsWorkoutRoutineVisible(true)}
@@ -225,6 +280,7 @@ export default function PlansScreen() {
                     status={planStatus}
                     hasChanges={hasChanges}
                     plan={currentPlan}
+                    startDate={startDate}
                 />
 
                 <PlanTimeline
@@ -232,6 +288,7 @@ export default function PlansScreen() {
                     currentDay={currentDay}
                     onSelectDay={setCurrentDay}
                     planDays={planDays}
+                    startDate={startDate}
                 />
 
                 <View style={styles.dayContent}>
@@ -252,10 +309,10 @@ export default function PlansScreen() {
                         onEditMeal={onEditMealPress}
                         onCopyMeals={() => setIsCopyMealsVisible(true)}
                         mealSections={mealSections}
-                        onAiAssist={handleAiAssist}
                     />
                 </View>
             </SafeAreaView>
+
 
             {isSearchVisible && (
                 <SearchModal
@@ -275,10 +332,9 @@ export default function PlansScreen() {
                 visible={isFoodDetailsVisible}
                 onClose={() => setIsFoodDetailsVisible(false)}
                 food={selectedItem}
-                onAddToMeal={(food, qty, type, unit) => handleAddItem(food, 'meal', { quantity: qty, unit }, selectedMealSection)}
+                onAddToMeal={(food, qty, type, unit, sIdx) => handleAddItem(food, 'meal', { quantity: qty, unit, servingIndex: sIdx }, selectedMealSection)}
                 mealSections={mealSections}
                 defaultMealType={selectedMealSection}
-                styles={styles}
             />
 
             <WorkoutDetailsModal
@@ -345,5 +401,27 @@ const styles = StyleSheet.create({
     },
     dayContent: {
         flex: 1,
+    },
+    aiFab: {
+        position: 'absolute',
+        bottom: 100,
+        right: 24,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        paddingHorizontal: 20,
+        paddingVertical: 14,
+        borderRadius: 24,
+        shadowColor: '#000',
+        shadowOpacity: 0.25,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 8,
+        zIndex: 1000,
+    },
+    aiFabText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '700',
     },
 });

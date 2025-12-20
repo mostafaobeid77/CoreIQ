@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/themeContext';
 import Colors from '../../constants/Colors';
-import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Swipeable, GestureHandlerRootView, FlatList } from 'react-native-gesture-handler';
 
 interface PlanSummary {
     _id: string;
@@ -60,17 +60,17 @@ export default function PlansListModal({
         const statusColor = item.status === 'active' ? colors.primary :
             item.status === 'completed' ? '#4CAF50' : colors.textSecondary;
 
-        let swipeableRow: Swipeable | null = null;
-
-        const close = () => {
-            swipeableRow?.close();
-        };
+        let swipeableRef: Swipeable | null = null;
 
         return (
             <Swipeable
-                ref={ref => { swipeableRow = ref; }}
-                renderRightActions={() => renderRightActions(item._id, close)}
+                ref={ref => { swipeableRef = ref; }}
+                renderRightActions={() => renderRightActions(item._id, () => swipeableRef?.close())}
                 overshootRight={false}
+                friction={2}
+                leftThreshold={30}
+                rightThreshold={40}
+                activeOffsetX={[-10, 10]}
             >
                 <TouchableOpacity
                     style={[
@@ -82,6 +82,7 @@ export default function PlansListModal({
                         }
                     ]}
                     onPress={() => onSelectPlan(item._id)}
+                    activeOpacity={0.7}
                 >
                     <View style={styles.planHeader}>
                         <Text style={[styles.planName, { color: colors.text }]}>{item.name}</Text>
@@ -116,40 +117,42 @@ export default function PlansListModal({
             transparent={true}
             onRequestClose={onClose}
         >
-            <View style={styles.overlay}>
-                <View style={[styles.content, { backgroundColor: colors.background }]}>
-                    <View style={styles.header}>
-                        <Text style={[styles.title, { color: colors.text }]}>My Plans</Text>
-                        <TouchableOpacity onPress={onClose}>
-                            <Ionicons name="close" size={24} color={colors.text} />
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <View style={styles.overlay}>
+                    <View style={[styles.content, { backgroundColor: colors.background }]}>
+                        <View style={styles.header}>
+                            <Text style={[styles.title, { color: colors.text }]}>My Plans</Text>
+                            <TouchableOpacity onPress={onClose}>
+                                <Ionicons name="close" size={24} color={colors.text} />
+                            </TouchableOpacity>
+                        </View>
+
+                        {isLoading ? (
+                            <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
+                        ) : (
+                            <FlatList
+                                data={plans}
+                                renderItem={renderPlanItem}
+                                keyExtractor={item => item._id}
+                                contentContainerStyle={styles.listContent}
+                                ListEmptyComponent={
+                                    <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+                                        No plans found. Create one to get started!
+                                    </Text>
+                                }
+                            />
+                        )}
+
+                        <TouchableOpacity
+                            style={[styles.createButton, { backgroundColor: colors.primary }]}
+                            onPress={onCreateNew}
+                        >
+                            <Ionicons name="add" size={24} color="#FFFFFF" />
+                            <Text style={styles.createButtonText}>Create New Plan</Text>
                         </TouchableOpacity>
                     </View>
-
-                    {isLoading ? (
-                        <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
-                    ) : (
-                        <FlatList
-                            data={plans}
-                            renderItem={renderPlanItem}
-                            keyExtractor={item => item._id}
-                            contentContainerStyle={styles.listContent}
-                            ListEmptyComponent={
-                                <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-                                    No plans found. Create one to get started!
-                                </Text>
-                            }
-                        />
-                    )}
-
-                    <TouchableOpacity
-                        style={[styles.createButton, { backgroundColor: colors.primary }]}
-                        onPress={onCreateNew}
-                    >
-                        <Ionicons name="add" size={24} color="#FFFFFF" />
-                        <Text style={styles.createButtonText}>Create New Plan</Text>
-                    </TouchableOpacity>
                 </View>
-            </View>
+            </GestureHandlerRootView>
         </Modal>
     );
 }

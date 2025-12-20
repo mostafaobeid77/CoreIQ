@@ -41,15 +41,15 @@ const GoalWeightModal: React.FC<GoalWeightModalProps> = ({
     animationType="slide"
     onRequestClose={onClose}
   >
-    <TouchableOpacity 
-      style={styles.modalOverlay} 
-      activeOpacity={1} 
+    <TouchableOpacity
+      style={styles.modalOverlay}
+      activeOpacity={1}
       onPress={onClose}
     >
-      <TouchableOpacity 
-        style={styles.modalContent} 
-        activeOpacity={1} 
-        onPress={() => {}} // Prevent closing when tapping inside modal
+      <TouchableOpacity
+        style={styles.modalContent}
+        activeOpacity={1}
+        onPress={() => { }} // Prevent closing when tapping inside modal
       >
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <View style={styles.modalHeader}>
@@ -74,7 +74,7 @@ const GoalWeightModal: React.FC<GoalWeightModalProps> = ({
                 onPress={() => setSelectedWeightGoal(option.label)}
               >
                 <View style={styles.goalOptionIcon}>
-                  <Ionicons name={option.icon as any} size={24} color={selectedWeightGoal === option.label ? "#fff" : "#60a5fa"} />
+                  <Ionicons name={option.icon as any} size={24} color={selectedWeightGoal === option.label ? "#8b5cf6" : "#94a3b8"} />
                 </View>
                 <View style={styles.goalOptionContent}>
                   <Text style={[
@@ -99,7 +99,7 @@ const GoalWeightModal: React.FC<GoalWeightModalProps> = ({
               <TextInput
                 style={styles.targetInput}
                 placeholder={
-                  selectedWeightGoal === 'Lose Weight' 
+                  selectedWeightGoal === 'Lose Weight'
                     ? `Enter weight less than ${stats.weight}kg`
                     : `Enter weight greater than ${stats.weight}kg`
                 }
@@ -115,7 +115,7 @@ const GoalWeightModal: React.FC<GoalWeightModalProps> = ({
             </View>
           )}
           {(selectedWeightGoal === 'Lose Weight' || selectedWeightGoal === 'Gain Weight') && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.modalButton, styles.confirmButton, { marginTop: 20, marginBottom: 20 }]}
               onPress={() => handleWeightGoalSelect(selectedWeightGoal, parseFloat(goalWeightInput) || 0)}
               disabled={!!error}

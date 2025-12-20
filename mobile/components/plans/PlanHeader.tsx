@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator,
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/themeContext';
 import Colors from '../../constants/Colors';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { format, isAfter, startOfDay } from 'date-fns';
 
 interface PlanHeaderProps {
     planName: string;
@@ -12,6 +12,7 @@ interface PlanHeaderProps {
     onSave: () => void;
     onActivate: () => void;
     onGenerateAI: () => void;
+    onAiAssist: () => void;
     onOpenPlansList: () => void;
     onDelete: () => void;
     onChooseWorkoutRoutine?: () => void;
@@ -20,6 +21,7 @@ interface PlanHeaderProps {
     status: 'draft' | 'active' | 'completed';
     hasChanges: boolean;
     plan: any;
+    startDate?: Date;
 }
 
 export default function PlanHeader({
@@ -28,6 +30,7 @@ export default function PlanHeader({
     onSave,
     onActivate,
     onGenerateAI,
+    onAiAssist,
     onOpenPlansList,
     onDelete,
     onChooseWorkoutRoutine,
@@ -35,7 +38,8 @@ export default function PlanHeader({
     isGenerating,
     status,
     hasChanges,
-    plan
+    plan,
+    startDate = new Date()
 }: PlanHeaderProps) {
     const { theme } = useTheme();
     const colors = Colors[theme];
@@ -60,6 +64,8 @@ export default function PlanHeader({
         // @ts-ignore - Navigation type
         navigation.navigate('AI');
     };
+
+    const isFuture = isAfter(startOfDay(startDate), startOfDay(new Date()));
 
     return (
         <View style={styles.container}>
@@ -87,28 +93,37 @@ export default function PlanHeader({
                 </View>
 
                 {/* Status Badge */}
-                <View style={[
-                    styles.statusBadge,
-                    {
-                        backgroundColor: status === 'active'
-                            ? '#2563eb' + '30'
-                            : status === 'completed'
-                                ? '#22c55e' + '30'
-                                : colors.textSecondary + '30'
-                    }
-                ]}>
-                    <Text style={[
-                        styles.statusText,
+                <View style={styles.badgeRow}>
+                    {isFuture && status === 'draft' && (
+                        <View style={[styles.statusBadge, { backgroundColor: '#f59e0b20', marginRight: 8 }]}>
+                            <Text style={[styles.statusText, { color: '#f59e0b' }]}>
+                                SCHEDULED: {format(startDate, 'MMM d')}
+                            </Text>
+                        </View>
+                    )}
+                    <View style={[
+                        styles.statusBadge,
                         {
-                            color: status === 'active'
-                                ? '#2563eb'
+                            backgroundColor: status === 'active'
+                                ? '#8b5cf6' + '30'
                                 : status === 'completed'
-                                    ? '#22c55e'
-                                    : colors.textSecondary
+                                    ? '#22c55e' + '30'
+                                    : colors.textSecondary + '30'
                         }
                     ]}>
-                        {status.toUpperCase()}
-                    </Text>
+                        <Text style={[
+                            styles.statusText,
+                            {
+                                color: status === 'active'
+                                    ? '#8b5cf6'
+                                    : status === 'completed'
+                                        ? '#22c55e'
+                                        : colors.textSecondary
+                            }
+                        ]}>
+                            {status.toUpperCase()}
+                        </Text>
+                    </View>
                 </View>
             </View>
 
@@ -116,58 +131,47 @@ export default function PlanHeader({
 
 
 
-            {/* Actions Row - Scrollable */}
-            <View style={{ marginHorizontal: -20 }}>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{
-                        paddingHorizontal: 20,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        gap: 12
-                    }}
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 12
+                }}
+            >
+                <TouchableOpacity
+                    style={[styles.actionButton, { backgroundColor: colors.card }]}
+                    onPress={onOpenPlansList}
                 >
+                    <Ionicons name="list" size={18} color={colors.text} />
+                    <Text style={[styles.actionText, { color: colors.text }]}>Plans</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.actionButton, { backgroundColor: colors.card }]}
+                    onPress={onAiAssist}
+                >
+                    <Ionicons name="sparkles" size={18} color={colors.primary} />
+                    <Text style={[styles.actionText, { color: colors.text }]}>AI Assist</Text>
+                </TouchableOpacity>
+
+                {status !== 'active' ? (
                     <TouchableOpacity
-                        style={[styles.actionButton, { backgroundColor: colors.card }]}
-                        onPress={onOpenPlansList}
+                        style={[styles.primaryButton, { backgroundColor: colors.primary }]}
+                        onPress={onActivate}
                     >
-                        <Ionicons name="list" size={18} color={colors.text} />
-                        <Text style={[styles.actionText, { color: colors.text }]}>Plans</Text>
+                        <Ionicons name="play" size={16} color="#FFF" />
+                        <Text style={styles.primaryButtonText}>Start Plan</Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[styles.actionButton, { backgroundColor: colors.card }]}
-                        onPress={onGenerateAI}
-                        disabled={isGenerating}
-                    >
-                        {isGenerating ? (
-                            <ActivityIndicator size="small" color="#2563eb" />
-                        ) : (
-                            <>
-                                <Ionicons name="sparkles" size={18} color="#2563eb" />
-                                <Text style={[styles.actionText, { color: '#2563eb' }]}>Re-Gen</Text>
-                            </>
-                        )}
-                    </TouchableOpacity>
-                    {status !== 'active' ? (
-                        <TouchableOpacity
-                            style={[styles.primaryButton, { backgroundColor: '#2563eb' }]}
-                            onPress={onActivate}
-                        >
-                            <Ionicons name="play" size={16} color="#FFF" />
-                            <Text style={styles.primaryButtonText}>Start Plan</Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <View style={[styles.activeBadge, { backgroundColor: '#22c55e20' }]}>
-                            <Ionicons name="checkmark-circle" size={16} color="#22c55e" />
-                            <Text style={[styles.activeText, { color: '#22c55e' }]}>Active</Text>
-                        </View>
-                    )}
-
-
-                </ScrollView>
-            </View>
+                ) : (
+                    <View style={[styles.activeBadge, { backgroundColor: '#22c55e20' }]}>
+                        <Ionicons name="checkmark-circle" size={16} color="#22c55e" />
+                        <Text style={[styles.activeText, { color: '#22c55e' }]}>Active</Text>
+                    </View>
+                )}
+            </ScrollView>
         </View >
     );
 }
@@ -183,6 +187,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 12,
+    },
+    badgeRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     titleContainer: {
         flex: 1,

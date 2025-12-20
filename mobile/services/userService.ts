@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, BASE_URL, fixProfilePhotoUrl } from './api';
 
 export interface UserProfile {
   id: string;
@@ -16,11 +16,16 @@ export interface UpdateProfileData {
   username?: string;
   email?: string;
   profilePhoto?: string | null;
+  birthDate?: string;
 }
 
 class UserService {
   async getProfile(): Promise<UserProfile> {
     const profile = await api.get<UserProfile>('/users/profile');
+
+    // Fix profile photo URL using standard utility
+    profile.profilePhoto = fixProfilePhotoUrl(profile.profilePhoto);
+
     return {
       ...profile,
       id: profile.id || (profile as any)._id || profile.email,
@@ -28,7 +33,13 @@ class UserService {
   }
 
   async updateProfile(data: UpdateProfileData): Promise<{ message: string; user: UserProfile }> {
-    return api.put('/users/profile', data);
+    const response = await api.put<{ message: string; user: UserProfile }>('/users/profile', data);
+
+    if (response.user) {
+      response.user.profilePhoto = fixProfilePhotoUrl(response.user.profilePhoto);
+    }
+
+    return response;
   }
 
   async updateUserStats(data: {

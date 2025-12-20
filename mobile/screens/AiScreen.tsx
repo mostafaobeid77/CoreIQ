@@ -11,17 +11,27 @@ import { planService } from '../services/planService';
 import { useFocusEffect } from '@react-navigation/native';
 import { useStats } from '../context/StatsContext';
 import { getMostRecentValues, getStatsForDate, calculateDailyTargets } from '../components/dashboard/dashboardUtils';
+import { useAuth } from '../context/AuthContext';
+import { format } from 'date-fns';
 
-const USER_NAME = 'Mr Kabalan';
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const DRAWER_WIDTH = Math.min(320, SCREEN_WIDTH * 0.85);
-const HEADER_HEIGHT = 60;
+const HEADER_HEIGHT = 64;
 
-const AiScreen = () => {
+interface AiScreenProps {
+  onTriggerWizard?: () => void;
+}
+
+const AiScreen = ({ onTriggerWizard }: AiScreenProps) => {
   const { theme } = useTheme();
   const { statsByDate } = useStats();
+  const { user } = useAuth();
+  const USER_NAME = (user?.fullName || 'Friend').split(' ')[0]; // First name only
   const isLight = theme === 'light';
-  const ACCENT = isLight ? '#0ea5e9' : '#60a5fa';
+  const ACCENT = isLight ? '#8b5cf6' : '#a78bfa'; // Violet consistent with Meals
+
+
   const insets = useSafeAreaInsets();
   const inputRef = React.useRef<TextInput>(null);
   const flatListRef = React.useRef<FlatList>(null);
@@ -152,7 +162,7 @@ const AiScreen = () => {
       setGenerating(true);
       // specific plan name logic handled by backend if passed in payload
 
-      const dateKey = new Date().toISOString().slice(0, 10);
+      const dateKey = format(new Date(), 'yyyy-MM-dd');
       const mostRecent = getMostRecentValues(statsByDate);
       const stats = getStatsForDate(dateKey, statsByDate, mostRecent);
       const dailyTargets = calculateDailyTargets(stats);
@@ -167,7 +177,7 @@ const AiScreen = () => {
       const payload = {
         name: name, // User provided name
         targetCalories: dailyTargets.calories,
-        targetProtein: dailyTargets.proteins,
+        targetProtein: dailyTargets.protein,
         targetCarbs: dailyTargets.carbs,
         targetFats: dailyTargets.fats,
         mealsPerDay: mealSections.length,
@@ -262,9 +272,12 @@ const AiScreen = () => {
 
       // Trigger plan generation if AI detected intent
       if (action === 'generate_plan') {
-        setTimeout(() => {
+        if (onTriggerWizard) {
+          onTriggerWizard();
+        } else {
+          // Fallback if prop not provided
           handleGeneratePlan(currentId);
-        }, 500);
+        }
       }
     } catch (error) {
       console.error('Send message error:', error);
@@ -284,19 +297,15 @@ const AiScreen = () => {
         <Animated.View
           style={[
             styles.msgRow,
-            { justifyContent: 'flex-end', marginTop: isFirst ? 0 : 8 }
+            { justifyContent: 'flex-end', marginTop: isFirst ? 0 : 12 }
           ]}
         >
           <View
             style={[
               styles.userBubble,
               {
-                backgroundColor: '#2563eb',
-                shadowColor: '#2563eb',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.25,
-                shadowRadius: 8,
-                elevation: 4,
+                backgroundColor: isLight ? '#8b5cf6' : '#7c3aed',
+                shadowColor: '#8b5cf6',
               }
             ]}
           >
@@ -310,13 +319,13 @@ const AiScreen = () => {
       <Animated.View
         style={[
           styles.msgRow,
-          { justifyContent: 'flex-start', marginTop: isFirst ? 0 : 6 }
+          { justifyContent: 'flex-start', marginTop: isFirst ? 0 : 12 }
         ]}
       >
         <View style={styles.aiBubbleContainer}>
           <View style={styles.aiAvatar}>
             <LinearGradient
-              colors={isLight ? ['#2563eb', '#1d4ed8'] : ['#3b82f6', '#2563eb']}
+              colors={isLight ? ['#8b5cf6', '#7c3aed'] : ['#a78bfa', '#8b5cf6']}
               style={styles.aiAvatarGradient}
             >
               <Ionicons name="sparkles" size={14} color="#fff" />
@@ -326,12 +335,12 @@ const AiScreen = () => {
             style={[
               styles.aiBubble,
               {
-                backgroundColor: isLight ? '#f8fafc' : '#111827',
-                borderColor: isLight ? '#e2e8f0' : '#1f2937',
+                backgroundColor: isLight ? '#ffffff' : '#1e1e1e',
+                borderColor: isLight ? '#f1f5f9' : '#2a2a2a',
               },
             ]}
           >
-            <Text style={[styles.aiText, { color: isLight ? '#1e293b' : '#e2e8f0' }]}>
+            <Text style={[styles.aiText, { color: isLight ? '#334155' : '#e2e8f0' }]}>
               {item.content}
             </Text>
           </View>
@@ -341,12 +350,12 @@ const AiScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isLight ? '#ffffff' : '#0a0a0a' }]}>
-      <SafeAreaView edges={['top']} style={{ backgroundColor: isLight ? '#ffffff' : '#0f0f0f' }}>
+    <View style={[styles.container, { backgroundColor: isLight ? '#f8fafc' : '#0a0a0a' }]}>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: isLight ? '#f8fafc' : '#0f0f0f' }}>
         {/* Enhanced Header */}
         <View style={[styles.header, { borderBottomColor: isLight ? '#f1f5f9' : '#1e293b' }]}>
           <TouchableOpacity onPress={openDrawer} style={styles.menuBtn} activeOpacity={0.7}>
-            <View style={[styles.menuIconBg, { backgroundColor: isLight ? '#f1f5f9' : '#1a1a1a' }]}>
+            <View style={[styles.menuIconBg, { backgroundColor: isLight ? '#ffffff' : '#1a1a1a' }]}>
               <Ionicons name="menu" size={20} color={isLight ? '#334155' : '#e2e8f0'} />
             </View>
           </TouchableOpacity>
@@ -364,36 +373,6 @@ const AiScreen = () => {
               </View>
             </View>
           </View>
-
-          <TouchableOpacity
-            onPress={() => handleGeneratePlan()}
-            style={[styles.planBtn, { opacity: generating ? 0.6 : 1 }]}
-            activeOpacity={0.8}
-            disabled={generating}
-          >
-            <View
-              style={[
-                styles.planBtnGradient,
-                {
-                  backgroundColor: '#2563eb',
-                  shadowColor: '#2563eb',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 4,
-                  elevation: 3,
-                }
-              ]}
-            >
-              {generating ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <>
-                  <Ionicons name="flash" size={16} color="#fff" />
-                  <Text style={styles.planBtnText}>Plan</Text>
-                </>
-              )}
-            </View>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
 
@@ -425,7 +404,7 @@ const AiScreen = () => {
                   <View style={styles.typingIndicator}>
                     <View style={[styles.aiAvatar, { marginBottom: 0 }]}>
                       <LinearGradient
-                        colors={isLight ? ['#2563eb', '#1d4ed8'] : ['#3b82f6', '#2563eb']}
+                        colors={isLight ? ['#8b5cf6', '#7c3aed'] : ['#a78bfa', '#8b5cf6']}
                         style={styles.aiAvatarGradient}
                       >
                         <Ionicons name="sparkles" size={14} color="#fff" />
@@ -448,23 +427,23 @@ const AiScreen = () => {
               >
                 <View style={styles.emptyIconContainer}>
                   <LinearGradient
-                    colors={isLight ? ['#2563eb', '#1d4ed8'] : ['#3b82f6', '#2563eb']}
+                    colors={isLight ? ['#8b5cf6', '#7c3aed'] : ['#a78bfa', '#8b5cf6']}
                     style={styles.emptyIcon}
                   >
                     <Ionicons name="sparkles" size={32} color="#fff" />
                   </LinearGradient>
                 </View>
                 <Text style={[styles.emptyTitle, { color: isLight ? '#0f172a' : '#f8fafc' }]}>
-                  Hey {USER_NAME.split(' ')[0]}! 👋
+                  Hey {USER_NAME} 👋
                 </Text>
                 <Text style={[styles.emptySub, { color: isLight ? '#64748b' : '#94a3b8' }]}>
-                  I'm your AI fitness coach. Ask me anything about workouts, nutrition, or your goals!
+                  I'm your AI Coach. Ask me to adjust your plan, swap meals, or give fitness tips.
                 </Text>
                 <View style={styles.suggestionsGrid}>
                   {[
-                    { icon: 'barbell', label: 'Plan workout', color: '#0ea5e9' },
-                    { icon: 'restaurant', label: 'Suggest meal', color: '#10b981' },
-                    { icon: 'flash', label: 'Generate plan', color: '#8b5cf6' },
+                    { icon: 'help-circle', label: 'How am I doing?', color: '#8b5cf6' },
+                    { icon: 'restaurant', label: 'Healthy snack ideas', color: '#10b981' },
+                    { icon: 'barbell', label: 'Tips for better form', color: '#8b5cf6' },
                   ].map((item) => (
                     <TouchableOpacity
                       key={item.label}
@@ -538,8 +517,8 @@ const AiScreen = () => {
                 style={[
                   styles.sendGradient,
                   {
-                    backgroundColor: '#2563eb',
-                    shadowColor: '#2563eb',
+                    backgroundColor: '#8b5cf6',
+                    shadowColor: '#8b5cf6',
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.3,
                     shadowRadius: 4,
@@ -592,8 +571,8 @@ const AiScreen = () => {
                 style={[
                   styles.newChatGradient,
                   {
-                    backgroundColor: '#2563eb',
-                    shadowColor: '#2563eb',
+                    backgroundColor: '#8b5cf6',
+                    shadowColor: '#8b5cf6',
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.3,
                     shadowRadius: 4,
@@ -629,7 +608,7 @@ const AiScreen = () => {
                     onPress={() => selectConversation(item._id)}
                     style={styles.conversationContent}
                   >
-                    <View style={[styles.convIcon, { backgroundColor: active ? '#2563eb' : (isLight ? '#f1f5f9' : '#1a1a1a') }]}>
+                    <View style={[styles.convIcon, { backgroundColor: active ? '#8b5cf6' : (isLight ? '#f1f5f9' : '#1a1a1a') }]}>
                       <Ionicons
                         name="chatbubble-ellipses"
                         size={16}
@@ -763,13 +742,18 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderRadius: 18,
+    borderRadius: 22,
     borderBottomRightRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 3,
   },
   userText: {
     color: '#ffffff',
     fontSize: 15,
-    lineHeight: 20,
+    lineHeight: 22,
+    fontWeight: '500',
   },
 
   // AI Message
@@ -793,15 +777,15 @@ const styles = StyleSheet.create({
   },
   aiBubble: {
     flex: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 18,
-    borderBottomLeftRadius: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 22,
+    borderBottomLeftRadius: 4,
     borderWidth: 1,
   },
   aiText: {
     fontSize: 15,
-    lineHeight: 20,
+    lineHeight: 22,
   },
 
   // Typing Indicator

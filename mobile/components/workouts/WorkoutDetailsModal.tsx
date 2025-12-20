@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
-import workoutStyles from './workoutStyles';
+import React, { useState, useMemo } from 'react';
+import { Modal, View, Text, TextInput, TouchableOpacity, ScrollView, Platform, KeyboardAvoidingView, Pressable, Keyboard } from 'react-native';
+import { createWorkoutStyles } from './workoutStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../context/themeContext';
 
 interface WorkoutDetailsModalProps {
   visible: boolean;
@@ -18,6 +19,9 @@ interface WorkoutDetailsModalProps {
 }
 
 const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onClose, workout, onSave }) => {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createWorkoutStyles(theme === 'light'), [theme]);
+
   const [numSets, setNumSets] = useState(0);
   const [sets, setSets] = useState<{ reps: string; weight: string }[]>([]);
   const [durationMinutes, setDurationMinutes] = useState<string>('');
@@ -29,7 +33,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
     if (visible && workout) {
       if (isCardio) {
         setDurationMinutes(workout.minutes ? workout.minutes.toString() : '');
-      } else if (workout.sets && Array.isArray(workout.sets)) {
+      } else if (workout.sets && Array.isArray(workout.sets) && workout.sets.length > 0) {
         const initialSets = workout.sets.map(s => ({
           reps: s.reps.toString(),
           weight: s.weight.toString()
@@ -37,9 +41,10 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
         setSets(initialSets);
         setNumSets(initialSets.length);
       } else {
-        // Default to 3 sets if none exist
-        setNumSets(3);
+        // Default to 4 sets if none exist (more premium default)
+        setNumSets(4);
         setSets([
+          { reps: '10', weight: '0' },
           { reps: '10', weight: '0' },
           { reps: '10', weight: '0' },
           { reps: '10', weight: '0' }
@@ -55,7 +60,8 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
       const newSets = [...prev];
       if (numSets > prev.length) {
         for (let i = prev.length; i < numSets; i++) {
-          newSets.push({ reps: '', weight: '' });
+          const lastSet = prev.length > 0 ? prev[prev.length - 1] : { reps: '10', weight: '0' };
+          newSets.push({ ...lastSet });
         }
       } else if (numSets < prev.length) {
         newSets.length = numSets;
@@ -85,130 +91,125 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
     onClose();
   };
 
-  const canSave = isCardio ? (Number(durationMinutes) > 0) : (numSets > 0);
-
   if (!workout) return null;
 
   return (
-    <Modal visible={visible} animationType="slide" transparent>
-      <View style={workoutStyles.workoutModalOverlay}>
-        <View style={[workoutStyles.workoutModalContent, { maxHeight: '90%' }]}>
-          <Text style={workoutStyles.workoutModalTitle}>{workout.name}</Text>
-          <Text style={workoutStyles.workoutModalSubtitle}>{workout.description}</Text>
-          <Text style={{ color: '#8b5cf6', fontSize: 16, fontWeight: '600', marginBottom: 16 }}>Target: {workout.muscle_group}</Text>
+    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <Pressable style={styles.workoutModalOverlay} onPress={onClose}>
+          <Pressable style={styles.workoutModalContent} onPress={(e) => e.stopPropagation()}>
+            <View style={styles.modalHandle} />
 
-          {isCardio ? (
-            <View>
-              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', marginBottom: 8 }}>Duration (minutes) </Text>
-              <TextInput
-                style={[workoutStyles.workoutInput, { width: 120 }]}
-                keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
-                value={durationMinutes}
-                onChangeText={(text) => {
-                  const cleaned = text.replace(/[^0-9]/g, '');
-                  setDurationMinutes(cleaned);
-                }}
-                placeholder="e.g. 30"
-                placeholderTextColor="#888"
-                maxLength={4}
-              />
+            <Text style={styles.workoutModalTitle}>{workout.name}</Text>
+            <Text style={styles.workoutModalSubtitle} numberOfLines={2}>{workout.description}</Text>
+
+            <View style={styles.targetBadge}>
+              <Ionicons name="fitness" size={14} color="#8b5cf6" />
+              <Text style={styles.targetBadgeText}>{workout.muscle_group || 'Target Area'}</Text>
             </View>
-          ) : (
-            <>
-              <View style={{ marginBottom: 16, flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', marginRight: 12 }}>Sets</Text>
-                <TouchableOpacity
-                  style={{ backgroundColor: '#232323', borderRadius: 16, padding: 6, marginRight: 8 }}
-                  onPress={() => setNumSets(Math.max(0, numSets - 1))}
-                  disabled={numSets === 0}
-                >
-                  <Ionicons name="remove" size={20} color={numSets === 0 ? '#444' : '#fff'} />
-                </TouchableOpacity>
-                <TextInput
-                  style={[workoutStyles.workoutInput, { width: 60, textAlign: 'center', fontSize: 18, marginRight: 8 }]}
-                  keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
-                  value={numSets.toString()}
-                  onChangeText={text => {
-                    const n = Math.max(0, Math.min(10, Number(text.replace(/[^0-9]/g, '')) || 0));
-                    setNumSets(n);
-                  }}
-                  placeholder="0"
-                  placeholderTextColor="#888"
-                  maxLength={2}
-                />
-                <TouchableOpacity
-                  style={{ backgroundColor: '#232323', borderRadius: 16, padding: 6 }}
-                  onPress={() => setNumSets(Math.min(10, numSets + 1))}
-                >
-                  <Ionicons name="add" size={20} color="#fff" />
-                </TouchableOpacity>
+
+            {isCardio ? (
+              <View style={styles.cardioContainer}>
+                <Text style={styles.inputLabel}>Session Duration</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <TextInput
+                    style={styles.cardioInput}
+                    keyboardType="number-pad"
+                    value={durationMinutes}
+                    onChangeText={(text) => setDurationMinutes(text.replace(/[^0-9]/g, ''))}
+                    placeholder="00"
+                    placeholderTextColor="#64748b"
+                    autoFocus
+                    returnKeyType="done"
+                    onSubmitEditing={Keyboard.dismiss}
+                  />
+                  <Text style={styles.cardioUnit}>min</Text>
+                </View>
               </View>
-
-              <ScrollView style={{ maxHeight: 220 }}>
-                {sets.map((set, idx) => (
-                  <View key={idx} style={{
-                    backgroundColor: '#23272f',
-                    borderRadius: 12,
-                    padding: 14,
-                    marginBottom: 12,
-                    shadowColor: '#000',
-                    shadowOpacity: 0.08,
-                    shadowRadius: 4,
-                    shadowOffset: { width: 0, height: 2 },
-                    elevation: 2,
-                  }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                      <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600', marginRight: 8 }}>Set {idx + 1}</Text>
-                      <View style={{ flex: 1, height: 1, backgroundColor: '#333', marginLeft: 4 }} />
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={{ color: '#aaa', fontSize: 13, marginBottom: 4 }}>Reps</Text>
-                        <TextInput
-                          style={[workoutStyles.workoutInput, { minWidth: 60, textAlign: 'center', fontSize: 16 }]}
-                          keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
-                          value={set.reps}
-                          onChangeText={text => handleSetChange(idx, 'reps', text.replace(/[^0-9]/g, ''))}
-                          placeholder="Reps"
-                          placeholderTextColor="#888"
-                          maxLength={3}
-                        />
-                      </View>
-                      <View style={{ width: 16 }} />
-                      <View style={{ flex: 1 }}>
-                        <Text style={{ color: '#aaa', fontSize: 13, marginBottom: 4 }}>Weight (kg) </Text>
-                        <TextInput
-                          style={[workoutStyles.workoutInput, { minWidth: 60, textAlign: 'center', fontSize: 16 }]}
-                          keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
-                          value={set.weight}
-                          onChangeText={text => {
-                            const cleaned = text.replace(/[^0-9.]/g, '');
-                            const parts = cleaned.split('.');
-                            const formatted = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : cleaned;
-                            handleSetChange(idx, 'weight', formatted);
-                          }}
-                          placeholder="kg"
-                          placeholderTextColor="#888"
-                          maxLength={6}
-                        />
-                      </View>
-                    </View>
+            ) : (
+              <>
+                <View style={styles.setCounterContainer}>
+                  <Text style={styles.setCounterLabel}>Number of Sets</Text>
+                  <View style={styles.counterControls}>
+                    <TouchableOpacity
+                      style={styles.counterButton}
+                      onPress={() => setNumSets(Math.max(1, numSets - 1))}
+                    >
+                      <Ionicons name="remove" size={24} color={theme === 'light' ? '#64748b' : '#94a3b8'} />
+                    </TouchableOpacity>
+                    <Text style={styles.counterValue}>{numSets}</Text>
+                    <TouchableOpacity
+                      style={styles.counterButton}
+                      onPress={() => setNumSets(Math.min(10, numSets + 1))}
+                    >
+                      <Ionicons name="add" size={24} color={theme === 'light' ? '#64748b' : '#94a3b8'} />
+                    </TouchableOpacity>
                   </View>
-                ))}
-              </ScrollView>
-            </>
-          )}
+                </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 24 }}>
-            <TouchableOpacity style={[workoutStyles.workoutModalButton, workoutStyles.workoutCancelButton]} onPress={onClose}>
-              <Text style={workoutStyles.workoutCancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[workoutStyles.workoutModalButton, workoutStyles.workoutConfirmButton]} onPress={handleSave} disabled={!canSave}>
-              <Text style={[workoutStyles.workoutConfirmButtonText, { opacity: !canSave ? 0.5 : 1 }]}>Save</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+                <ScrollView
+                  style={styles.setsList}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ paddingBottom: 20 }}
+                >
+                  {sets.map((set, idx) => (
+                    <View key={idx} style={styles.setRow}>
+                      <View style={styles.setIndexCircle}>
+                        <Text style={styles.setIndexText}>{idx + 1}</Text>
+                      </View>
+
+                      <View style={styles.inputsContainer}>
+                        <View style={styles.inputGroup}>
+                          <Text style={styles.inputLabel}>Reps</Text>
+                          <TextInput
+                            style={styles.inputField}
+                            keyboardType="number-pad"
+                            value={set.reps}
+                            onChangeText={text => handleSetChange(idx, 'reps', text.replace(/[^0-9]/g, ''))}
+                            placeholder="10"
+                            placeholderTextColor="#64748b"
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                          />
+                        </View>
+
+                        <Text style={styles.inputDivider}>×</Text>
+
+                        <View style={styles.inputGroup}>
+                          <Text style={styles.inputLabel}>Weight (kg)</Text>
+                          <TextInput
+                            style={styles.inputField}
+                            keyboardType="decimal-pad"
+                            value={set.weight}
+                            onChangeText={text => handleSetChange(idx, 'weight', text.replace(/[^0-9.]/g, ''))}
+                            placeholder="0.0"
+                            placeholderTextColor="#64748b"
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                          />
+                        </View>
+                      </View>
+                    </View>
+                  ))}
+                </ScrollView>
+              </>
+            )}
+
+            <View style={styles.actionButtons}>
+              <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onClose}>
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
+                <Text style={styles.saveText}>Save Progress</Text>
+                <Ionicons name="arrow-forward" size={18} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </Pressable>
+        </Pressable>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

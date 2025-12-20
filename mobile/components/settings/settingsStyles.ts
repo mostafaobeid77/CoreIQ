@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native';
 
 export function createSettingsStyles(isLight: boolean) {
   const palette = {
-    bg: isLight ? '#ffffff' : '#0f0f0f',
-    headerBg: isLight ? '#ffffff' : '#0f0f0f',
-    border: isLight ? '#e5e7eb' : '#1d1d1d',
+    bg: isLight ? '#f8fafc' : '#0f0f0f',
+    headerBg: isLight ? '#f8fafc' : '#0f0f0f',
+    border: isLight ? 'rgba(0,0,0,0.05)' : '#1d1d1d',
     cardBg: isLight ? '#ffffff' : '#151515',
-    text: isLight ? '#111827' : '#fff',
-    textMuted: isLight ? '#6b7280' : '#9aa0a6',
+    text: isLight ? '#0f172a' : '#fff',
+    textMuted: isLight ? '#64748b' : '#9aa0a6',
   };
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: palette.bg },
@@ -51,7 +51,7 @@ export function createSettingsStyles(isLight: boolean) {
     rowLabel: { color: palette.text, fontSize: 15, fontWeight: '600' },
     rowSub: { color: palette.textMuted, fontSize: 12, marginTop: 2 },
 
-    link: { color: '#2563eb', fontSize: 15, fontWeight: '600' },
+    link: { color: '#8b5cf6', fontSize: 15, fontWeight: '600' },
 
     modalOverlay: {
       flex: 1,
@@ -71,7 +71,7 @@ export function createSettingsStyles(isLight: boolean) {
 
     modalButton: {
       marginTop: 8,
-      backgroundColor: '#2563eb',
+      backgroundColor: '#8b5cf6',
       borderRadius: 12,
       paddingVertical: 14,
       alignItems: 'center',

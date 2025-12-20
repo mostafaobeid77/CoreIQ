@@ -56,7 +56,7 @@ export const aiService = {
         currentDay: any,
         instruction: string,
         planContext?: string
-    ): Promise<{ success: boolean; modifiedDay: any }> => {
-        return api.post<{ success: boolean; modifiedDay: any }>('/ai/edit-plan', { currentDay, instruction, planContext });
+    ): Promise<{ success: boolean; modifiedDay: any; message?: string; changes?: string[]; aiReasoning?: string }> => {
+        return api.post<{ success: boolean; modifiedDay: any; message?: string; changes?: string[]; aiReasoning?: string }>('/ai/edit-plan', { currentDay, instruction, planContext });
     },
 };

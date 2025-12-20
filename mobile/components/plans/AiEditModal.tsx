@@ -44,7 +44,7 @@ export default function AiEditModal({
                     {/* Header */}
                     <View style={styles.header}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                            <Ionicons name="sparkles" size={24} color="#8b5cf6" />
+                            <Ionicons name="sparkles" size={24} color="#2563eb" />
                             <Text style={[styles.title, { color: colors.text }]}>AI Assistant</Text>
                         </View>
                         <TouchableOpacity onPress={onClose} disabled={isLoading}>
@@ -53,14 +53,14 @@ export default function AiEditModal({
                     </View>
 
                     <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                        {context ? `Editing ${context}` : 'Modify your plan'} with natural language.
+                        Modify your plan naturally.
                     </Text>
 
                     {/* Input Area */}
                     <View style={[styles.inputContainer, { backgroundColor: theme === 'light' ? '#f1f5f9' : '#1e1e1e', borderColor: colors.border }]}>
                         <TextInput
                             style={[styles.input, { color: colors.text }]}
-                            placeholder="e.g. 'Swap all chicken for salmon', 'Add a protein shake in the afternoon', 'Remove breakfast'"
+                            placeholder="e.g. 'Swap chicken for salmon' or 'Add a protein shake'"
                             placeholderTextColor={colors.textSecondary}
                             multiline
                             value={instruction}

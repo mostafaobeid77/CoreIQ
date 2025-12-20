@@ -1,0 +1,212 @@
+[
+    {
+      "name": "Barbell Back Squat",
+      "description": "King of leg exercises — targets quads, glutes, hamstrings, and core with heavy loading.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Front Squat",
+      "description": "Squat variation with bar racked on shoulders; emphasizes quads and upright torso.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Bulgarian Split Squat",
+      "description": "Unilateral squat with rear foot elevated; builds balance, quads, and glutes.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Dumbbells or Barbell"
+    },
+    {
+      "name": "Walking Lunge",
+      "description": "Dynamic lunge moving forward; targets quads, glutes, and stabilizers.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Dumbbells or Bodyweight"
+    },
+    {
+      "name": "Reverse Lunge",
+      "description": "Step backward into lunge for reduced knee stress and glute emphasis.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Dumbbells or Bodyweight"
+    },
+    {
+      "name": "Goblet Squat",
+      "description": "Squat holding a dumbbell or kettlebell at chest; beginner-friendly and quad-focused.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Dumbbell or Kettlebell"
+    },
+    {
+      "name": "Leg Press",
+      "description": "Machine-based compound movement for heavy quad and glute loading with back support.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Machine"
+    },
+    {
+      "name": "Hack Squat",
+      "description": "Machine squat with shoulder pads and footplate; targets quads with controlled motion.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Machine"
+    },
+    {
+      "name": "Romanian Deadlift",
+      "description": "Hip hinge targeting hamstrings and glutes with minimal knee bend.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Barbell or Dumbbells"
+    },
+    {
+      "name": "Stiff-Leg Deadlift",
+      "description": "Deadlift variation with straight legs to increase hamstring stretch and lower back engagement.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Good Morning",
+      "description": "Barbell hip hinge with weight on back; advanced move for hamstrings and spinal erectors.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Glute Bridge",
+      "description": "Lying hip extension targeting glutes; can be loaded with barbell or band.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Barbell or Bodyweight"
+    },
+    {
+      "name": "Hip Thrust",
+      "description": "Advanced glute bridge with shoulders on bench; maximizes glute activation under load.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Step-up",
+      "description": "Step onto bench or box; unilateral movement targeting quads and glutes.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Dumbbells or Bodyweight"
+    },
+    {
+      "name": "Pistol Squat",
+      "description": "Advanced bodyweight single-leg squat requiring strength, mobility, and balance.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Leg Extension",
+      "description": "Machine isolation for quads; great for finishing or rehab.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Machine"
+    },
+    {
+      "name": "Lying Leg Curl",
+      "description": "Prone machine curl targeting hamstrings with hip fixed.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Machine"
+    },
+    {
+      "name": "Seated Leg Curl",
+      "description": "Seated machine curl emphasizing hamstrings with hip flexion.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Machine"
+    },
+    {
+      "name": "Standing Calf Raise",
+      "description": "Targets gastrocnemius (upper calves) with ankle extension; can be loaded or bodyweight.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Machine, Dumbbells, or Bodyweight"
+    },
+    {
+      "name": "Seated Calf Raise",
+      "description": "Targets soleus (deeper calf) with knees bent; usually done on machine.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Machine"
+    },
+    {
+      "name": "Donkey Calf Raise",
+      "description": "Bent-over calf raise with partner or machine weight on back for deep stretch and load.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Machine or Partner"
+    },
+    {
+      "name": "Sissy Squat",
+      "description": "Knee-dominant isolation with torso leaning back; emphasizes quads and knee stability.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Bodyweight or Machine"
+    },
+    {
+      "name": "Wall Sit",
+      "description": "Isometric squat hold against wall; builds quad endurance and mental toughness.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Copenhagen Plank",
+      "description": "Side plank with top leg elevated; targets hip adductors (inner thigh) for injury prevention.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Clamshell",
+      "description": "Lying side leg raise with knees bent; activates gluteus medius (hip abductor).",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Bodyweight or Band"
+    },
+    {
+      "name": "Fire Hydrant",
+      "description": "Quadruped leg lift to the side; targets glute medius and hip stabilizers.",
+      "category": "Strength",
+      "muscle_group": "Legs",
+      "equipment": "Bodyweight or Band"
+    },
+    {
+      "name": "Box Jump",
+      "description": "Plyometric jump onto box; builds explosive power in quads and glutes.",
+      "category": "Plyometric",
+      "muscle_group": "Legs",
+      "equipment": "Plyo Box"
+    },
+    {
+      "name": "Jump Squat",
+      "description": "Explosive squat with jump; increases power and cardiovascular demand.",
+      "category": "Plyometric",
+      "muscle_group": "Legs",
+      "equipment": "Bodyweight or Dumbbells"
+    },
+    {
+      "name": "Skater Jump",
+      "description": "Lateral plyometric jump; improves agility, balance, and outer glute/quad activation.",
+      "category": "Plyometric",
+      "muscle_group": "Legs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Kettlebell Swing",
+      "description": "Hip-hinge power movement targeting glutes, hamstrings, and conditioning.",
+      "category": "Strength/Cardio",
+      "muscle_group": "Legs",
+      "equipment": "Kettlebell"
+    }
+  ]

@@ -89,11 +89,11 @@ export default function AccountScreen() {
       if (!response.ok) {
         throw new Error(`Failed to fetch image: ${response.statusText}`);
       }
-      
+
       // Read as blob and convert to base64
       const blob = await response.blob();
       const reader = new (global as any).FileReader();
-      
+
       return new Promise((resolve, reject) => {
         reader.onloadend = () => {
           const base64String = reader.result as string;
@@ -134,6 +134,7 @@ export default function AccountScreen() {
         fullName: userData.fullName,
         username: userData.username,
         email: userData.email,
+        birthDate: userData.birthdate.toISOString(),
       };
 
       // Handle profile photo - if it's a data URI (base64), use it directly
@@ -164,16 +165,16 @@ export default function AccountScreen() {
             setSaving(false);
             return;
           }
-        } else {
-          // URL from backend - keep as is
-          updateData.profilePhoto = photoUri;
         }
+        // If it's a URL (http/https/relative), we simply DO NOT include it in the update.
+        // This prevents re-sending the URL text and corrupting the base64 field in DB.
       }
 
       await userService.updateProfile(updateData);
       await refreshUser();
-      Alert.alert('Success', 'Profile updated successfully');
-      router.back();
+      Alert.alert('Success', 'Profile updated successfully', [
+        { text: 'OK', onPress: () => router.back() }
+      ]);
     } catch (error: any) {
       console.error('Save profile error:', error);
       const errorMessage = error?.message || 'Failed to update profile';
@@ -221,7 +222,7 @@ export default function AccountScreen() {
         <Text style={{ color: isLight ? '#111' : '#fff', fontSize: 18, fontWeight: '700' }}>Account</Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 16 }} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 100 }} keyboardShouldPersistTaps="handled">
         <View style={{ alignItems: 'center', marginBottom: 20 }}>
           <Image source={getProfileImageSource()} style={{ width: 96, height: 96, borderRadius: 48, marginBottom: 10 }} />
           <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={pickImage}>

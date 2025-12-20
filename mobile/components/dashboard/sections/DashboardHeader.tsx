@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Image } from 'expo-image';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { format } from 'date-fns';
@@ -36,7 +35,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     {!hideWelcome && (
       <View style={styles.headerTopRow}>
         <Text style={styles.welcome}>
-          Welcome, <Text style={styles.userName}>{userName}</Text> {greetingEmoji}
+          Welcome, <Text style={styles.userName}>{userName.split(' ')[0]}</Text> {greetingEmoji}
         </Text>
         <Image
           source={avatarSource}

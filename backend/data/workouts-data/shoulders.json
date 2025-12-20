@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Overhead Barbell Press",
+    "description": "Compound vertical press targeting primarily the anterior delts with assistance from lateral and triceps.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Barbell"
+  },
+  {
+    "name": "Seated Dumbbell Shoulder Press",
+    "description": "Vertical press with dumbbells allowing greater range of motion and balanced shoulder development.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Dumbbells"
+  },
+  {
+    "name": "Arnold Press",
+    "description": "Rotational dumbbell press that engages all three deltoid heads through a twisting motion.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Dumbbells"
+  },
+  {
+    "name": "Front Raise",
+    "description": "Isolation lift raising arms forward to target the anterior deltoids.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Dumbbells or Cable Machine"
+  },
+  {
+    "name": "Lateral Raise",
+    "description": "Classic isolation movement raising arms sideways to emphasize the lateral (medial) deltoids.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Dumbbells or Cable Machine"
+  },
+  {
+    "name": "Cable Lateral Raise",
+    "description": "Lateral raise using cables for constant tension throughout the movement.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Cable Machine"
+  },
+  {
+    "name": "Bent-Over Lateral Raise",
+    "description": "Performed bent at the waist, raising arms to target the posterior deltoids.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Dumbbells"
+  },
+  {
+    "name": "Face Pull",
+    "description": "Cable exercise pulling rope toward face to target rear delts and upper back; excellent for posture.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Cable Machine"
+  },
+  {
+    "name": "Reverse Pec Deck Fly",
+    "description": "Machine-based rear delt isolation exercise, also called reverse fly.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Machine"
+  },
+  {
+    "name": "Upright Row",
+    "description": "Vertical pulling motion elevating elbows to target lateral and anterior delts (use caution with form).",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Barbell, Dumbbells, or Cable Machine"
+  },
+  {
+    "name": "Landmine Press",
+    "description": "Angled overhead press using landmine bar; shoulder-friendly with anterior and lateral emphasis.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Barbell (Landmine Setup)"
+  },
+  {
+    "name": "Single-Arm Cable Front Raise",
+    "description": "Unilateral front raise using cable for controlled anterior delt activation.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Cable Machine"
+  },
+  {
+    "name": "Leaning Lateral Raise",
+    "description": "Standing sideways to a bench and leaning for greater stretch and contraction on lateral delts.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Dumbbells"
+  },
+  {
+    "name": "Rear Delt Cable Row",
+    "description": "Bent-over cable row with high-to-low pull targeting rear delts with scapular retraction.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Cable Machine"
+  },
+  {
+    "name": "Scaption (Scapular Plane Raise)",
+    "description": "Raise arms at 30-45° angle between front and side to target all deltoid heads with joint-friendly motion.",
+    "category": "Strength",
+    "muscle_group": "Shoulders",
+    "equipment": "Dumbbells"
+  }
+]

@@ -1,0 +1,1305 @@
+[
+    {
+      "name": "Apple",
+      "description": "A crisp, sweet fruit, eaten raw or cooked.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 52,
+        "protein": 0.3,
+        "fat": 0.2,
+        "carbs": 14
+      },
+      "servings": [
+        { "size": "1 medium apple (182g)", "calories": 95, "protein": 0.5, "fat": 0.3, "carbs": 25 }
+      ]
+    },
+    {
+      "name": "Banana",
+      "description": "A long curved fruit, which grows in clusters and has soft pulpy flesh and yellow skin when ripe.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 89,
+        "protein": 1.1,
+        "fat": 0.3,
+        "carbs": 23
+      },
+      "servings": [
+        { "size": "1 medium banana (118g)", "calories": 105, "protein": 1.3, "fat": 0.4, "carbs": 27 }
+      ]
+    },
+    {
+      "name": "Orange",
+      "description": "A round juicy citrus fruit with a tough bright reddish-yellow rind.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 47,
+        "protein": 0.9,
+        "fat": 0.1,
+        "carbs": 12
+      },
+      "servings": [
+        { "size": "1 medium orange (131g)", "calories": 62, "protein": 1.2, "fat": 0.2, "carbs": 15 }
+      ]
+    },
+    {
+      "name": "Grapes",
+      "description": "A berry, typically green, purple, or black, growing in clusters on a vine, eaten as fruit, and used in making wine.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 69,
+        "protein": 0.7,
+        "fat": 0.2,
+        "carbs": 18
+      },
+      "servings": [
+        { "size": "1 cup (151g)", "calories": 104, "protein": 1.1, "fat": 0.2, "carbs": 27 }
+      ]
+    },
+    {
+      "name": "Strawberry",
+      "description": "A sweet soft red fruit with a seed-studded surface.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 32,
+        "protein": 0.7,
+        "fat": 0.3,
+        "carbs": 8
+      },
+      "servings": [
+        { "size": "1 cup, whole (144g)", "calories": 46, "protein": 1, "fat": 0.4, "carbs": 11 }
+      ]
+    },
+    {
+      "name": "Blueberry",
+      "description": "A small sweet blue-black edible berry.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 57,
+        "protein": 0.7,
+        "fat": 0.3,
+        "carbs": 14
+      },
+      "servings": [
+        { "size": "1 cup (148g)", "calories": 84, "protein": 1.1, "fat": 0.5, "carbs": 21 }
+      ]
+    },
+    {
+      "name": "Raspberry",
+      "description": "An edible soft fruit related to the blackberry, consisting of a cluster of reddish-pink drupelets.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 52,
+        "protein": 1.2,
+        "fat": 0.7,
+        "carbs": 12
+      },
+      "servings": [
+        { "size": "1 cup (123g)", "calories": 64, "protein": 1.5, "fat": 0.8, "carbs": 15 }
+      ]
+    },
+    {
+      "name": "Mango",
+      "description": "A fleshy, oval, yellowish-red tropical fruit that is eaten ripe or used green for pickles or chutneys.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 0.8,
+        "fat": 0.4,
+        "carbs": 15
+      },
+      "servings": [
+        { "size": "1 cup, sliced (165g)", "calories": 99, "protein": 1.3, "fat": 0.6, "carbs": 25 }
+      ]
+    },
+    {
+      "name": "Pineapple",
+      "description": "A large tropical fruit with a tough outer rind and sweet, juicy, yellow flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 50,
+        "protein": 0.5,
+        "fat": 0.1,
+        "carbs": 13
+      },
+      "servings": [
+        { "size": "1 cup, chunks (165g)", "calories": 82, "protein": 0.9, "fat": 0.2, "carbs": 22 }
+      ]
+    },
+    {
+      "name": "Watermelon",
+      "description": "A large, sweet fruit of a plant of the gourd family, with smooth green skin, red pulp, and watery juice.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 30,
+        "protein": 0.6,
+        "fat": 0.2,
+        "carbs": 8
+      },
+      "servings": [
+        { "size": "1 cup, diced (152g)", "calories": 46, "protein": 0.9, "fat": 0.2, "carbs": 11 }
+      ]
+    },
+    {
+      "name": "Peach",
+      "description": "A round stone fruit with juicy yellow flesh and downy pinkish-yellow skin.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 39,
+        "protein": 0.9,
+        "fat": 0.3,
+        "carbs": 10
+      },
+      "servings": [
+        { "size": "1 medium peach (150g)", "calories": 58, "protein": 1.4, "fat": 0.4, "carbs": 15 }
+      ]
+    },
+    {
+      "name": "Kiwi",
+      "description": "A fruit with a thin hairy skin, green flesh, and black seeds.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 61,
+        "protein": 1.1,
+        "fat": 0.5,
+        "carbs": 15
+      },
+      "servings": [
+        { "size": "1 medium kiwi (69g)", "calories": 42, "protein": 0.8, "fat": 0.4, "carbs": 10 }
+      ]
+    },
+    {
+      "name": "Cherry",
+      "description": "A small, round stone fruit that is typically bright or dark red.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 50,
+        "protein": 1,
+        "fat": 0.3,
+        "carbs": 12
+      },
+      "servings": [
+        { "size": "1 cup, with pits (138g)", "calories": 69, "protein": 1.4, "fat": 0.4, "carbs": 17 }
+      ]
+    },
+    {
+      "name": "Plum",
+      "description": "An oval fleshy fruit that is purple, reddish, or yellow when ripe and contains a flattish pointed stone.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 46,
+        "protein": 0.7,
+        "fat": 0.3,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "1 medium plum (66g)", "calories": 30, "protein": 0.5, "fat": 0.2, "carbs": 8 }
+      ]
+    },
+    {
+      "name": "Pear",
+      "description": "A sweet, juicy, yellowish- or brownish-green fruit, tapering towards the stalk.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 57,
+        "protein": 0.4,
+        "fat": 0.1,
+        "carbs": 15
+      },
+      "servings": [
+        { "size": "1 medium pear (178g)", "calories": 101, "protein": 0.7, "fat": 0.2, "carbs": 27 }
+      ]
+    },
+    {
+      "name": "Cantaloupe",
+      "description": "A small, round melon of a variety with orange-colored flesh and a ribbed, netted skin.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 34,
+        "protein": 0.8,
+        "fat": 0.2,
+        "carbs": 8
+      },
+      "servings": [
+        { "size": "1 cup, cubes (160g)", "calories": 54, "protein": 1.3, "fat": 0.3, "carbs": 13 }
+      ]
+    },
+    {
+      "name": "Apricot",
+      "description": "A juicy, soft fruit, resembling a small peach, of an orange-yellow color.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 48,
+        "protein": 1.4,
+        "fat": 0.4,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "1 apricot (35g)", "calories": 17, "protein": 0.5, "fat": 0.1, "carbs": 4 }
+      ]
+    },
+    {
+      "name": "Avocado",
+      "description": "A pear-shaped fruit with a rough leathery skin, smooth oily edible flesh, and a large stone.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 160,
+        "protein": 2,
+        "fat": 15,
+        "carbs": 9
+      },
+      "servings": [
+        { "size": "1/2 avocado (100g)", "calories": 160, "protein": 2, "fat": 15, "carbs": 9 }
+      ]
+    },
+    {
+      "name": "Blackberry",
+      "description": "An edible soft fruit, consisting of a cluster of drupelets, growing on a prickly bush.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 1.4,
+        "fat": 0.5,
+        "carbs": 10
+      },
+      "servings": [
+        { "size": "1 cup (144g)", "calories": 62, "protein": 2, "fat": 0.7, "carbs": 14 }
+      ]
+    },
+    {
+      "name": "Cranberry",
+      "description": "A small, red, acid berry used in cooking.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 46,
+        "protein": 0.4,
+        "fat": 0.1,
+        "carbs": 12
+      },
+      "servings": [
+        { "size": "1 cup, whole (100g)", "calories": 46, "protein": 0.4, "fat": 0.1, "carbs": 12 }
+      ]
+    },
+    {
+      "name": "Fig",
+      "description": "A soft pear-shaped fruit with sweet dark flesh and many small seeds, eaten fresh or dried.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 74,
+        "protein": 0.8,
+        "fat": 0.3,
+        "carbs": 19
+      },
+      "servings": [
+        { "size": "1 large fig (64g)", "calories": 47, "protein": 0.5, "fat": 0.2, "carbs": 12 }
+      ]
+    },
+    {
+      "name": "Grapefruit",
+      "description": "A large round yellow citrus fruit with an acid juicy pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 42,
+        "protein": 0.8,
+        "fat": 0.1,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "1/2 medium grapefruit (123g)", "calories": 52, "protein": 1, "fat": 0.2, "carbs": 13 }
+      ]
+    },
+    {
+      "name": "Guava",
+      "description": "A tropical fruit with pink juicy flesh and a strong sweet aroma.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 68,
+        "protein": 2.6,
+        "fat": 1,
+        "carbs": 14
+      },
+      "servings": [
+        { "size": "1 guava (55g)", "calories": 37, "protein": 1.4, "fat": 0.5, "carbs": 8 }
+      ]
+    },
+    {
+      "name": "Honeydew Melon",
+      "description": "A melon of a variety with smooth pale skin and sweet green flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 36,
+        "protein": 0.5,
+        "fat": 0.1,
+        "carbs": 9
+      },
+      "servings": [
+        { "size": "1 cup, cubes (177g)", "calories": 64, "protein": 0.9, "fat": 0.2, "carbs": 16 }
+      ]
+    },
+    {
+      "name": "Lemon",
+      "description": "A pale yellow oval citrus fruit with thick skin and fragrant, acidic juice.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 29,
+        "protein": 1.1,
+        "fat": 0.3,
+        "carbs": 9
+      },
+      "servings": [
+        { "size": "1 medium lemon (84g)", "calories": 24, "protein": 0.9, "fat": 0.3, "carbs": 8 }
+      ]
+    },
+    {
+      "name": "Lime",
+      "description": "A green citrus fruit, smaller than a lemon, with a more acid juice.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 30,
+        "protein": 0.7,
+        "fat": 0.2,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "1 lime (67g)", "calories": 20, "protein": 0.5, "fat": 0.1, "carbs": 7 }
+      ]
+    },
+    {
+      "name": "Lychee",
+      "description": "A small rounded fruit with sweet white scented flesh, a large central stone, and a thin rough skin.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 66,
+        "protein": 0.8,
+        "fat": 0.4,
+        "carbs": 17
+      },
+      "servings": [
+        { "size": "1 cup (190g)", "calories": 125, "protein": 1.6, "fat": 0.8, "carbs": 31 }
+      ]
+    },
+    {
+      "name": "Nectarine",
+      "description": "A variety of peach with smooth skin.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 44,
+        "protein": 1.1,
+        "fat": 0.3,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "1 medium nectarine (142g)", "calories": 62, "protein": 1.5, "fat": 0.5, "carbs": 15 }
+      ]
+    },
+    {
+      "name": "Papaya",
+      "description": "A large, oval, melon-like fruit with a sweet, juicy, orange flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 0.5,
+        "fat": 0.3,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "1 cup, 1\" cubes (145g)", "calories": 62, "protein": 0.7, "fat": 0.4, "carbs": 16 }
+      ]
+    },
+    {
+      "name": "Passion Fruit",
+      "description": "The edible fruit of a passionflower, with a sweet, seedy pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 97,
+        "protein": 2.2,
+        "fat": 0.7,
+        "carbs": 23
+      },
+      "servings": [
+        { "size": "1 fruit (18g)", "calories": 17, "protein": 0.4, "fat": 0.1, "carbs": 4 }
+      ]
+    },
+    {
+      "name": "Pomegranate",
+      "description": "A thick-skinned, reddish fruit with a sweet, juicy, edible pulp full of seeds.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 83,
+        "protein": 1.7,
+        "fat": 1.2,
+        "carbs": 19
+      },
+      "servings": [
+        { "size": "1/2 cup arils (87g)", "calories": 72, "protein": 1.5, "fat": 1, "carbs": 16 }
+      ]
+    },
+    {
+      "name": "Starfruit (Carambola)",
+      "description": "An edible, waxy, yellow-green, star-shaped fruit.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 31,
+        "protein": 1,
+        "fat": 0.3,
+        "carbs": 7
+      },
+      "servings": [
+        { "size": "1 medium fruit (91g)", "calories": 28, "protein": 0.9, "fat": 0.3, "carbs": 6 }
+      ]
+    },
+    {
+      "name": "Tangerine",
+      "description": "A small citrus fruit with a loose skin, similar to an orange but smaller and sweeter.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 53,
+        "protein": 0.8,
+        "fat": 0.3,
+        "carbs": 13
+      },
+      "servings": [
+        { "size": "1 medium tangerine (88g)", "calories": 47, "protein": 0.7, "fat": 0.3, "carbs": 12 }
+      ]
+    },
+    {
+      "name": "Dragon Fruit (Pitaya)",
+      "description": "A fruit from a cactus, with a bright pink or yellow skin and sweet, seedy flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 1.2,
+        "fat": 0.6,
+        "carbs": 13
+      },
+      "servings": [
+        { "size": "1 fruit (198g)", "calories": 119, "protein": 2.4, "fat": 1.2, "carbs": 26 }
+      ]
+    },
+    {
+      "name": "Persimmon",
+      "description": "An edible fruit that resembles a large tomato and has a sweet, rich flavor.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 70,
+        "protein": 0.6,
+        "fat": 0.2,
+        "carbs": 19
+      },
+      "servings": [
+        { "size": "1 fruit (168g)", "calories": 118, "protein": 1, "fat": 0.3, "carbs": 32 }
+      ]
+    },
+    {
+      "name": "Jackfruit",
+      "description": "A very large tropical fruit with a spiky, yellow-green skin and a sweet, fibrous flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 95,
+        "protein": 1.7,
+        "fat": 0.6,
+        "carbs": 23
+      },
+      "servings": [
+        { "size": "1 cup, sliced (165g)", "calories": 157, "protein": 2.8, "fat": 1.1, "carbs": 38 }
+      ]
+    },
+    {
+      "name": "Rambutan",
+      "description": "A red, plum-sized tropical fruit with soft spines and a slightly acidic taste.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 82,
+        "protein": 0.7,
+        "fat": 0.2,
+        "carbs": 21
+      },
+      "servings": [
+        { "size": "1 fruit (9g)", "calories": 7, "protein": 0.1, "fat": 0, "carbs": 2 }
+      ]
+    },
+    {
+      "name": "Kumquat",
+      "description": "A small, orange-like fruit with a sweet, edible rind and sour flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 71,
+        "protein": 1.9,
+        "fat": 0.9,
+        "carbs": 16
+      },
+      "servings": [
+        { "size": "1 fruit (19g)", "calories": 13, "protein": 0.4, "fat": 0.2, "carbs": 3 }
+      ]
+    },
+    {
+      "name": "Mulberry",
+      "description": "A small, sweet, dark purple or red fruit that grows on a mulberry tree.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 1.4,
+        "fat": 0.4,
+        "carbs": 10
+      },
+      "servings": [
+        { "size": "1 cup (140g)", "calories": 60, "protein": 2, "fat": 0.5, "carbs": 14 }
+      ]
+    },
+    {
+      "name": "Gooseberry",
+      "description": "A small, green, edible berry with a sour taste.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 44,
+        "protein": 0.9,
+        "fat": 0.6,
+        "carbs": 10
+      },
+      "servings": [
+        { "size": "1 cup (150g)", "calories": 66, "protein": 1.3, "fat": 0.9, "carbs": 15 }
+      ]
+    },
+    {
+      "name": "Elderberry",
+      "description": "A small, dark purple or black berry from the elder tree, used for making wine and preserves.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 73,
+        "protein": 0.7,
+        "fat": 0.5,
+        "carbs": 18
+      },
+      "servings": [
+        { "size": "1 cup (145g)", "calories": 106, "protein": 1, "fat": 0.7, "carbs": 27 }
+      ]
+    },
+    {
+      "name": "Date",
+      "description": "A sweet, edible fruit of the date palm, with a single, long, hard seed.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 282,
+        "protein": 2.5,
+        "fat": 0.4,
+        "carbs": 75
+      },
+      "servings": [
+        { "size": "1 Medjool date (24g)", "calories": 66, "protein": 0.4, "fat": 0.1, "carbs": 18 }
+      ]
+    },
+    {
+      "name": "Coconut",
+      "description": "The large, oval, brown seed of a tropical palm, consisting of a hard shell lined with edible white flesh and containing a clear liquid.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 354,
+        "protein": 3.3,
+        "fat": 33.5,
+        "carbs": 15.2
+      },
+      "servings": [
+        { "size": "1 cup, shredded (80g)", "calories": 283, "protein": 2.6, "fat": 26.8, "carbs": 12.2 }
+      ]
+    },
+    {
+      "name": "Soursop (Guanabana)",
+      "description": "A large, spiny, green tropical fruit with a sweet, fleshy, white pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 66,
+        "protein": 1,
+        "fat": 0.3,
+        "carbs": 17
+      },
+      "servings": [
+        { "size": "1 cup (225g)", "calories": 148, "protein": 2.3, "fat": 0.7, "carbs": 38 }
+      ]
+    },
+    {
+      "name": "Mangosteen",
+      "description": "A tropical fruit with a sweet, juicy, edible pulp and a thick, reddish-purple rind.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 73,
+        "protein": 0.4,
+        "fat": 0.6,
+        "carbs": 18
+      },
+      "servings": [
+        { "size": "1 cup, canned, drained (196g)", "calories": 143, "protein": 0.8, "fat": 1.1, "carbs": 35 }
+      ]
+    },
+    {
+      "name": "Durian",
+      "description": "A large, oval, tropical fruit with a hard, spiky rind and a strong-smelling, but very sweet, edible pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 147,
+        "protein": 1.5,
+        "fat": 5.3,
+        "carbs": 27
+      },
+      "servings": [
+        { "size": "1 cup, chopped (243g)", "calories": 357, "protein": 3.6, "fat": 13, "carbs": 66 }
+      ]
+    },
+    {
+      "name": "Acai Berry",
+      "description": "A small, round, black-purple drupe, similar in appearance to a grape, but smaller and with less pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 70,
+        "protein": 1,
+        "fat": 5,
+        "carbs": 4
+      },
+      "servings": [
+        { "size": "100g frozen pulp", "calories": 70, "protein": 1, "fat": 5, "carbs": 4 }
+      ]
+    },
+    {
+      "name": "Loquat",
+      "description": "A small, oval, yellow-orange fruit with a sweet, slightly acidic taste.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 47,
+        "protein": 0.4,
+        "fat": 0.2,
+        "carbs": 12
+      },
+      "servings": [
+        { "size": "1 cup (149g)", "calories": 70, "protein": 0.6, "fat": 0.3, "carbs": 18 }
+      ]
+    },
+    {
+      "name": "Jujube",
+      "description": "A small, sweet, dark red or purple fruit from a tree of the buckthorn family.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 79,
+        "protein": 1.2,
+        "fat": 0.2,
+        "carbs": 20
+      },
+      "servings": [
+        { "size": "100g raw", "calories": 79, "protein": 1.2, "fat": 0.2, "carbs": 20 }
+      ]
+    },
+    {
+      "name": "Salak (Snake Fruit)",
+      "description": "A species of palm tree native to Java and Sumatra in Indonesia. It is a very short-stemmed palm, with leaves up to 6 meters long; each leaf has a 2-meter long petiole with spines up to 15 centimeters long, and numerous leaflets.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 82,
+        "protein": 0.8,
+        "fat": 0.4,
+        "carbs": 21
+      },
+      "servings": [
+        { "size": "100g", "calories": 82, "protein": 0.8, "fat": 0.4, "carbs": 21 }
+      ]
+    },
+    {
+      "name": "Tamarind",
+      "description": "A sticky, brown, acidic pulp from the pod of a tree of the pea family, widely used as a flavoring in Asian cooking.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 239,
+        "protein": 2.8,
+        "fat": 0.6,
+        "carbs": 63
+      },
+      "servings": [
+        { "size": "1 cup pulp (120g)", "calories": 287, "protein": 3.4, "fat": 0.7, "carbs": 75 }
+      ]
+    },
+    {
+      "name": "Plantain",
+      "description": "A type of banana that is cooked before eating.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 122,
+        "protein": 1.3,
+        "fat": 0.4,
+        "carbs": 32
+      },
+      "servings": [
+        { "size": "1 cup, sliced (148g)", "calories": 181, "protein": 1.9, "fat": 0.6, "carbs": 47 }
+      ]
+    },
+    {
+      "name": "Quince",
+      "description": "A hard, acid, pear-shaped fruit used in preserves.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 57,
+        "protein": 0.4,
+        "fat": 0.1,
+        "carbs": 15
+      },
+      "servings": [
+        { "size": "1 fruit (92g)", "calories": 52, "protein": 0.4, "fat": 0.1, "carbs": 14 }
+      ]
+    },
+    {
+      "name": "Mirabelle Plum",
+      "description": "A small, sweet, yellow plum.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 0.7,
+        "fat": 0.2,
+        "carbs": 15
+      },
+      "servings": [
+        { "size": "1 cup (165g)", "calories": 99, "protein": 1.2, "fat": 0.3, "carbs": 25 }
+      ]
+    },
+    {
+      "name": "Sapodilla",
+      "description": "A tropical American fruit with a rough brownish skin and very sweet brownish pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 83,
+        "protein": 0.4,
+        "fat": 1.1,
+        "carbs": 20
+      },
+      "servings": [
+        { "size": "1 fruit (170g)", "calories": 141, "protein": 0.7, "fat": 1.9, "carbs": 34 }
+      ]
+    },
+    {
+      "name": "Ugli Fruit",
+      "description": "A citrus fruit that is a hybrid of a grapefruit, an orange, and a tangerine.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 47,
+        "protein": 0.8,
+        "fat": 0.2,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "1 fruit (240g)", "calories": 113, "protein": 1.9, "fat": 0.5, "carbs": 26 }
+      ]
+    },
+    {
+      "name": "Feijoa",
+      "description": "A small, green, oval fruit with a sweet, aromatic flavor, also known as pineapple guava.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 61,
+        "protein": 0.6,
+        "fat": 0.4,
+        "carbs": 15
+      },
+      "servings": [
+        { "size": "1 cup (240g)", "calories": 146, "protein": 1.4, "fat": 1, "carbs": 36 }
+      ]
+    },
+    {
+      "name": "Canary Melon",
+      "description": "A large, bright-yellow melon with a sweet, pale green or white flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 28,
+        "protein": 1,
+        "fat": 0.1,
+        "carbs": 6
+      },
+      "servings": [
+        { "size": "1 cup, cubes (170g)", "calories": 48, "protein": 1.7, "fat": 0.2, "carbs": 10 }
+      ]
+    },
+    {
+      "name": "Galia Melon",
+      "description": "A hybrid melon, with a netted, pale yellow or green rind and sweet, aromatic, pale green flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 34,
+        "protein": 0.8,
+        "fat": 0.2,
+        "carbs": 8
+      },
+      "servings": [
+        { "size": "1 cup, cubes (160g)", "calories": 54, "protein": 1.3, "fat": 0.3, "carbs": 13 }
+      ]
+    },
+    {
+      "name": "Kiwano (Horned Melon)",
+      "description": "An oval-shaped fruit with horn-like spines, a yellow-orange skin, and a jelly-like, green flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 44,
+        "protein": 1.8,
+        "fat": 1.3,
+        "carbs": 8
+      },
+      "servings": [
+        { "size": "1 melon (209g)", "calories": 92, "protein": 3.7, "fat": 2.6, "carbs": 16 }
+      ]
+    },
+    {
+      "name": "Mamey Sapote",
+      "description": "A species of tree native to Mexico and Central America, naturally ranging from southern Mexico to southern Costa Rica. The fruit is large, with a brown, rough skin.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 124,
+        "protein": 1.5,
+        "fat": 0.5,
+        "carbs": 32
+      },
+      "servings": [
+        { "size": "1 cup (175g)", "calories": 217, "protein": 2.6, "fat": 0.8, "carbs": 56 }
+      ]
+    },
+    {
+      "name": "Monstera Deliciosa Fruit",
+      "description": "The fruit of the Monstera deliciosa plant, which has a scaly green skin and a flavor reminiscent of pineapple and banana.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 86,
+        "protein": 0.3,
+        "fat": 0.1,
+        "carbs": 22
+      },
+      "servings": [
+        { "size": "100g", "calories": 86, "protein": 0.3, "fat": 0.1, "carbs": 22 }
+      ]
+    },
+    {
+      "name": "Noni Fruit",
+      "description": "A fruit from a small tree in the coffee family, with a strong, bitter taste and a distinctive, unpleasant odor.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 15,
+        "protein": 0.5,
+        "fat": 0.1,
+        "carbs": 3
+      },
+      "servings": [
+        { "size": "100g", "calories": 15, "protein": 0.5, "fat": 0.1, "carbs": 3 }
+      ]
+    },
+    {
+      "name": "Pawpaw",
+      "description": "The fruit of a small North American tree, having a yellowish-green or brown skin and a sweet, edible, yellow pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 80,
+        "protein": 1.2,
+        "fat": 1.2,
+        "carbs": 19
+      },
+      "servings": [
+        { "size": "1 cup (230g)", "calories": 184, "protein": 2.8, "fat": 2.8, "carbs": 43 }
+      ]
+    },
+    {
+      "name": "Pepino Melon",
+      "description": "A small, oval, smooth-skinned melon with a flavor similar to a cucumber and cantaloupe.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 23,
+        "protein": 0.6,
+        "fat": 0.1,
+        "carbs": 5
+      },
+      "servings": [
+        { "size": "100g", "calories": 23, "protein": 0.6, "fat": 0.1, "carbs": 5 }
+      ]
+    },
+    {
+      "name": "Prickly Pear",
+      "description": "The edible, egg-shaped fruit of a cactus, with a sweet, juicy pulp and a spiny skin.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 41,
+        "protein": 0.7,
+        "fat": 0.5,
+        "carbs": 10
+      },
+      "servings": [
+        { "size": "1 fruit (103g)", "calories": 42, "protein": 0.8, "fat": 0.5, "carbs": 10 }
+      ]
+    },
+    {
+      "name": "Rose Apple",
+      "description": "A tropical fruit with a crisp, watery texture and a mild, rose-like fragrance.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 25,
+        "protein": 0.6,
+        "fat": 0.3,
+        "carbs": 6
+      },
+      "servings": [
+        { "size": "100g", "calories": 25, "protein": 0.6, "fat": 0.3, "carbs": 6 }
+      ]
+    },
+    {
+      "name": "Saskatoon Berry",
+      "description": "A sweet, edible, purple-black berry from a North American shrub.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 85,
+        "protein": 1.4,
+        "fat": 0.5,
+        "carbs": 19
+      },
+      "servings": [
+        { "size": "1 cup (140g)", "calories": 119, "protein": 2, "fat": 0.7, "carbs": 27 }
+      ]
+    },
+    {
+      "name": "Sugar Apple (Sweetsop)",
+      "description": "A tropical American fruit with a sweet, creamy, white pulp and a lumpy, green skin.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 94,
+        "protein": 1.7,
+        "fat": 0.6,
+        "carbs": 24
+      },
+      "servings": [
+        { "size": "1 cup (160g)", "calories": 150, "protein": 2.7, "fat": 1, "carbs": 38 }
+      ]
+    },
+    {
+      "name": "White Sapote",
+      "description": "A tree native to eastern Mexico and Central America. The fruit is edible and has a smooth, thin, yellow or green skin.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 135,
+        "protein": 2,
+        "fat": 0.5,
+        "carbs": 34
+      },
+      "servings": [
+        { "size": "1 fruit (170g)", "calories": 230, "protein": 3.4, "fat": 0.9, "carbs": 58 }
+      ]
+    },
+    {
+      "name": "Yuzu",
+      "description": "A round, yellow citrus fruit with a strong, aromatic rind, used for its zest and juice.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 21,
+        "protein": 0.8,
+        "fat": 0.3,
+        "carbs": 7
+      },
+      "servings": [
+        { "size": "1 fruit (100g)", "calories": 21, "protein": 0.8, "fat": 0.3, "carbs": 7 }
+      ]
+    },
+    {
+      "name": "Ambarella (June Plum)",
+      "description": "An equatorial or tropical tree, with edible fruit containing a single, fibrous pit.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 46,
+        "protein": 0.2,
+        "fat": 0.1,
+        "carbs": 12
+      },
+      "servings": [
+        { "size": "100g", "calories": 46, "protein": 0.2, "fat": 0.1, "carbs": 12 }
+      ]
+    },
+    {
+      "name": "Bael Fruit",
+      "description": "A species of tree native to the Indian subcontinent and Southeast Asia. The fruit has a hard, woody shell and a sweet, aromatic pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 137,
+        "protein": 1.8,
+        "fat": 0.3,
+        "carbs": 32
+      },
+      "servings": [
+        { "size": "100g", "calories": 137, "protein": 1.8, "fat": 0.3, "carbs": 32 }
+      ]
+    },
+    {
+      "name": "Black Sapote",
+      "description": "A species of persimmon. The fruit is globose and has a thin, olive-green skin and a rich, dark brown pulp that resembles chocolate pudding.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 134,
+        "protein": 2.6,
+        "fat": 0.8,
+        "carbs": 34
+      },
+      "servings": [
+        { "size": "1 cup (240g)", "calories": 322, "protein": 6.2, "fat": 1.9, "carbs": 82 }
+      ]
+    },
+    {
+      "name": "Breadfruit",
+      "description": "A large, round, starchy fruit of a tropical tree, which is used as a vegetable and is a staple food in the Pacific Islands.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 103,
+        "protein": 1.1,
+        "fat": 0.2,
+        "carbs": 27
+      },
+      "servings": [
+        { "size": "1 cup (220g)", "calories": 227, "protein": 2.4, "fat": 0.5, "carbs": 60 }
+      ]
+    },
+    {
+      "name": "Buddha's Hand",
+      "description": "An unusually shaped citron variety whose fruit is segmented into finger-like sections. It has a sweet, lemon blossom aroma and no juice or pulp.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 29,
+        "protein": 1.1,
+        "fat": 0.3,
+        "carbs": 9
+      },
+      "servings": [
+        { "size": "100g", "calories": 29, "protein": 1.1, "fat": 0.3, "carbs": 9 }
+      ]
+    },
+    {
+      "name": "Cherimoya",
+      "description": "A large, green, conical or heart-shaped fruit with a sweet, creamy, white pulp and large, black seeds.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 75,
+        "protein": 1.6,
+        "fat": 0.7,
+        "carbs": 18
+      },
+      "servings": [
+        { "size": "1 fruit (235g)", "calories": 176, "protein": 3.7, "fat": 1.6, "carbs": 42 }
+      ]
+    },
+    {
+      "name": "Cloudberry",
+      "description": "An amber-colored edible fruit, similar to the raspberry or blackberry, that grows on a low-lying plant in arctic or alpine regions.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 51,
+        "protein": 2.2,
+        "fat": 0.8,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "100g", "calories": 51, "protein": 2.2, "fat": 0.8, "carbs": 11 }
+      ]
+    },
+    {
+      "name": "Damson",
+      "description": "A small, dark blue or purple plum.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 0.5,
+        "fat": 0.1,
+        "carbs": 14
+      },
+      "servings": [
+        { "size": "100g", "calories": 60, "protein": 0.5, "fat": 0.1, "carbs": 14 }
+      ]
+    },
+    {
+      "name": "Finger Lime",
+      "description": "A citrus fruit that is long and cylindrical, with a skin that can be green, yellow, orange, red, or brown. The pulp is made up of small, pearl-like vesicles that burst in the mouth.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 30,
+        "protein": 1,
+        "fat": 0.2,
+        "carbs": 7
+      },
+      "servings": [
+        { "size": "100g", "calories": 30, "protein": 1, "fat": 0.2, "carbs": 7 }
+      ]
+    },
+    {
+      "name": "Goji Berry",
+      "description": "A small, red, oval-shaped berry that is native to China. It is often sold dried and is used in traditional Chinese medicine.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 349,
+        "protein": 14.3,
+        "fat": 0.4,
+        "carbs": 77
+      },
+      "servings": [
+        { "size": "5 tablespoons (28g)", "calories": 98, "protein": 4, "fat": 0.1, "carbs": 22 }
+      ]
+    },
+    {
+      "name": "Golden Berry (Cape Gooseberry)",
+      "description": "A small, orange berry with a sweet, tangy flavor, enclosed in a papery husk.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 53,
+        "protein": 1.9,
+        "fat": 0.7,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "1 cup (140g)", "calories": 74, "protein": 2.7, "fat": 1, "carbs": 16 }
+      ]
+    },
+    {
+      "name": "Huckleberry",
+      "description": "A small, round, dark blue or black berry that is similar to a blueberry.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 37,
+        "protein": 0.4,
+        "fat": 0.6,
+        "carbs": 8
+      },
+      "servings": [
+        { "size": "1 cup (145g)", "calories": 54, "protein": 0.6, "fat": 0.9, "carbs": 12 }
+      ]
+    },
+    {
+      "name": "Ice Cream Bean",
+      "description": "A leguminous tree native to South America. The fruit is a long, thick pod that contains a sweet, white pulp that has a texture similar to cotton candy.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 1,
+        "fat": 0.1,
+        "carbs": 14
+      },
+      "servings": [
+        { "size": "100g", "calories": 60, "protein": 1, "fat": 0.1, "carbs": 14 }
+      ]
+    },
+    {
+      "name": "Imbe (African Mangosteen)",
+      "description": "A small, evergreen tree native to Africa. The fruit is a small, round, orange or red berry with a sweet, acidic flavor.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 63,
+        "protein": 0.5,
+        "fat": 0.2,
+        "carbs": 16
+      },
+      "servings": [
+        { "size": "100g", "calories": 63, "protein": 0.5, "fat": 0.2, "carbs": 16 }
+      ]
+    },
+    {
+      "name": "Jabuticaba",
+      "description": "A Brazilian grape tree. The fruit is a small, purple-black, thick-skinned berry that grows directly on the trunk and branches of the tree.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 58,
+        "protein": 1,
+        "fat": 0.1,
+        "carbs": 15
+      },
+      "servings": [
+        { "size": "100g", "calories": 58, "protein": 1, "fat": 0.1, "carbs": 15 }
+      ]
+    },
+    {
+      "name": "Kei Apple",
+      "description": "A small, thorny, evergreen tree native to southern Africa. The fruit is a small, round, yellow or orange berry with a tart, acidic flavor.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 44,
+        "protein": 1,
+        "fat": 0.5,
+        "carbs": 10
+      },
+      "servings": [
+        { "size": "100g", "calories": 44, "protein": 1, "fat": 0.5, "carbs": 10 }
+      ]
+    },
+    {
+      "name": "Langsat",
+      "description": "A species of tree in the mahogany family. The fruit is a small, round, yellow or brown berry with a sweet, acidic flavor.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 1,
+        "fat": 0.2,
+        "carbs": 14
+      },
+      "servings": [
+        { "size": "100g", "calories": 60, "protein": 1, "fat": 0.2, "carbs": 14 }
+      ]
+    },
+    {
+      "name": "Lucuma",
+      "description": "A subtropical fruit native to the Andean valleys of Peru, Chile, and Ecuador. The fruit is a globose to ovoid shape, with a green skin and a bright yellow pulp that has a dry, mealy texture and a sweet flavor reminiscent of a sweet potato.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 99,
+        "protein": 1.5,
+        "fat": 0.5,
+        "carbs": 23
+      },
+      "servings": [
+        { "size": "100g", "calories": 99, "protein": 1.5, "fat": 0.5, "carbs": 23 }
+      ]
+    },
+    {
+      "name": "Marula",
+      "description": "A medium-sized deciduous tree, indigenous to the miombo woodlands of Southern Africa, the Sudano-Sahelian range of West Africa, and Madagascar. The fruit is a small, round, yellow berry with a sweet, tart flavor.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 60,
+        "protein": 0.5,
+        "fat": 0.5,
+        "carbs": 13
+      },
+      "servings": [
+        { "size": "100g", "calories": 60, "protein": 0.5, "fat": 0.5, "carbs": 13 }
+      ]
+    },
+    {
+      "name": "Medlar",
+      "description": "A small, deciduous tree native to southwestern Asia and southeastern Europe. The fruit is a small, round, brown berry with a tart, acidic flavor that becomes sweet after it has been bletted (softened by frost or decay).",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 43,
+        "protein": 0.5,
+        "fat": 0.2,
+        "carbs": 11
+      },
+      "servings": [
+        { "size": "100g", "calories": 43, "protein": 0.5, "fat": 0.2, "carbs": 11 }
+      ]
+    },
+    {
+      "name": "Muscadine",
+      "description": "A species of grape native to the southeastern and south-central United States. The fruit is a large, round, thick-skinned berry with a musky flavor.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 57,
+        "protein": 0.8,
+        "fat": 0.5,
+        "carbs": 14
+      },
+      "servings": [
+        { "size": "1 cup (92g)", "calories": 52, "protein": 0.7, "fat": 0.5, "carbs": 13 }
+      ]
+    },
+    {
+      "name": "Pomelo",
+      "description": "A large citrus fruit, 15–25 centimetres (6–10 in) in diameter, with a thick, pale green or yellow rind and a sweet, white, pink, or red flesh.",
+      "category": "fruits",
+      "nutrients_per_100g": {
+        "calories": 38,
+        "protein": 0.8,
+        "fat": 0,
+        "carbs": 10
+      },
+      "servings": [
+        { "size": "1 cup, sections (190g)", "calories": 72, "protein": 1.5, "fat": 0.1, "carbs": 18 }
+      ]
+    }
+  ]
+  

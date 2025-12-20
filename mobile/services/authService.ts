@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, BASE_URL, fixProfilePhotoUrl } from './api';
 
 export interface RegisterData {
   fullName: string;
@@ -19,6 +19,7 @@ export interface AuthUserSummary {
   fullName: string;
   username: string;
   email: string;
+  profilePhoto?: string | null;
 }
 
 export interface AuthResponse {
@@ -53,7 +54,12 @@ class AuthService {
   async getUserCache(): Promise<CurrentUser | null> {
     try {
       const json = await AsyncStorage.getItem(USER_CACHE_KEY);
-      return json ? JSON.parse(json) : null;
+      if (!json) return null;
+      const user = JSON.parse(json);
+      if (user && user.profilePhoto) {
+        user.profilePhoto = fixProfilePhotoUrl(user.profilePhoto);
+      }
+      return user;
     } catch (error) {
       return null;
     }
@@ -68,6 +74,8 @@ class AuthService {
     if (response.token) {
       await api.setToken(response.token);
       if (response.user) {
+        // Standardize profile photo URL
+        response.user.profilePhoto = fixProfilePhotoUrl(response.user.profilePhoto);
         await this.saveUserCache(response.user);
       }
     }
@@ -79,6 +87,8 @@ class AuthService {
     if (response.token) {
       await api.setToken(response.token);
       if (response.user) {
+        // Standardize profile photo URL
+        response.user.profilePhoto = fixProfilePhotoUrl(response.user.profilePhoto);
         await this.saveUserCache(response.user);
       }
     }
@@ -116,6 +126,10 @@ class AuthService {
       ...profile,
       id: profile.id || profile._id || profile.email,
     };
+
+    // Standardize profile photo URL
+    user.profilePhoto = fixProfilePhotoUrl(user.profilePhoto);
+
     await this.saveUserCache(user);
     return user;
   }

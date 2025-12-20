@@ -1,0 +1,107 @@
+[
+    {
+      "name": "Crunch",
+      "description": "Classic upper ab isolation by curling shoulders off the floor with knees bent.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Reverse Crunch",
+      "description": "Lift hips off floor by curling knees toward chest to target lower abs.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Hanging Leg Raise",
+      "description": "Hang from bar and lift legs to 90° or higher; advanced move for lower abs and hip flexors.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Pull-up Bar"
+    },
+    {
+      "name": "Plank",
+      "description": "Isometric hold on forearms and toes; builds full-core stability and endurance.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Side Plank",
+      "description": "Lateral plank targeting obliques and deep core stabilizers; can be modified or loaded.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Russian Twist",
+      "description": "Seated rotational twist with or without weight to engage obliques and core control.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Dumbbell, Medicine Ball, or Bodyweight"
+    },
+    {
+      "name": "Bicycle Crunch",
+      "description": "Dynamic crunch with alternating elbow-to-knee motion; targets upper/lower abs and obliques.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Dead Bug",
+      "description": "Lie on back, extend opposite arm/leg while bracing core; enhances stability and coordination.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Flutter Kicks",
+      "description": "Lie on back and alternate small leg kicks; targets lower abs and hip flexor endurance.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Cable Woodchop",
+      "description": "Rotational cable pull from high to low or low to high; functional oblique and core movement.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Ab Wheel Rollout",
+      "description": "Roll forward from knees or feet using ab wheel; advanced full-core anti-extension challenge.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Ab Wheel"
+    },
+    {
+      "name": "Mountain Climbers",
+      "description": "Dynamic plank with alternating knee drives; combines cardio and core endurance.",
+      "category": "Cardio/Core",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Heel Tap",
+      "description": "Lie on back, lift shoulders slightly and tap heels side to side; isolates obliques.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Bird Dog",
+      "description": "Quadruped extension of opposite arm and leg; improves core stability and balance.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Hollow Hold",
+      "description": "Lie on back, lift legs and shoulders off ground in a 'banana' shape; elite core isometric.",
+      "category": "Strength",
+      "muscle_group": "Abs",
+      "equipment": "Bodyweight"
+    }
+  ]

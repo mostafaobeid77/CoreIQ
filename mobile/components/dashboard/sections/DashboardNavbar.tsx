@@ -31,7 +31,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
         <Ionicons
           name={tab.icon as any}
           size={24}
-          color={activeTab === tab.label ? '#2563eb' : (styles.navLabel?.color || '#888')}
+          color={activeTab === tab.label ? styles.colors.primary : (styles.navLabel?.color || '#888')}
         />
         <Text style={[styles.navLabel, activeTab === tab.label && styles.navLabelActive]}>
           {tab.label}

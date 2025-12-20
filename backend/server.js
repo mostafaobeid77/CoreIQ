@@ -12,6 +12,7 @@ const workoutEntryRoutes = require('./routes/workoutEntryRoutes');
 const preferencesRoutes = require('./routes/preferencesRoutes');
 const favoritesRoutes = require('./routes/favoritesRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const aiCoachRoutes = require('./routes/aiCoachRoutes');
 const planRoutes = require('./routes/planRoutes');
 const adminAuthRoutes = require('./routes/adminAuthRoutes');
 const adminContentRoutes = require('./routes/adminContentRoutes');
@@ -32,7 +33,11 @@ app.use(cors({
 // Simple ping endpoint to test connectivity
 app.get('/api/ping', (req, res) => {
   console.log('Ping received!');
-  res.json({ message: 'pong' });
+  res.json({
+    message: 'pong',
+    dbStatus: mongoose.connection.readyState,
+    dbStatusText: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState] || 'unknown'
+  });
 });
 
 // Increase JSON body size limit for profile photos (base64 images can be large)
@@ -41,8 +46,6 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const compression = require('compression');
 const responseTime = require('response-time');
-
-// ... (imports)
 
 // Enable Gzip compression
 app.use(compression());
@@ -61,17 +64,20 @@ app.use((req, res, next) => {
 });
 
 // API Routes
-app.use('/api/foods', foodRoutes);
-app.use('/api/workouts', workoutRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/stats', statsRoutes);
-app.use('/api/meals', mealsRoutes);
+app.use('/api/foods', foodRoutes);
+app.use('/api/meals', mealsRoutes); // Corrected from mealRoutes to mealsRoutes
+app.use('/api/workouts', workoutRoutes);
+app.use('/api/plans', planRoutes);
+app.use('/api/templates/workout', workoutTemplatesRoutes);
+app.use('/api/templates/meal', mealTemplateRoutes);
+app.use('/api/stats', statsRoutes); // Corrected from dailyStatsRoutes to statsRoutes
+app.use('/api/ai', aiRoutes);
+app.use('/api/ai', aiCoachRoutes); // AI Coach
 app.use('/api/workout-entries', workoutEntryRoutes);
 app.use('/api/preferences', preferencesRoutes);
 app.use('/api/favorites', favoritesRoutes);
-app.use('/api/ai', aiRoutes);
-app.use('/api/plans', planRoutes);
 app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin/content', adminContentRoutes);
 app.use('/api/admin/users', adminUserRoutes);
@@ -81,11 +87,12 @@ app.use('/api/meal-templates', mealTemplateRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {
   maxPoolSize: 10,
-  minPoolSize: 1, // Keep at least one connection open
+  minPoolSize: 1,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 20000,
   connectTimeoutMS: 10000,
-  family: 4 // Use IPv4
+  bufferCommands: false, // Don't buffer if connection is down
+  autoIndex: false // Don't build indexes in production for better performance
 })
   .then(async () => {
     console.log('MongoDB connected');

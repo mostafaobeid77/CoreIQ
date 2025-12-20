@@ -68,6 +68,7 @@ const DashboardScreen = () => {
     return require('../assets/images/logo.png');
   }, [user?.profilePhoto]);
   const styles = React.useMemo(() => createDashboardStyles(theme === 'light'), [theme]);
+  const [autoOpenWizard, setAutoOpenWizard] = useState(false);
   const [waterInput, setWaterInput] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
   const [mentalHealthOptions, setMentalHealthOptions] = useState([
@@ -98,7 +99,7 @@ const DashboardScreen = () => {
     setSelectedDate
   } = useDatePicker();
 
-  const dateKey = selectedDate.toISOString().slice(0, 10);
+  const dateKey = format(selectedDate, 'yyyy-MM-dd');
 
 
   const { statsByDate, loadStatsForDate, updateStatsForDate } = useStats();
@@ -166,12 +167,17 @@ const DashboardScreen = () => {
     handleHeightSave,
     handleActivityLevelSave,
     handleGoalWeightSave,
-    handleWeightGoalSelect,
+    handleWeightGoalSelect: baseHandleWeightGoalSelect,
     handleSleepSave,
     handleSleepAdd,
     handleSleepSubtract,
     errors
   } = useStatsByDate(dateKey, stats, setIsEditingWater, updateStatsForDate, waterInput, weightInput, heightInput, sleepInput);
+
+  const handleWeightGoalSelect = (goal: string, targetWeight: number) => {
+    setGoalWeightInput(''); // Clear input when transitioning between goal types
+    baseHandleWeightGoalSelect(goal, targetWeight);
+  };
 
   const {
     isWaterModalVisible, setIsWaterModalVisible,
@@ -188,6 +194,20 @@ const DashboardScreen = () => {
   const handleOutsideTap = () => {
     setIsWaterModalVisible(false);
     // Don't clear waterInput - let it persist
+  };
+
+  const openGoalWeightModal = () => {
+    // Pre-populate with current goal
+    if (stats.goalWeight && stats.goalWeight !== 'Not set') {
+      if (stats.goalWeight.includes(':')) {
+        const parts = stats.goalWeight.split(':');
+        setSelectedWeightGoal(parts[0].trim());
+        setGoalWeightInput(parts[1].replace('kg', '').trim());
+      } else {
+        setSelectedWeightGoal(stats.goalWeight);
+      }
+    }
+    setIsGoalWeightModalVisible(true);
   };
 
   const openSheetSafely = (category: 'nutritions' | 'mind' | 'activity') => {
@@ -237,10 +257,7 @@ const DashboardScreen = () => {
     setGoalWeightInput('');
   };
 
-  // Reset goalWeightInput when selectedWeightGoal changes
-  React.useEffect(() => {
-    setGoalWeightInput('');
-  }, [selectedWeightGoal]);
+
 
   // --- Main content ---
   let content;
@@ -274,7 +291,7 @@ const DashboardScreen = () => {
         <GoalsSection
           stats={stats}
           setIsActivityModalVisible={setIsActivityModalVisible}
-          setIsGoalWeightModalVisible={setIsGoalWeightModalVisible}
+          setIsGoalWeightModalVisible={openGoalWeightModal}
           styles={styles}
         />
       </ScrollView>
@@ -284,19 +301,22 @@ const DashboardScreen = () => {
   } else if (activeTab === 'Workouts') {
     content = <WorkoutScreen />;
   } else if (activeTab === 'Plans') {
-    content = <PlansScreen />;
+    content = <PlansScreen autoOpenWizard={autoOpenWizard} onWizardReset={() => setAutoOpenWizard(false)} />;
   } else if (activeTab === 'AI') {
-    content = <AiScreen />;
+    content = <AiScreen onTriggerWizard={() => {
+      setAutoOpenWizard(true);
+      setActiveTab('Plans');
+    }} />;
   } else if (activeTab === 'Settings') {
     content = <SettingScreen />;
   }
 
   // --- Bottom Sheet Modal ---
   return (
-    <View style={[styles.container, { backgroundColor: theme === 'light' ? '#fff' : '#0f0f0f' }]}>
+    <View style={[styles.container, { backgroundColor: styles.colors.bg }]}>
       {activeTab === 'Home' && (
         <SafeAreaView
-          style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#181818' }}
+          style={{ backgroundColor: styles.colors.bg }}
           edges={['top']}
         >
           <DashboardHeader
@@ -364,33 +384,35 @@ const DashboardScreen = () => {
         animationType="slide"
         onRequestClose={closeSheetSafely}
       >
-        <Pressable
-          style={styles.sheetOverlay}
-          onPress={closeSheetSafely}
-        >
+        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          {/* Backdrop/Close Overlay - sibling behind the sheet */}
           <Pressable
-            style={styles.bottomSheet}
-            onPress={(e) => e.stopPropagation()}
-          >
+            style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.3)' }]}
+            onPress={closeSheetSafely}
+          />
+
+          <View style={styles.bottomSheet}>
             <View style={styles.sheetHandle} />
-            <BottomSheetContent
-              openSheet={openSheet}
-              stats={{
-                ...stats,
-                getMealsPerDay
-              }}
-              dailyTargets={dailyTargets}
-              consumedNutrients={consumedNutrients}
-              completedMealsCount={getCompletedMealsCountForDate(dateKey)}
-              mentalHealthOptions={mentalHealthOptions}
-              setSleepInput={setSleepInput}
-              setIsSleepModalVisible={setIsSleepModalVisible}
-              closeSheetSafely={closeSheetSafely}
-              setIsMentalModalVisible={setIsMentalModalVisible}
-              styles={styles}
-            />
-          </Pressable>
-        </Pressable>
+            <View style={{ flex: 1 }}>
+              <BottomSheetContent
+                openSheet={openSheet}
+                stats={{
+                  ...stats,
+                  getMealsPerDay
+                }}
+                dailyTargets={dailyTargets}
+                consumedNutrients={consumedNutrients}
+                completedMealsCount={getCompletedMealsCountForDate(dateKey)}
+                mentalHealthOptions={mentalHealthOptions}
+                setSleepInput={setSleepInput}
+                setIsSleepModalVisible={setIsSleepModalVisible}
+                closeSheetSafely={closeSheetSafely}
+                setIsMentalModalVisible={setIsMentalModalVisible}
+                styles={styles}
+              />
+            </View>
+          </View>
+        </View>
       </Modal>
 
       {/* Weight Modal */}
@@ -449,6 +471,9 @@ const DashboardScreen = () => {
         stats={stats}
         selectedWeightGoal={selectedWeightGoal}
         setSelectedWeightGoal={(goal) => {
+          if (goal !== selectedWeightGoal) {
+            setGoalWeightInput('');
+          }
           setSelectedWeightGoal(goal);
           if (goal === 'Maintain Weight') {
             void updateStatsForDate(dateKey, { goalWeight: 'Maintain Weight' });
@@ -482,19 +507,15 @@ const DashboardScreen = () => {
       {/* Sleep Modal */}
       <SleepModal
         visible={isSleepModalVisible}
-        onClose={() => setIsSleepModalVisible(false)}
+        onClose={() => {
+          setIsSleepModalVisible(false);
+          setSleepInput('');
+        }}
         sleepInput={sleepInput}
         setSleepInput={setSleepInput}
         stats={stats}
-        handleSleepAdd={() => {
-          handleSleepAdd(sleepInput);
-          if (!errors.sleep) {
-            setIsSleepModalVisible(false);
-            setSleepInput('');
-          }
-        }}
-        handleSleepSubtract={() => {
-          handleSleepSubtract(sleepInput);
+        handleSleepSave={(val) => {
+          handleSleepSave(val);
           if (!errors.sleep) {
             setIsSleepModalVisible(false);
             setSleepInput('');

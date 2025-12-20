@@ -1,0 +1,107 @@
+[
+    {
+      "name": "Barbell Curl",
+      "description": "Classic biceps exercise using a barbell for mass and strength building.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Dumbbell Curl",
+      "description": "Unilateral or bilateral curl using dumbbells for balanced biceps development.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Incline Dumbbell Curl",
+      "description": "Performed on an incline bench to stretch the biceps and increase range of motion.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Hammer Curl",
+      "description": "Curl variation with neutral grip to target brachialis and brachioradialis along with biceps.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Concentration Curl",
+      "description": "Isolation curl performed seated with elbow braced against inner thigh for peak contraction.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Preacher Curl",
+      "description": "Curl performed on a preacher bench to eliminate cheating and isolate the biceps.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Barbell or Dumbbells"
+    },
+    {
+      "name": "Cable Curl",
+      "description": "Uses a cable machine for constant tension throughout the curling motion.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "EZ-Bar Curl",
+      "description": "Barbell curl using an EZ-bar to reduce wrist strain while targeting biceps.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "EZ-Bar"
+    },
+    {
+      "name": "Spider Curl",
+      "description": "Performed face-down on an incline bench to maximize biceps contraction at the top.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Barbell or Dumbbells"
+    },
+    {
+      "name": "Zottman Curl",
+      "description": "Combines a supinated curl with a pronated lowering phase to target multiple forearm muscles.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Reverse Curl",
+      "description": "Performed with an overhand grip to emphasize brachialis and forearm extensors.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Barbell or Dumbbells"
+    },
+    {
+      "name": "21s",
+      "description": "Combines partial reps: 7 bottom half, 7 top half, then 7 full curls for intensity.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Barbell or Dumbbells"
+    },
+    {
+      "name": "Drag Curl",
+      "description": "Barbell curl where elbows travel backward to emphasize the long head of the biceps.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Cable Hammer Curl",
+      "description": "Hammer curl variation using a cable machine for constant tension and forearm engagement.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Machine Preacher Curl",
+      "description": "Preacher curl performed on a dedicated machine for strict form and isolation.",
+      "category": "Strength",
+      "muscle_group": "Biceps",
+      "equipment": "Machine"
+    }
+  ]

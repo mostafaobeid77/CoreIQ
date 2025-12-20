@@ -1,0 +1,107 @@
+[
+    {
+      "name": "Barbell Wrist Curl",
+      "description": "Seated exercise with barbell resting on knees, curling wrists upward to target forearm flexors.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Reverse Barbell Wrist Curl",
+      "description": "Performed with overhand grip, curling wrists downward to target forearm extensors.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Dumbbell Wrist Curl",
+      "description": "Unilateral or bilateral wrist curl using dumbbells for balanced forearm development.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Reverse Dumbbell Wrist Curl",
+      "description": "Dumbbell wrist curl with palms down to isolate extensor muscles of the forearm.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Behind-the-Back Barbell Wrist Curl",
+      "description": "Standing wrist curl with barbell held behind back to emphasize forearm flexors from a stretched position.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Farmer’s Walk",
+      "description": "Grip-intensive carry using heavy dumbbells or farmer’s handles to build forearm and grip strength.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Dumbbells or Farmer’s Handles"
+    },
+    {
+      "name": "Plate Pinch Carry",
+      "description": "Pinching weight plates between fingers and walking to develop crushing grip and forearm endurance.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Weight Plates"
+    },
+    {
+      "name": "Towel Pull-up",
+      "description": "Pull-up variation using towels draped over bar to challenge grip and forearm strength.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Pull-up Bar and Towels"
+    },
+    {
+      "name": "Cable Wrist Curl",
+      "description": "Wrist curl using low cable pulley for constant tension and controlled movement.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Reverse Cable Wrist Curl",
+      "description": "Cable-based reverse wrist curl for forearm extensors with smooth resistance curve.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Dead Hang",
+      "description": "Static hold from pull-up bar to build grip endurance and forearm isometric strength.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Pull-up Bar"
+    },
+    {
+      "name": "Wrist Roller",
+      "description": "Rolling a weighted rope up and down using a wrist roller device to build forearm stamina.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Wrist Roller"
+    },
+    {
+      "name": "Zottman Curl",
+      "description": "Combines supinated curl with pronated lowering to work both flexors and extensors of the forearm.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Fingertip Push-up",
+      "description": "Advanced push-up variation balancing on fingertips to build finger, hand, and forearm strength.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Grip Trainer Squeeze",
+      "description": "Isometric squeezing of a hand gripper to develop crushing grip and forearm definition.",
+      "category": "Strength",
+      "muscle_group": "Forearms",
+      "equipment": "Hand Gripper"
+    }
+  ]

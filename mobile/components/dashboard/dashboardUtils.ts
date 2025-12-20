@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 export type DashboardStats = {
   water: number;
   calories: number;
-  proteins: number;
+  protein: number;
   carbs: number;
   fats: number;
   meals: number;
@@ -28,7 +28,7 @@ export type DashboardStats = {
 export const defaultStats: DashboardStats = {
   water: 0,
   calories: 0,
-  proteins: 0,
+  protein: 0,
   carbs: 0,
   fats: 0,
   meals: 0,
@@ -110,7 +110,7 @@ export function calculateDailyTargets(stats: DashboardStats) {
   if (stats.weight <= 0 || stats.height <= 0 || stats.age <= 0) {
     return {
       calories: 2000,
-      proteins: 120,
+      protein: 120,
       carbs: 250,
       fats: 70,
       water: 2500,
@@ -175,7 +175,7 @@ export function calculateDailyTargets(stats: DashboardStats) {
 
   return {
     calories: Math.round(targetCalories),
-    proteins: Math.max(proteins, 50),
+    protein: Math.max(proteins, 50),
     carbs: Math.max(carbs, 100),
     fats: Math.max(fats, 30),
     water: water,

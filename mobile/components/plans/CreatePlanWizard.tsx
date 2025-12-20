@@ -7,6 +7,8 @@ import { mealTemplateService, MealTemplateType } from '../../services/mealTempla
 import { workoutTemplatesService } from '../../services/workoutTemplatesService';
 import { planService } from '../../services/planService';
 import { getMealSections } from '../../screens/MealsScreen';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { format, addDays } from 'date-fns';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -15,10 +17,10 @@ interface CreatePlanWizardProps {
     onClose: () => void;
     onSuccess: (planId: string) => void;
     userGoal?: string;
-    userGoalWeight?: string; // Added to get meal sections
+    userGoalWeight?: string;
     userTargets?: {
         calories: number;
-        proteins: number;
+        protein: number;
         carbs: number;
         fats: number;
     };
@@ -48,17 +50,19 @@ export default function CreatePlanWizard({
     // Selection
     const [selectedMealType, setSelectedMealType] = useState<MealTemplateType | null>(null);
     const [selectedWorkoutTemplate, setSelectedWorkoutTemplate] = useState<any | null>(null);
-    const [selectedDays, setSelectedDays] = useState<number>(4); // Default to 4 days
+    const [selectedDays, setSelectedDays] = useState<number>(4);
+    const [startDate, setStartDate] = useState(new Date());
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     // Load data on open
     useEffect(() => {
         if (visible) {
             setStep(1);
             setName('');
-            setName('');
             setSelectedMealType(null);
             setSelectedWorkoutTemplate(null);
             setSelectedDays(4);
+            setStartDate(new Date());
             loadData();
         }
     }, [visible]);
@@ -80,7 +84,7 @@ export default function CreatePlanWizard({
     };
 
     const handleNext = () => {
-        if (step < 4) setStep(step + 1);
+        if (step < 5) setStep(step + 1);
     };
 
     const handleBack = () => {
@@ -93,14 +97,11 @@ export default function CreatePlanWizard({
         try {
             setCreating(true);
 
-            // 1. Get Target Macros
-            // Use user's calculated targets from their profile
             const targetCals = userTargets?.calories || 2200;
-            const targetProtein = userTargets?.proteins || Math.round(targetCals * 0.30 / 4);
+            const targetProtein = userTargets?.protein || Math.round(targetCals * 0.30 / 4);
             const targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.40 / 4);
             const targetFats = userTargets?.fats || Math.round(targetCals * 0.30 / 9);
 
-            // Get user's meal sections based on their goal
             const mealSections = getMealSections(userGoalWeight);
 
             const mealPlan = await mealTemplateService.generatePlan(
@@ -112,11 +113,8 @@ export default function CreatePlanWizard({
                 mealSections
             );
 
-            // 2. Generate Workout Plan (Frontend Helper)
             const workoutPlan = workoutTemplatesService.applyTemplateToPlan(selectedWorkoutTemplate);
 
-            // 3. Create Plan
-            const startDate = new Date();
             const res = await planService.createPlan({
                 name: name || 'My Custom Plan',
                 startDate: startDate.toISOString(),
@@ -134,7 +132,6 @@ export default function CreatePlanWizard({
 
         } catch (error) {
             console.error('Wizard create error:', error);
-            // Alert user?
         } finally {
             setCreating(false);
         }
@@ -142,7 +139,7 @@ export default function CreatePlanWizard({
 
     const renderStep1_Name = () => (
         <View style={styles.stepContainer}>
-            <Text style={[styles.stepTitle, { color: colors.text }]}>Let's start locally.</Text>
+            <Text style={[styles.stepTitle, { color: colors.text }]}>Let's start.</Text>
             <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>Give your new plan a name.</Text>
 
             <TextInput
@@ -180,15 +177,15 @@ export default function CreatePlanWizard({
                                 style={[
                                     styles.card,
                                     {
-                                        borderColor: isSelected ? '#2563eb' : colors.border,
-                                        backgroundColor: isSelected ? (theme === 'light' ? '#eff6ff' : '#1e3a8a30') : colors.card
+                                        borderColor: isSelected ? '#8b5cf6' : colors.border,
+                                        backgroundColor: isSelected ? (theme === 'light' ? '#f5f3ff' : 'rgba(139, 92, 246, 0.1)') : colors.card
                                     }
                                 ]}
                                 onPress={() => setSelectedMealType(type)}
                             >
                                 <View style={styles.cardHeader}>
                                     <Text style={[styles.cardTitle, { color: colors.text }]}>{type.name}</Text>
-                                    {isSelected && <Ionicons name="checkmark-circle" size={20} color="#2563eb" />}
+                                    {isSelected && <Ionicons name="checkmark-circle" size={20} color="#8b5cf6" />}
                                 </View>
                                 <Text style={[styles.cardDesc, { color: colors.textSecondary }]}>{type.description}</Text>
                                 {isRecommended && (
@@ -209,7 +206,6 @@ export default function CreatePlanWizard({
             <Text style={[styles.stepTitle, { color: colors.text }]}>Pick a Routine</Text>
             <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>How many days can you train?</Text>
 
-            {/* Days Filter */}
             <View style={{ flexDirection: 'row', gap: 12, marginBottom: 20 }}>
                 {[3, 4, 5, 6].map(days => (
                     <TouchableOpacity
@@ -223,9 +219,9 @@ export default function CreatePlanWizard({
                             paddingVertical: 12,
                             alignItems: 'center',
                             borderRadius: 12,
-                            backgroundColor: selectedDays === days ? '#2563eb' : colors.card,
+                            backgroundColor: selectedDays === days ? '#8b5cf6' : colors.card,
                             borderWidth: 1,
-                            borderColor: selectedDays === days ? '#2563eb' : colors.border
+                            borderColor: selectedDays === days ? '#8b5cf6' : colors.border
                         }}
                     >
                         <Text style={{
@@ -252,8 +248,8 @@ export default function CreatePlanWizard({
                                     style={[
                                         styles.listItem,
                                         {
-                                            borderColor: isSelected ? '#2563eb' : colors.border,
-                                            backgroundColor: isSelected ? (theme === 'light' ? '#eff6ff' : '#1e3a8a30') : colors.card
+                                            borderColor: isSelected ? '#8b5cf6' : colors.border,
+                                            backgroundColor: isSelected ? (theme === 'light' ? '#f5f3ff' : 'rgba(139, 92, 246, 0.1)') : colors.card
                                         }
                                     ]}
                                     onPress={() => setSelectedWorkoutTemplate(template)}
@@ -263,7 +259,7 @@ export default function CreatePlanWizard({
                                             <Text style={[styles.itemTitle, { color: colors.text }]}>{template.name}</Text>
                                             <Text style={[styles.itemSub, { color: colors.textSecondary }]}>{template.daysPerWeek} Days / Week • {template.difficulty}</Text>
                                         </View>
-                                        {isSelected && <Ionicons name="checkmark-circle" size={24} color="#2563eb" />}
+                                        {isSelected && <Ionicons name="checkmark-circle" size={24} color="#8b5cf6" />}
                                     </View>
                                     {isRecommended && (
                                         <Text style={[styles.recText, { color: '#10b981' }]}>Recommended for your goal</Text>
@@ -276,32 +272,115 @@ export default function CreatePlanWizard({
         </View>
     );
 
-    const renderStep4_Review = () => (
+    const renderStep4_Schedule = () => (
         <View style={styles.stepContainer}>
-            <Text style={[styles.stepTitle, { color: colors.text }]}>Ready to Build?</Text>
-            <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>Review your choices.</Text>
+            <Text style={[styles.stepTitle, { color: colors.text }]}>When do we start?</Text>
+            <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>Pick a start date for your 14-day plan.</Text>
+
+            <View style={styles.scheduleGrid}>
+                {[
+                    { label: 'Today', date: new Date(), icon: 'today-outline' },
+                    { label: 'Tomorrow', date: addDays(new Date(), 1), icon: 'calendar-outline' },
+                    { label: 'Next Monday', date: addDays(new Date(), (8 - new Date().getDay()) % 7 || 7), icon: 'calendar-number-outline' },
+                ].map((option, idx) => {
+                    const isSelected = format(startDate, 'yyyy-MM-dd') === format(option.date, 'yyyy-MM-dd');
+                    return (
+                        <TouchableOpacity
+                            key={idx}
+                            style={[
+                                styles.optionCard,
+                                {
+                                    backgroundColor: colors.card,
+                                    borderColor: isSelected ? '#8b5cf6' : colors.border,
+                                }
+                            ]}
+                            onPress={() => setStartDate(option.date)}
+                        >
+                            <Ionicons name={option.icon as any} size={24} color={isSelected ? '#8b5cf6' : colors.textSecondary} />
+                            <Text style={[styles.optionLabel, { color: colors.text }]}>{option.label}</Text>
+                            <Text style={[styles.optionDate, { color: colors.textSecondary }]}>{format(option.date, 'MMM d')}</Text>
+                            {isSelected && <View style={styles.selectedDot} />}
+                        </TouchableOpacity>
+                    );
+                })}
+
+                <TouchableOpacity
+                    style={[
+                        styles.optionCard,
+                        {
+                            backgroundColor: colors.card,
+                            borderColor: isDatePickerVisible ? '#8b5cf6' : colors.border,
+                        }
+                    ]}
+                    onPress={() => setDatePickerVisibility(true)}
+                >
+                    <Ionicons name="ellipsis-horizontal" size={24} color={colors.textSecondary} />
+                    <Text style={[styles.optionLabel, { color: colors.text }]}>Custom</Text>
+                    <Text style={[styles.optionDate, { color: colors.textSecondary }]}>Choose date</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={[styles.summaryBox, { backgroundColor: theme === 'light' ? '#f8fafc' : '#1e1e1e', borderColor: colors.border }]}>
+                <View style={styles.summaryRow}>
+                    <Text style={[styles.summaryText, { color: colors.textSecondary }]}>Plan Range:</Text>
+                    <Text style={[styles.summaryDate, { color: colors.text }]}>
+                        {format(startDate, 'MMM d')} - {format(addDays(startDate, 13), 'MMM d, yyyy')}
+                    </Text>
+                </View>
+                <Text style={[styles.infoText, { marginTop: 8 }]}>
+                    Your plan will last exactly 14 days. You can prepare it now and it will be waiting for you!
+                </Text>
+            </View>
+
+            <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={(date: Date) => {
+                    setStartDate(date);
+                    setDatePickerVisibility(false);
+                }}
+                onCancel={() => setDatePickerVisibility(false)}
+                minimumDate={new Date()}
+            />
+        </View>
+    );
+
+    const renderStep5_Review = () => (
+        <View style={styles.stepContainer}>
+            <Text style={[styles.stepTitle, { color: colors.text }]}>Review & Create</Text>
+            <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>Everything looks solid.</Text>
 
             <View style={[styles.summaryCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
                 <View style={styles.summaryItem}>
-                    <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Name</Text>
+                    <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Plan Name</Text>
                     <Text style={[styles.summaryValue, { color: colors.text }]}>{name || 'My Custom Plan'}</Text>
                 </View>
                 <View style={styles.divider} />
                 <View style={styles.summaryItem}>
-                    <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Diet</Text>
+                    <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Diet Style</Text>
                     <Text style={[styles.summaryValue, { color: colors.text }]}>{selectedMealType?.name}</Text>
                 </View>
                 <View style={styles.divider} />
                 <View style={styles.summaryItem}>
-                    <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Workout</Text>
+                    <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Workout Routine</Text>
                     <Text style={[styles.summaryValue, { color: colors.text }]}>{selectedWorkoutTemplate?.name}</Text>
+                </View>
+                <View style={styles.divider} />
+                <View style={styles.summaryItem}>
+                    <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Starts On</Text>
+                    <View style={{ alignItems: 'flex-end' }}>
+                        <Text style={[styles.summaryValue, { color: colors.text }]}>{format(startDate, 'EEEE, MMM d')}</Text>
+                        <Text style={{ fontSize: 12, color: '#10b981', fontWeight: '600' }}>
+                            {format(startDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') ? 'Today' : 'Scheduled'}
+                        </Text>
+                    </View>
                 </View>
             </View>
 
             <View style={styles.infoBox}>
-                <Ionicons name="information-circle-outline" size={20} color="#64748b" />
+                <Ionicons name="rocket-outline" size={20} color="#8b5cf6" />
                 <Text style={styles.infoText}>
-                    We will generate a full 14-day plan. You can edit any day using our new AI Assistant later!
+                    Ready for a lifestyle upgrade? Hit create below to build your 14-day blueprint.
                 </Text>
             </View>
         </View>
@@ -310,32 +389,30 @@ export default function CreatePlanWizard({
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
             <View style={[styles.container, { backgroundColor: colors.background }]}>
-                {/* Header */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
                         <Ionicons name="close" size={24} color={colors.text} />
                     </TouchableOpacity>
                     <View style={styles.progressContainer}>
-                        <View style={[styles.progressBar, { width: `${(step / 4) * 100}%` }]} />
+                        <View style={[styles.progressBar, { width: `${(step / 5) * 100}%` }]} />
                     </View>
                     <View style={{ width: 40 }} />
                 </View>
 
-                {/* Content */}
                 <View style={styles.content}>
                     {loading ? (
-                        <ActivityIndicator size="large" color="#2563eb" />
+                        <ActivityIndicator size="large" color="#8b5cf6" />
                     ) : (
                         <>
                             {step === 1 && renderStep1_Name()}
                             {step === 2 && renderStep2_Meals()}
                             {step === 3 && renderStep3_Workouts()}
-                            {step === 4 && renderStep4_Review()}
+                            {step === 4 && renderStep4_Schedule()}
+                            {step === 5 && renderStep5_Review()}
                         </>
                     )}
                 </View>
 
-                {/* Footer */}
                 <View style={[styles.footer, { borderTopColor: colors.border }]}>
                     {step > 1 ? (
                         <TouchableOpacity onPress={handleBack} style={styles.backBtn} disabled={creating}>
@@ -345,7 +422,7 @@ export default function CreatePlanWizard({
                         <View style={{ flex: 1 }} />
                     )}
 
-                    {step < 4 ? (
+                    {step < 5 ? (
                         <TouchableOpacity
                             onPress={handleNext}
                             style={[
@@ -373,8 +450,8 @@ export default function CreatePlanWizard({
                                 <ActivityIndicator color="#fff" />
                             ) : (
                                 <>
-                                    <Text style={styles.createText}>Create Plan</Text>
-                                    <Ionicons name="checkmark" size={20} color="#fff" />
+                                    <Text style={styles.createText}>Create Blueprint</Text>
+                                    <Ionicons name="sparkles" size={20} color="#fff" />
                                 </>
                             )}
                         </TouchableOpacity>
@@ -410,7 +487,7 @@ const styles = StyleSheet.create({
     },
     progressBar: {
         height: '100%',
-        backgroundColor: '#2563eb',
+        backgroundColor: '#8b5cf6',
     },
     content: {
         flex: 1,
@@ -431,7 +508,7 @@ const styles = StyleSheet.create({
     input: {
         width: '100%',
         height: 56,
-        borderWidth: 1,
+        borderWidth: 1.1,
         borderRadius: 16,
         paddingHorizontal: 20,
         fontSize: 18,
@@ -443,7 +520,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     card: {
-        width: (SCREEN_WIDTH - 48 - 12) / 2, // 2 columns
+        width: (SCREEN_WIDTH - 48 - 12) / 2,
         padding: 16,
         borderRadius: 16,
         borderWidth: 1,
@@ -525,7 +602,7 @@ const styles = StyleSheet.create({
     nextBtn: {
         flex: 2,
         height: 56,
-        backgroundColor: '#2563eb',
+        backgroundColor: '#8b5cf6',
         borderRadius: 16,
         flexDirection: 'row',
         justifyContent: 'center',
@@ -565,27 +642,84 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
     },
     summaryLabel: {
-        fontSize: 16,
+        fontSize: 15,
+        fontWeight: '500',
     },
     summaryValue: {
-        fontSize: 16,
-        fontWeight: '600',
+        fontSize: 15,
+        fontWeight: '700',
     },
     divider: {
         height: 1,
-        backgroundColor: '#e2e8f0',
+        backgroundColor: '#f1f5f9',
     },
     infoBox: {
         flexDirection: 'row',
         padding: 16,
-        backgroundColor: '#f1f5f9',
+        backgroundColor: '#f5f3ff',
         borderRadius: 12,
         gap: 12,
+        borderWidth: 1,
+        borderColor: '#ede9fe',
     },
     infoText: {
-        fontSize: 14,
+        fontSize: 13,
         color: '#64748b',
         flex: 1,
-        lineHeight: 20,
+        lineHeight: 18,
+        fontWeight: '500',
+    },
+    scheduleGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 12,
+        marginBottom: 24,
+    },
+    optionCard: {
+        width: (SCREEN_WIDTH - 48 - 12) / 2,
+        height: 120,
+        borderRadius: 16,
+        borderWidth: 2,
+        padding: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    optionLabel: {
+        fontSize: 15,
+        fontWeight: '700',
+        marginTop: 8,
+    },
+    optionDate: {
+        fontSize: 12,
+        fontWeight: '600',
+        marginTop: 2,
+    },
+    selectedDot: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: '#8b5cf6',
+    },
+    summaryBox: {
+        padding: 16,
+        borderRadius: 16,
+        borderWidth: 1,
+    },
+    summaryRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    summaryText: {
+        fontSize: 14,
+        fontWeight: '600',
+    },
+    summaryDate: {
+        fontSize: 14,
+        fontWeight: '700',
     },
 });

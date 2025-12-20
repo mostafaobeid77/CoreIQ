@@ -56,7 +56,7 @@ const ResetPasswordScreen = () => {
   const isLight = theme === 'light';
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, { backgroundColor: isLight ? '#ffffff' : '#0f0f0f' }]}>
+      <View style={[styles.container, { backgroundColor: isLight ? '#f8fafc' : '#0f0f0f' }]}>
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={styles.logoWrapper}>
             <Image
@@ -110,7 +110,7 @@ const ResetPasswordScreen = () => {
           </View>
 
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={submitting}>
-            <LinearGradient colors={["#2563eb", "#1d4ed8"]} style={styles.submitGradient}>
+            <LinearGradient colors={["#8b5cf6", "#7c3aed"]} style={styles.submitGradient}>
               <Text style={styles.submitText}>{submitting ? 'Resetting…' : 'Reset Password'}</Text>
             </LinearGradient>
           </TouchableOpacity>

@@ -1,0 +1,1585 @@
+[
+    {
+      "name": "Hamburger (Standard)",
+      "description": "A classic beef patty on a bun with lettuce, tomato, onion, and pickles.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 12.0,
+        "fat": 15.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 burger (150g)", "calories": 375, "protein": 18.0, "fat": 22.5, "carbs": 27.0 }
+      ]
+    },
+    {
+      "name": "Cheeseburger (Standard)",
+      "description": "A classic beef patty with a slice of cheese on a bun with lettuce, tomato, onion, and pickles.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 14.0,
+        "fat": 18.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 burger (160g)", "calories": 448, "protein": 22.4, "fat": 28.8, "carbs": 28.8 }
+      ]
+    },
+    {
+      "name": "Chicken Sandwich (Fried)",
+      "description": "Crispy fried chicken fillet on a bun with mayonnaise and lettuce.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 270,
+        "protein": 10.0,
+        "fat": 17.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 sandwich (180g)", "calories": 486, "protein": 18.0, "fat": 30.6, "carbs": 36.0 }
+      ]
+    },
+    {
+      "name": "Zinger Sandwich (Spicy Fried Chicken)",
+      "description": "Spicy fried chicken fillet on a bun with lettuce and spicy mayonnaise.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 290,
+        "protein": 11.0,
+        "fat": 19.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 sandwich (200g)", "calories": 580, "protein": 22.0, "fat": 38.0, "carbs": 40.0 }
+      ]
+    },
+    {
+      "name": "Pizza (Pepperoni, Slice)",
+      "description": "A slice of classic pepperoni pizza.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 260,
+        "protein": 11.0,
+        "fat": 10.0,
+        "carbs": 28.0
+      },
+      "servings": [
+        { "size": "1 slice (100g)", "calories": 260, "protein": 11.0, "fat": 10.0, "carbs": 28.0 }
+      ]
+    },
+    {
+      "name": "Pizza (Cheese, Slice)",
+      "description": "A slice of classic cheese pizza.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 10.0,
+        "fat": 9.0,
+        "carbs": 28.0
+      },
+      "servings": [
+        { "size": "1 slice (100g)", "calories": 250, "protein": 10.0, "fat": 9.0, "carbs": 28.0 }
+      ]
+    },
+    {
+      "name": "French Fries (Medium)",
+      "description": "Medium serving of classic fried potato sticks.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 312,
+        "protein": 3.4,
+        "fat": 15.0,
+        "carbs": 41.0
+      },
+      "servings": [
+        { "size": "Medium serving (117g)", "calories": 365, "protein": 4.0, "fat": 17.6, "carbs": 48.0 }
+      ]
+    },
+    {
+      "name": "Onion Rings (Medium)",
+      "description": "Medium serving of battered and fried onion rings.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 4.0,
+        "fat": 18.0,
+        "carbs": 30.0
+      },
+      "servings": [
+        { "size": "Medium serving (100g)", "calories": 300, "protein": 4.0, "fat": 18.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Chicken Nuggets (6 pieces)",
+      "description": "Six pieces of breaded and fried chicken nuggets.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 15.0,
+        "fat": 18.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "6 pieces (100g)", "calories": 280, "protein": 15.0, "fat": 18.0, "carbs": 15.0 }
+      ]
+    },
+    {
+      "name": "Fish Sandwich (Fried)",
+      "description": "Fried fish fillet on a bun with tartar sauce and lettuce.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 10.0,
+        "fat": 15.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 sandwich (160g)", "calories": 400, "protein": 16.0, "fat": 24.0, "carbs": 28.8 }
+      ]
+    },
+    {
+      "name": "Hot Dog (Standard)",
+      "description": "Frankfurter sausage in a bun with ketchup and mustard.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 10.0,
+        "fat": 20.0,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "1 hot dog (100g)", "calories": 280, "protein": 10.0, "fat": 20.0, "carbs": 12.0 }
+      ]
+    },
+    {
+      "name": "Taco (Soft Shell, Beef)",
+      "description": "Soft tortilla with seasoned ground beef, lettuce, cheese, and salsa.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 10.0,
+        "fat": 10.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 taco (100g)", "calories": 200, "protein": 10.0, "fat": 10.0, "carbs": 15.0 }
+      ]
+    },
+    {
+      "name": "Burrito (Bean & Cheese)",
+      "description": "Flour tortilla filled with refried beans and cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 180,
+        "protein": 7.0,
+        "fat": 8.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 small burrito (150g)", "calories": 270, "protein": 10.5, "fat": 12.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Nachos (Cheese)",
+      "description": "Tortilla chips topped with melted cheese sauce.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 6.0,
+        "fat": 18.0,
+        "carbs": 25.0
+      },
+      "servings": [
+        { "size": "Small serving (150g)", "calories": 420, "protein": 9.0, "fat": 27.0, "carbs": 37.5 }
+      ]
+    },
+    {
+      "name": "Milkshake (Vanilla)",
+      "description": "Creamy vanilla ice cream blended with milk.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 100,
+        "protein": 3.0,
+        "fat": 4.0,
+        "carbs": 13.0
+      },
+      "servings": [
+        { "size": "Small (300ml)", "calories": 300, "protein": 9.0, "fat": 12.0, "carbs": 39.0 }
+      ]
+    },
+    {
+      "name": "Soft Serve Ice Cream (Vanilla Cone)",
+      "description": "Vanilla soft serve ice cream in a wafer cone.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 4.0,
+        "fat": 8.0,
+        "carbs": 28.0
+      },
+      "servings": [
+        { "size": "1 cone (100g)", "calories": 200, "protein": 4.0, "fat": 8.0, "carbs": 28.0 }
+      ]
+    },
+    {
+      "name": "Donut (Glazed)",
+      "description": "Sweet, deep-fried pastry with a sugar glaze.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 400,
+        "protein": 5.0,
+        "fat": 20.0,
+        "carbs": 50.0
+      },
+      "servings": [
+        { "size": "1 donut (50g)", "calories": 200, "protein": 2.5, "fat": 10.0, "carbs": 25.0 }
+      ]
+    },
+    {
+      "name": "Muffin (Blueberry)",
+      "description": "Sweet baked good with blueberries.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 5.0,
+        "fat": 12.0,
+        "carbs": 40.0
+      },
+      "servings": [
+        { "size": "1 muffin (100g)", "calories": 300, "protein": 5.0, "fat": 12.0, "carbs": 40.0 }
+      ]
+    },
+    {
+      "name": "Hash Browns",
+      "description": "Shredded potatoes, pan-fried until crispy.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 3.0,
+        "fat": 15.0,
+        "carbs": 25.0
+      },
+      "servings": [
+        { "size": "1 patty (70g)", "calories": 175, "protein": 2.1, "fat": 10.5, "carbs": 17.5 }
+      ]
+    },
+    {
+      "name": "Breakfast Burrito",
+      "description": "Tortilla filled with scrambled eggs, cheese, and sausage or bacon.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 10.0,
+        "fat": 12.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 burrito (180g)", "calories": 396, "protein": 18.0, "fat": 21.6, "carbs": 32.4 }
+      ]
+    },
+    {
+      "name": "Pancakes (3 pcs with syrup)",
+      "description": "Three fluffy pancakes served with butter and syrup.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 5.0,
+        "fat": 8.0,
+        "carbs": 28.0
+      },
+      "servings": [
+        { "size": "3 pancakes (150g)", "calories": 300, "protein": 7.5, "fat": 12.0, "carbs": 42.0 }
+      ]
+    },
+    {
+      "name": "Waffles (2 pcs with syrup)",
+      "description": "Two crispy waffles served with butter and syrup.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 5.0,
+        "fat": 10.0,
+        "carbs": 28.0
+      },
+      "servings": [
+        { "size": "2 waffles (150g)", "calories": 330, "protein": 7.5, "fat": 15.0, "carbs": 42.0 }
+      ]
+    },
+    {
+      "name": "Sausage Biscuit",
+      "description": "Sausage patty served on a fluffy biscuit.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 10.0,
+        "fat": 20.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 biscuit (100g)", "calories": 300, "protein": 10.0, "fat": 20.0, "carbs": 20.0 }
+      ]
+    },
+    {
+      "name": "Egg & Cheese Biscuit",
+      "description": "Scrambled egg and cheese served on a fluffy biscuit.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 9.0,
+        "fat": 18.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 biscuit (100g)", "calories": 280, "protein": 9.0, "fat": 18.0, "carbs": 20.0 }
+      ]
+    },
+    {
+      "name": "Chicken Wrap (Grilled)",
+      "description": "Grilled chicken, lettuce, tomato, and dressing wrapped in a tortilla.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 180,
+        "protein": 12.0,
+        "fat": 8.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 wrap (200g)", "calories": 360, "protein": 24.0, "fat": 16.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Fish & Chips (Small)",
+      "description": "Small serving of fried fish and french fries.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 10.0,
+        "fat": 18.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "Small serving (250g)", "calories": 700, "protein": 25.0, "fat": 45.0, "carbs": 50.0 }
+      ]
+    },
+    {
+      "name": "Chicken Strips (3 pcs)",
+      "description": "Three pieces of breaded chicken strips.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 290,
+        "protein": 18.0,
+        "fat": 18.0,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "3 pieces (120g)", "calories": 348, "protein": 21.6, "fat": 21.6, "carbs": 14.4 }
+      ]
+    },
+    {
+      "name": "Corn Dog",
+      "description": "Frankfurter sausage coated in cornmeal batter and deep-fried.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 9.0,
+        "fat": 20.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 corn dog (100g)", "calories": 300, "protein": 9.0, "fat": 20.0, "carbs": 20.0 }
+      ]
+    },
+    {
+      "name": "Soft Taco (Chicken)",
+      "description": "Soft tortilla with seasoned chicken, lettuce, cheese, and salsa.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 190,
+        "protein": 12.0,
+        "fat": 8.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 taco (100g)", "calories": 190, "protein": 12.0, "fat": 8.0, "carbs": 15.0 }
+      ]
+    },
+    {
+      "name": "Quesadilla (Cheese)",
+      "description": "Folded tortilla filled with melted cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 10.0,
+        "fat": 15.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 quesadilla (150g)", "calories": 375, "protein": 15.0, "fat": 22.5, "carbs": 27.0 }
+      ]
+    },
+    {
+      "name": "Churro",
+      "description": "Fried dough pastry, often coated in cinnamon sugar.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 350,
+        "protein": 4.0,
+        "fat": 18.0,
+        "carbs": 40.0
+      },
+      "servings": [
+        { "size": "1 churro (50g)", "calories": 175, "protein": 2.0, "fat": 9.0, "carbs": 20.0 }
+      ]
+    },
+    {
+      "name": "Apple Pie (Small)",
+      "description": "Small individual apple pie.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 2.0,
+        "fat": 15.0,
+        "carbs": 35.0
+      },
+      "servings": [
+        { "size": "1 pie (100g)", "calories": 280, "protein": 2.0, "fat": 15.0, "carbs": 35.0 }
+      ]
+    },
+    {
+      "name": "Chocolate Chip Cookie (Large)",
+      "description": "Large, soft chocolate chip cookie.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 450,
+        "protein": 5.0,
+        "fat": 20.0,
+        "carbs": 60.0
+      },
+      "servings": [
+        { "size": "1 cookie (50g)", "calories": 225, "protein": 2.5, "fat": 10.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Oatmeal (Plain, Small)",
+      "description": "Small serving of plain cooked oatmeal.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 70,
+        "protein": 2.5,
+        "fat": 1.5,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "Small serving (150g)", "calories": 105, "protein": 3.8, "fat": 2.3, "carbs": 18.0 }
+      ]
+    },
+    {
+      "name": "Sausage, Egg & Cheese Croissant",
+      "description": "Sausage, egg, and cheese served on a flaky croissant.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 350,
+        "protein": 12.0,
+        "fat": 25.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 croissant (150g)", "calories": 525, "protein": 18.0, "fat": 37.5, "carbs": 27.0 }
+      ]
+    },
+    {
+      "name": "Bacon, Egg & Cheese Biscuit",
+      "description": "Bacon, egg, and cheese served on a fluffy biscuit.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 320,
+        "protein": 10.0,
+        "fat": 22.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 biscuit (120g)", "calories": 384, "protein": 12.0, "fat": 26.4, "carbs": 21.6 }
+      ]
+    },
+    {
+      "name": "Grilled Chicken Salad (No Dressing)",
+      "description": "Mixed greens with grilled chicken, tomatoes, and cucumber.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 80,
+        "protein": 12.0,
+        "fat": 2.0,
+        "carbs": 4.0
+      },
+      "servings": [
+        { "size": "1 large salad (250g)", "calories": 200, "protein": 30.0, "fat": 5.0, "carbs": 10.0 }
+      ]
+    },
+    {
+      "name": "Side Salad (No Dressing)",
+      "description": "Small mixed green salad with tomatoes and cucumber.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 20,
+        "protein": 1.0,
+        "fat": 0.5,
+        "carbs": 3.0
+      },
+      "servings": [
+        { "size": "1 side salad (80g)", "calories": 16, "protein": 0.8, "fat": 0.4, "carbs": 2.4 }
+      ]
+    },
+    {
+      "name": "Chicken Caesar Salad (No Dressing)",
+      "description": "Romaine lettuce with grilled chicken and Parmesan cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 100,
+        "protein": 15.0,
+        "fat": 3.0,
+        "carbs": 4.0
+      },
+      "servings": [
+        { "size": "1 large salad (250g)", "calories": 250, "protein": 37.5, "fat": 7.5, "carbs": 10.0 }
+      ]
+    },
+    {
+      "name": "Veggie Burger (Standard)",
+      "description": "Plant-based patty on a bun with lettuce, tomato, onion, and pickles.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 10.0,
+        "fat": 10.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 burger (150g)", "calories": 330, "protein": 15.0, "fat": 15.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Double Cheeseburger",
+      "description": "Two beef patties with two slices of cheese on a bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 320,
+        "protein": 18.0,
+        "fat": 22.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 burger (250g)", "calories": 800, "protein": 45.0, "fat": 55.0, "carbs": 37.5 }
+      ]
+    },
+    {
+      "name": "Big Mac",
+      "description": "Iconic McDonald's burger with two beef patties, special sauce, lettuce, cheese, pickles, onions, on a sesame seed bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 12.0,
+        "fat": 15.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 burger (215g)", "calories": 540, "protein": 26.0, "fat": 30.0, "carbs": 45.0 }
+      ]
+    },
+    {
+      "name": "Whopper",
+      "description": "Burger King's signature flame-grilled beef patty with tomatoes, lettuce, mayonnaise, ketchup, pickles, and white onions on a sesame seed bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 230,
+        "protein": 10.0,
+        "fat": 13.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 burger (270g)", "calories": 660, "protein": 29.0, "fat": 39.0, "carbs": 49.0 }
+      ]
+    },
+    {
+      "name": "Fried Chicken (Drumstick)",
+      "description": "Crispy fried chicken drumstick.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 240,
+        "protein": 20.0,
+        "fat": 15.0,
+        "carbs": 5.0
+      },
+      "servings": [
+        { "size": "1 drumstick (80g)", "calories": 192, "protein": 16.0, "fat": 12.0, "carbs": 4.0 }
+      ]
+    },
+    {
+      "name": "Fried Chicken (Thigh)",
+      "description": "Crispy fried chicken thigh.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 22.0,
+        "fat": 20.0,
+        "carbs": 5.0
+      },
+      "servings": [
+        { "size": "1 thigh (120g)", "calories": 336, "protein": 26.4, "fat": 24.0, "carbs": 6.0 }
+      ]
+    },
+    {
+      "name": "Chicken Popcorn (Small)",
+      "description": "Small serving of bite-sized fried chicken pieces.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 15.0,
+        "fat": 20.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "Small serving (100g)", "calories": 300, "protein": 15.0, "fat": 20.0, "carbs": 15.0 }
+      ]
+    },
+    {
+      "name": "Spicy Chicken Sandwich",
+      "description": "Fried chicken fillet with spicy seasoning, lettuce, and spicy mayonnaise on a bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 10.0,
+        "fat": 18.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 sandwich (180g)", "calories": 504, "protein": 18.0, "fat": 32.4, "carbs": 36.0 }
+      ]
+    },
+    {
+      "name": "Chicken Strips (5 pcs)",
+      "description": "Five pieces of breaded chicken strips.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 290,
+        "protein": 18.0,
+        "fat": 18.0,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "5 pieces (200g)", "calories": 580, "protein": 36.0, "fat": 36.0, "carbs": 24.0 }
+      ]
+    },
+    {
+      "name": "Crispy Chicken Salad (with dressing)",
+      "description": "Mixed greens with crispy fried chicken pieces and dressing.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 180,
+        "protein": 10.0,
+        "fat": 12.0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "1 large salad (300g)", "calories": 540, "protein": 30.0, "fat": 36.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Grilled Chicken Wrap (with sauce)",
+      "description": "Grilled chicken, lettuce, tomato, and a creamy sauce wrapped in a tortilla.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 12.0,
+        "fat": 10.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 wrap (200g)", "calories": 400, "protein": 24.0, "fat": 20.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Fish Fillet (Fried)",
+      "description": "Single piece of battered and fried fish fillet.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 12.0,
+        "fat": 15.0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "1 fillet (100g)", "calories": 220, "protein": 12.0, "fat": 15.0, "carbs": 10.0 }
+      ]
+    },
+    {
+      "name": "Shrimp Scampi (Fast Food Version)",
+      "description": "Shrimp cooked in garlic butter sauce, often served with rice or pasta.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 180,
+        "protein": 15.0,
+        "fat": 10.0,
+        "carbs": 8.0
+      },
+      "servings": [
+        { "size": "Small serving (150g)", "calories": 270, "protein": 22.5, "fat": 15.0, "carbs": 12.0 }
+      ]
+    },
+    {
+      "name": "Soft Pretzel (Plain)",
+      "description": "Large, soft baked pretzel, often served with salt.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 8.0,
+        "fat": 2.0,
+        "carbs": 55.0
+      },
+      "servings": [
+        { "size": "1 pretzel (100g)", "calories": 280, "protein": 8.0, "fat": 2.0, "carbs": 55.0 }
+      ]
+    },
+    {
+      "name": "Cinnamon Roll",
+      "description": "Sweet rolled pastry with cinnamon and sugar, topped with icing.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 380,
+        "protein": 5.0,
+        "fat": 18.0,
+        "carbs": 50.0
+      },
+      "servings": [
+        { "size": "1 roll (100g)", "calories": 380, "protein": 5.0, "fat": 18.0, "carbs": 50.0 }
+      ]
+    },
+    {
+      "name": "Chocolate Croissant",
+      "description": "Flaky croissant with a chocolate filling.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 450,
+        "protein": 7.0,
+        "fat": 25.0,
+        "carbs": 45.0
+      },
+      "servings": [
+        { "size": "1 croissant (80g)", "calories": 360, "protein": 5.6, "fat": 20.0, "carbs": 36.0 }
+      ]
+    },
+    {
+      "name": "Bagel (Plain) with Cream Cheese",
+      "description": "Plain bagel served with a spread of cream cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 10.0,
+        "fat": 12.0,
+        "carbs": 30.0
+      },
+      "servings": [
+        { "size": "1 bagel (120g)", "calories": 336, "protein": 12.0, "fat": 14.4, "carbs": 36.0 }
+      ]
+    },
+    {
+      "name": "Breakfast Sandwich (Egg & Cheese)",
+      "description": "Egg and cheese on an English muffin or similar bread.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 9.0,
+        "fat": 10.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 sandwich (120g)", "calories": 240, "protein": 10.8, "fat": 12.0, "carbs": 21.6 }
+      ]
+    },
+    {
+      "name": "Breakfast Platter (Eggs, Bacon, Hash Browns)",
+      "description": "A platter with scrambled eggs, bacon strips, and hash browns.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 12.0,
+        "fat": 18.0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "1 platter (300g)", "calories": 750, "protein": 36.0, "fat": 54.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Chicken Biscuit",
+      "description": "Fried chicken patty served on a fluffy biscuit.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 320,
+        "protein": 12.0,
+        "fat": 20.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 biscuit (120g)", "calories": 384, "protein": 14.4, "fat": 24.0, "carbs": 24.0 }
+      ]
+    },
+    {
+      "name": "Sausage, Egg & Cheese Muffin",
+      "description": "Sausage, egg, and cheese served on an English muffin.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 10.0,
+        "fat": 18.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 muffin (150g)", "calories": 420, "protein": 15.0, "fat": 27.0, "carbs": 27.0 }
+      ]
+    },
+    {
+      "name": "McFlurry (Oreo)",
+      "description": "Vanilla soft serve blended with Oreo cookie pieces.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 4.0,
+        "fat": 8.0,
+        "carbs": 28.0
+      },
+      "servings": [
+        { "size": "Regular size (200g)", "calories": 400, "protein": 8.0, "fat": 16.0, "carbs": 56.0 }
+      ]
+    },
+    {
+      "name": "Blizzard (Dairy Queen, Oreo)",
+      "description": "Dairy Queen's soft serve blended with Oreo cookie pieces.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 4.0,
+        "fat": 9.0,
+        "carbs": 30.0
+      },
+      "servings": [
+        { "size": "Small size (200g)", "calories": 440, "protein": 8.0, "fat": 18.0, "carbs": 60.0 }
+      ]
+    },
+    {
+      "name": "Chicken Quesadilla",
+      "description": "Folded tortilla filled with melted cheese and seasoned chicken.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 15.0,
+        "fat": 15.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 quesadilla (180g)", "calories": 504, "protein": 27.0, "fat": 27.0, "carbs": 32.4 }
+      ]
+    },
+    {
+      "name": "Beef Burrito",
+      "description": "Flour tortilla filled with seasoned ground beef, rice, beans, and cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 10.0,
+        "fat": 10.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 medium burrito (250g)", "calories": 550, "protein": 25.0, "fat": 25.0, "carbs": 50.0 }
+      ]
+    },
+    {
+      "name": "Chicken Burrito",
+      "description": "Flour tortilla filled with seasoned chicken, rice, beans, and cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 12.0,
+        "fat": 8.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 medium burrito (250g)", "calories": 500, "protein": 30.0, "fat": 20.0, "carbs": 50.0 }
+      ]
+    },
+    {
+      "name": "Supreme Nachos",
+      "description": "Tortilla chips topped with seasoned beef, cheese, sour cream, salsa, and jalapeños.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 10.0,
+        "fat": 20.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "Large serving (300g)", "calories": 900, "protein": 30.0, "fat": 60.0, "carbs": 60.0 }
+      ]
+    },
+    {
+      "name": "Cheesecake (Slice)",
+      "description": "Creamy cheesecake slice, often with a fruit topping.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 350,
+        "protein": 6.0,
+        "fat": 25.0,
+        "carbs": 30.0
+      },
+      "servings": [
+        { "size": "1 slice (120g)", "calories": 420, "protein": 7.2, "fat": 30.0, "carbs": 36.0 }
+      ]
+    },
+    {
+      "name": "Brownie",
+      "description": "Rich, fudgy chocolate brownie.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 450,
+        "protein": 5.0,
+        "fat": 25.0,
+        "carbs": 50.0
+      },
+      "servings": [
+        { "size": "1 brownie (80g)", "calories": 360, "protein": 4.0, "fat": 20.0, "carbs": 40.0 }
+      ]
+    },
+    {
+      "name": "Chocolate Chip Muffin",
+      "description": "Sweet baked good with chocolate chips.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 320,
+        "protein": 5.0,
+        "fat": 15.0,
+        "carbs": 40.0
+      },
+      "servings": [
+        { "size": "1 muffin (100g)", "calories": 320, "protein": 5.0, "fat": 15.0, "carbs": 40.0 }
+      ]
+    },
+    {
+      "name": "Sausage Gravy & Biscuit",
+      "description": "Fluffy biscuit smothered in creamy sausage gravy.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 8.0,
+        "fat": 18.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 serving (200g)", "calories": 560, "protein": 16.0, "fat": 36.0, "carbs": 40.0 }
+      ]
+    },
+    {
+      "name": "Chicken Pot Pie (Small)",
+      "description": "Individual savory pie with chicken and vegetables in a creamy sauce, topped with pastry.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 10.0,
+        "fat": 15.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 pie (200g)", "calories": 500, "protein": 20.0, "fat": 30.0, "carbs": 36.0 }
+      ]
+    },
+    {
+      "name": "Tater Tots (Small)",
+      "description": "Small serving of crispy fried potato cylinders.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 3.0,
+        "fat": 18.0,
+        "carbs": 25.0
+      },
+      "servings": [
+        { "size": "Small serving (80g)", "calories": 224, "protein": 2.4, "fat": 14.4, "carbs": 20.0 }
+      ]
+    },
+    {
+      "name": "Mozzarella Sticks (3 pcs)",
+      "description": "Three breaded and fried mozzarella cheese sticks, served with marinara sauce.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 15.0,
+        "fat": 20.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "3 pieces (80g)", "calories": 240, "protein": 12.0, "fat": 16.0, "carbs": 12.0 }
+      ]
+    },
+    {
+      "name": "Jalapeño Poppers (3 pcs)",
+      "description": "Three breaded and fried jalapeño peppers filled with cream cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 320,
+        "protein": 8.0,
+        "fat": 25.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "3 pieces (80g)", "calories": 256, "protein": 6.4, "fat": 20.0, "carbs": 12.0 }
+      ]
+    },
+    {
+      "name": "Soft Pretzel with Cheese Sauce",
+      "description": "Large, soft baked pretzel served with a side of warm cheese sauce.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 320,
+        "protein": 10.0,
+        "fat": 10.0,
+        "carbs": 45.0
+      },
+      "servings": [
+        { "size": "1 pretzel (120g)", "calories": 384, "protein": 12.0, "fat": 12.0, "carbs": 54.0 }
+      ]
+    },
+    {
+      "name": "Chocolate Chip Pancake (1 pc)",
+      "description": "Single pancake with chocolate chips.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 5.0,
+        "fat": 10.0,
+        "carbs": 30.0
+      },
+      "servings": [
+        { "size": "1 pancake (70g)", "calories": 154, "protein": 3.5, "fat": 7.0, "carbs": 21.0 }
+      ]
+    },
+    {
+      "name": "Strawberry Milkshake",
+      "description": "Creamy strawberry ice cream blended with milk.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 110,
+        "protein": 3.0,
+        "fat": 4.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "Small (300ml)", "calories": 330, "protein": 9.0, "fat": 12.0, "carbs": 45.0 }
+      ]
+    },
+    {
+      "name": "Chocolate Milkshake",
+      "description": "Creamy chocolate ice cream blended with milk.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 120,
+        "protein": 3.0,
+        "fat": 5.0,
+        "carbs": 16.0
+      },
+      "servings": [
+        { "size": "Small (300ml)", "calories": 360, "protein": 9.0, "fat": 15.0, "carbs": 48.0 }
+      ]
+    },
+    {
+      "name": "Oreo Milkshake",
+      "description": "Creamy vanilla ice cream blended with Oreo cookies and milk.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 130,
+        "protein": 3.0,
+        "fat": 6.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "Small (300ml)", "calories": 390, "protein": 9.0, "fat": 18.0, "carbs": 54.0 }
+      ]
+    },
+    {
+      "name": "Cheesecake Bites (3 pcs)",
+      "description": "Small, bite-sized pieces of cheesecake, often fried or baked.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 380,
+        "protein": 6.0,
+        "fat": 28.0,
+        "carbs": 25.0
+      },
+      "servings": [
+        { "size": "3 pieces (60g)", "calories": 228, "protein": 3.6, "fat": 16.8, "carbs": 15.0 }
+      ]
+    },
+    {
+      "name": "Apple Slices (Fast Food Side)",
+      "description": "Pre-packaged fresh apple slices, a healthier side option.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 52,
+        "protein": 0.3,
+        "fat": 0.2,
+        "carbs": 14.0
+      },
+      "servings": [
+        { "size": "1 bag (80g)", "calories": 42, "protein": 0.2, "fat": 0.2, "carbs": 11.2 }
+      ]
+    },
+    {
+      "name": "Yogurt Parfait (Fast Food)",
+      "description": "Layered yogurt with granola and fruit.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 120,
+        "protein": 5.0,
+        "fat": 3.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 parfait (150g)", "calories": 180, "protein": 7.5, "fat": 4.5, "carbs": 27.0 }
+      ]
+    },
+    {
+      "name": "Fruit & Maple Oatmeal",
+      "description": "Oatmeal with fruit and maple flavoring.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 100,
+        "protein": 3.0,
+        "fat": 2.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 serving (200g)", "calories": 200, "protein": 6.0, "fat": 4.0, "carbs": 36.0 }
+      ]
+    },
+    {
+      "name": "Sausage McMuffin (McDonald's)",
+      "description": "Sausage patty on an English muffin.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 10.0,
+        "fat": 18.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 sandwich (130g)", "calories": 364, "protein": 13.0, "fat": 23.4, "carbs": 23.4 }
+      ]
+    },
+    {
+      "name": "Egg McMuffin (McDonald's)",
+      "description": "Egg, Canadian bacon, and cheese on an English muffin.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 10.0,
+        "fat": 10.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 sandwich (130g)", "calories": 260, "protein": 13.0, "fat": 13.0, "carbs": 19.5 }
+      ]
+    },
+    {
+      "name": "Filet-O-Fish (McDonald's)",
+      "description": "Steamed bun with a fried fish patty, tartar sauce, and cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 10.0,
+        "fat": 12.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 sandwich (140g)", "calories": 308, "protein": 14.0, "fat": 16.8, "carbs": 25.2 }
+      ]
+    },
+    {
+      "name": "Chicken McNuggets (10 pcs)",
+      "description": "Ten pieces of breaded and fried chicken nuggets.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 15.0,
+        "fat": 18.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "10 pieces (167g)", "calories": 468, "protein": 25.1, "fat": 30.1, "carbs": 25.1 }
+      ]
+    },
+    {
+      "name": "Quarter Pounder with Cheese (McDonald's)",
+      "description": "Quarter-pound beef patty with cheese, pickles, onions, ketchup, and mustard on a sesame seed bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 260,
+        "protein": 14.0,
+        "fat": 16.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 burger (190g)", "calories": 490, "protein": 26.6, "fat": 30.4, "carbs": 34.2 }
+      ]
+    },
+    {
+      "name": "Chicken Royale (Burger King)",
+      "description": "Crispy chicken patty with lettuce and mayonnaise on a sesame seed bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 270,
+        "protein": 10.0,
+        "fat": 17.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 sandwich (200g)", "calories": 540, "protein": 20.0, "fat": 34.0, "carbs": 40.0 }
+      ]
+    },
+    {
+      "name": "Long Chicken (Burger King)",
+      "description": "Long chicken patty with lettuce and mayonnaise on a sesame seed bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 260,
+        "protein": 10.0,
+        "fat": 16.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 sandwich (180g)", "calories": 468, "protein": 18.0, "fat": 28.8, "carbs": 36.0 }
+      ]
+    },
+    {
+      "name": "Whopper Jr. (Burger King)",
+      "description": "Smaller version of the Whopper.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 9.0,
+        "fat": 12.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 burger (120g)", "calories": 240, "protein": 10.8, "fat": 14.4, "carbs": 18.0 }
+      ]
+    },
+    {
+      "name": "Chicken Fries (Burger King)",
+      "description": "Strips of chicken shaped like french fries.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 15.0,
+        "fat": 18.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "9 pieces (80g)", "calories": 224, "protein": 12.0, "fat": 14.4, "carbs": 12.0 }
+      ]
+    },
+    {
+      "name": "Taco Supreme (Taco Bell)",
+      "description": "Crunchy taco shell with seasoned beef, sour cream, tomatoes, lettuce, and cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 10.0,
+        "fat": 12.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 taco (100g)", "calories": 220, "protein": 10.0, "fat": 12.0, "carbs": 15.0 }
+      ]
+    },
+    {
+      "name": "Crunchwrap Supreme (Taco Bell)",
+      "description": "Large flour tortilla grilled with seasoned beef, nacho cheese sauce, a tostada shell, sour cream, lettuce, and tomatoes.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 200,
+        "protein": 8.0,
+        "fat": 10.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 wrap (250g)", "calories": 500, "protein": 20.0, "fat": 25.0, "carbs": 50.0 }
+      ]
+    },
+    {
+      "name": "Cheesy Gordita Crunch (Taco Bell)",
+      "description": "Hard taco shell wrapped in a soft tortilla with a layer of melted cheese, seasoned beef, spicy ranch, lettuce, and cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 250,
+        "protein": 10.0,
+        "fat": 15.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 taco (150g)", "calories": 375, "protein": 15.0, "fat": 22.5, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Bean Burrito (Taco Bell)",
+      "description": "Flour tortilla filled with refried beans, red sauce, onions, and cheese.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 180,
+        "protein": 7.0,
+        "fat": 6.0,
+        "carbs": 25.0
+      },
+      "servings": [
+        { "size": "1 burrito (180g)", "calories": 324, "protein": 12.6, "fat": 10.8, "carbs": 45.0 }
+      ]
+    },
+    {
+      "name": "Crispy Chicken Sandwich (Popeyes)",
+      "description": "Crispy fried chicken fillet with pickles and mayonnaise on a brioche bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 12.0,
+        "fat": 20.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 sandwich (220g)", "calories": 660, "protein": 26.4, "fat": 44.0, "carbs": 44.0 }
+      ]
+    },
+    {
+      "name": "Spicy Chicken Sandwich (Popeyes)",
+      "description": "Spicy fried chicken fillet with pickles and spicy mayonnaise on a brioche bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 310,
+        "protein": 12.0,
+        "fat": 21.0,
+        "carbs": 20.0
+      },
+      "servings": [
+        { "size": "1 sandwich (220g)", "calories": 682, "protein": 26.4, "fat": 46.2, "carbs": 44.0 }
+      ]
+    },
+    {
+      "name": "Chicken Tender (Popeyes, 3 pcs)",
+      "description": "Three pieces of crispy chicken tenders.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 290,
+        "protein": 18.0,
+        "fat": 18.0,
+        "carbs": 12.0
+      },
+      "servings": [
+        { "size": "3 pieces (150g)", "calories": 435, "protein": 27.0, "fat": 27.0, "carbs": 18.0 }
+      ]
+    },
+    {
+      "name": "Red Beans & Rice (Popeyes, Regular)",
+      "description": "A side dish of red beans and rice.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 120,
+        "protein": 5.0,
+        "fat": 3.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "Regular serving (180g)", "calories": 216, "protein": 9.0, "fat": 5.4, "carbs": 32.4 }
+      ]
+    },
+    {
+      "name": "Mashed Potatoes with Gravy (Popeyes, Regular)",
+      "description": "A side dish of mashed potatoes with gravy.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 90,
+        "protein": 2.0,
+        "fat": 4.0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "Regular serving (150g)", "calories": 135, "protein": 3.0, "fat": 6.0, "carbs": 15.0 }
+      ]
+    },
+    {
+      "name": "Coleslaw (Popeyes, Regular)",
+      "description": "A side dish of creamy coleslaw.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 150,
+        "protein": 1.0,
+        "fat": 12.0,
+        "carbs": 10.0
+      },
+      "servings": [
+        { "size": "Regular serving (100g)", "calories": 150, "protein": 1.0, "fat": 12.0, "carbs": 10.0 }
+      ]
+    },
+    {
+      "name": "Biscuit (Popeyes)",
+      "description": "Fluffy, buttery biscuit.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 6.0,
+        "fat": 18.0,
+        "carbs": 30.0
+      },
+      "servings": [
+        { "size": "1 biscuit (80g)", "calories": 240, "protein": 4.8, "fat": 14.4, "carbs": 24.0 }
+      ]
+    },
+    {
+      "name": "Chicken Sandwich (Grilled)",
+      "description": "Grilled chicken fillet on a bun with lettuce and tomato.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 180,
+        "protein": 15.0,
+        "fat": 5.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 sandwich (150g)", "calories": 270, "protein": 22.5, "fat": 7.5, "carbs": 27.0 }
+      ]
+    },
+    {
+      "name": "Double Hamburger",
+      "description": "Two beef patties on a bun with lettuce, tomato, onion, and pickles.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 16.0,
+        "fat": 20.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "1 burger (200g)", "calories": 600, "protein": 32.0, "fat": 40.0, "carbs": 30.0 }
+      ]
+    },
+    {
+      "name": "Bacon Cheeseburger",
+      "description": "Beef patty with bacon and cheese on a bun.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 320,
+        "protein": 15.0,
+        "fat": 22.0,
+        "carbs": 18.0
+      },
+      "servings": [
+        { "size": "1 burger (180g)", "calories": 576, "protein": 27.0, "fat": 39.6, "carbs": 32.4 }
+      ]
+    },
+    {
+      "name": "Spicy Chicken Nuggets (6 pcs)",
+      "description": "Six pieces of spicy breaded and fried chicken nuggets.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 290,
+        "protein": 15.0,
+        "fat": 19.0,
+        "carbs": 15.0
+      },
+      "servings": [
+        { "size": "6 pieces (100g)", "calories": 290, "protein": 15.0, "fat": 19.0, "carbs": 15.0 }
+      ]
+    },
+    {
+      "name": "Veggie Pizza (Slice)",
+      "description": "A slice of pizza topped with various vegetables.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 220,
+        "protein": 9.0,
+        "fat": 8.0,
+        "carbs": 25.0
+      },
+      "servings": [
+        { "size": "1 slice (100g)", "calories": 220, "protein": 9.0, "fat": 8.0, "carbs": 25.0 }
+      ]
+    },
+    {
+      "name": "Meat Lovers Pizza (Slice)",
+      "description": "A slice of pizza topped with various meats (pepperoni, sausage, bacon).",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 300,
+        "protein": 14.0,
+        "fat": 18.0,
+        "carbs": 25.0
+      },
+      "servings": [
+        { "size": "1 slice (100g)", "calories": 300, "protein": 14.0, "fat": 18.0, "carbs": 25.0 }
+      ]
+    },
+    {
+      "name": "Supreme Pizza (Slice)",
+      "description": "A slice of pizza topped with various meats and vegetables.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 12.0,
+        "fat": 15.0,
+        "carbs": 25.0
+      },
+      "servings": [
+        { "size": "1 slice (100g)", "calories": 280, "protein": 12.0, "fat": 15.0, "carbs": 25.0 }
+      ]
+    },
+    {
+      "name": "Garlic Bread (2 slices)",
+      "description": "Two slices of bread toasted with garlic butter.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 350,
+        "protein": 8.0,
+        "fat": 20.0,
+        "carbs": 35.0
+      },
+      "servings": [
+        { "size": "2 slices (80g)", "calories": 280, "protein": 6.4, "fat": 16.0, "carbs": 28.0 }
+      ]
+    },
+    {
+      "name": "Cheesy Breadsticks (3 pcs)",
+      "description": "Three breadsticks topped with melted cheese, served with marinara sauce.",
+      "category": "fast_foods",
+      "nutrients_per_100g": {
+        "calories": 280,
+        "protein": 10.0,
+        "fat": 12.0,
+        "carbs": 30.0
+      },
+      "servings": [
+        { "size": "3 pieces (100g)", "calories": 280, "protein": 10.0, "fat": 12.0, "carbs": 30.0 }
+      ]
+    },
+      {
+        "name": "Cinnamon Sticks (3 pcs)",
+        "description": "Three fried dough sticks coated in cinnamon sugar, often served with icing.",
+        "category": "fast_foods",
+        "nutrients_per_100g": {
+          "calories": 380,
+          "protein": 4.0,
+          "fat": 20.0,
+          "carbs": 45.0
+        },
+        "servings": [
+          { "size": "3 pieces (80g)", "calories": 304, "protein": 3.2, "fat": 16.0, "carbs": 36.0 }
+        ]
+      }
+  ]
+  

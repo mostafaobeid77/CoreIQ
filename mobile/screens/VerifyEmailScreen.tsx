@@ -75,7 +75,7 @@ const VerifyEmailScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, { backgroundColor: isLight ? "#ffffff" : "#0f0f0f" }]}>
+      <View style={[styles.container, { backgroundColor: isLight ? "#f8fafc" : "#0f0f0f" }]}>
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={styles.logoWrapper}>
             <Image source={require("../assets/images/logo.png")} style={styles.logo} />
@@ -121,14 +121,14 @@ const VerifyEmailScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.submitButton} onPress={handleVerify} disabled={submitting}>
-            <LinearGradient colors={["#2563eb", "#1d4ed8"]} style={styles.submitGradient}>
+            <LinearGradient colors={["#8b5cf6", "#7c3aed"]} style={styles.submitGradient}>
               <Text style={styles.submitText}>{submitting ? "Verifying…" : "Verify Email"}</Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <View style={styles.actionsRow}>
             <TouchableOpacity onPress={handleResend} disabled={resending}>
-              <Text style={{ color: "#2563eb", fontWeight: "600" }}>
+              <Text style={{ color: "#8b5cf6", fontWeight: "600" }}>
                 {resending ? "Sending…" : "Resend code"}
               </Text>
             </TouchableOpacity>
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   codeBoxActive: {
-    borderColor: "#2563eb",
+    borderColor: "#8b5cf6",
   },
   codeDigit: {
     fontSize: 24,

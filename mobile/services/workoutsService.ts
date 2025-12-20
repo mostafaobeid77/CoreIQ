@@ -34,6 +34,13 @@ class WorkoutsService {
     return api.post(`/workout-entries/${id}/toggle`);
   }
 
+  async updateWorkoutEntry(id: string, data: {
+    sets?: { reps: number; weight: number }[];
+    minutes?: number;
+  }): Promise<{ entry: WorkoutEntry; message: string }> {
+    return api.put(`/workout-entries/${id}`, data);
+  }
+
   async deleteWorkoutEntry(id: string): Promise<{ message: string }> {
     return api.delete(`/workout-entries/${id}`);
   }

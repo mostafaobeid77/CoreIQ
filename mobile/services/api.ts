@@ -2,6 +2,36 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URLS } from '../constants/api';
 
 const TOKEN_KEY = '@coreiq_token';
+export const BASE_URL = 'https://coreiq-backend.onrender.com/api';
+
+/**
+ * Ensures profile photo URLs point to the current active host.
+ * This handles cases where absolute URLs (with old IPs) were cached.
+ */
+export function fixProfilePhotoUrl(photoPath: string | null | undefined): string | null {
+  if (!photoPath) return null;
+
+  // If it's already a base64 string, keep it as is
+  if (photoPath.startsWith('data:')) return photoPath;
+
+  const host = BASE_URL.replace(/\/api\/?$/, '');
+
+  // If it's a relative path, prepend host
+  if (photoPath.startsWith('/')) {
+    return `${host}${photoPath}`;
+  }
+
+  // If it's an absolute URL but points to our internal API structure
+  if (photoPath.includes('/api/users/') && photoPath.includes('/photo')) {
+    // Match the path including any query parameters (like ?v=timestamp)
+    const internalPathMatch = photoPath.match(/\/api\/users\/[^\/]+\/photo(\?.*)?$/);
+    if (internalPathMatch) {
+      return `${host}${internalPathMatch[0]}`;
+    }
+  }
+
+  return photoPath;
+}
 
 class ApiService {
   private lastWorkingBaseUrl: string | null = null;
@@ -30,7 +60,7 @@ class ApiService {
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const headers = await this.getHeaders();
-    const url = `http://192.168.1.101:5000/api${endpoint}`;
+    const url = `${BASE_URL}${endpoint}`;
 
     console.log('Fetching:', url);
 
@@ -43,15 +73,22 @@ class ApiService {
         },
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (parseError) {
+        console.error('JSON Parse Error. Raw body:', text);
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}...`);
+      }
 
       if (!response.ok) {
-        throw new Error(data?.message || 'An error occurred');
+        throw new Error(data?.message || `Server error: ${response.status}`);
       }
 
       return data as T;
     } catch (error) {
-      console.error('Simple Fetch Error:', error);
+      console.error('Fetch error:', error);
       throw error;
     }
   }

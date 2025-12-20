@@ -101,18 +101,55 @@ exports.addMessage = async (req, res) => {
                 const userTargets = await getUserTargets(req.userId);
                 const user = await User.findById(req.userId);
 
-                const contextStr = `User: ${user.firstName || 'User'}, Goal: ${userTargets.goalWeight || 'Fitness'}, Targets: ${userTargets.calories}kcal, ${userTargets.protein}g Protein`;
-                const systemPrompt = `You are CoreIQ, a fitness coach. 
-Context: ${contextStr}
-Mission: concise, encouraging, actionable advice.
-Return JSON: { "reply": "text", "intent": "chat" | "generate_plan" }`;
+                // Humanize the identity
+                const userName = user.fullName ? user.fullName.split(' ')[0] : 'there';
 
-                const messages = conversation.messages.map(m => ({ role: m.role, content: m.content }));
-                messages.unshift({ role: 'system', content: systemPrompt });
+                const statsContext = {
+                    name: user.fullName || 'User',
+                    age: user.birthDate ? Math.floor((new Date() - new Date(user.birthDate)) / 31557600000) : 'unknown',
+                    gender: user.gender || 'unknown',
+                    weight: user.weight ? `${user.weight}kg` : 'unknown',
+                    height: user.height ? `${user.height}cm` : 'unknown',
+                    activityLevel: user.activityLevel || 'unknown',
+                    goal: userTargets.goalWeight || 'Health',
+                    targets: {
+                        calories: `${userTargets.calories} kcal`,
+                        protein: `${userTargets.protein}g`,
+                        carbs: `${userTargets.carbs}g`,
+                        fats: `${userTargets.fats}g`
+                    }
+                };
 
-                const result = await groqProvider.generateJson(systemPrompt, JSON.stringify(messages.slice(-5))); // Simplified call
+                const systemPrompt = `You are CoreIQ, a premium AI health and fitness coach. 
+Your personality is warm, professional, and deeply empathetic but disciplined. You feel like a high-end personal coach who knows their stuff.
+You MUST address the user as '${user.fullName || 'there'}' naturally in the conversation.
+You have access to the user's current profile and targets: ${JSON.stringify(statsContext)}.
 
-                aiResponseContent = result.reply || "I didn't catch that.";
+CORE PRODUCT CONNECTION:
+- If the user discusses specific goals like gaining weight, losing weight, or body shaping, explain that the BEST results come from creating a structured plan using our app's "Plans" feature.
+- Advise them to let the app generate their multi-day roadmap first.
+- Emphasize that your role as AI Coach is to support them, answer questions, and fine-tune things once that foundational plan is active. This ensures their journey is structured and scientifically backed.
+
+CRITICAL GUIDELINES:
+1. LANGUAGE DYNAMISM: Detect the user's language and respond in the SAME language. If they speak Arabic, respond in Arabic. If they speak English, respond in English.
+2. Don't be robotic. Use natural transitions and supportive language.
+3. Refer to their specific goals or stats if it adds value to the conversation.
+4. Keep advice science-based but accessible.
+5. If they ask about their plan or progress, you know their exact targets.
+6. Your replies should be concise but meaningful. Avoid long lists unless asked.
+
+Return your response in strict JSON format:
+{
+  "reply": "Your human-like response here in the user's language",
+  "intent": "chat" or "generate_plan"
+}
+If the user indicates they want to start a completely new multi-day meal/workout plan, set intent to "generate_plan". Otherwise, keep it as "chat".`;
+
+                const chatHistory = conversation.messages.map(m => ({ role: m.role, content: m.content }));
+
+                const result = await groqProvider.generateJson(systemPrompt, JSON.stringify(chatHistory.slice(-8)));
+
+                aiResponseContent = result.reply || "I'm here for you. Could you rephrase that? I want to make sure I give you the best advice.";
                 if (result.intent === 'generate_plan') action = 'generate_plan';
             } catch (err) {
                 console.error('Chat Error:', err.message);
@@ -253,6 +290,546 @@ exports.generatePlan = async (req, res) => {
 };
 
 exports.modifyPlan = async (req, res) => res.status(501).json({ message: 'Not implemented' });
-exports.editPlan = async (req, res) => res.status(501).json({ message: 'Not implemented' });
+
+/**
+ * AI-Powered Plan Editor
+ * Understands natural language and modifies meals/workouts
+ */
+exports.editPlan = async (req, res) => {
+    console.log('\n========================================');
+    console.log('🔍 [AI EDIT] Endpoint called!');
+    console.log('User ID:', req.userId);
+    console.log('Body received:', JSON.stringify(req.body, null, 2));
+    console.log('========================================\n');
+
+    try {
+        const { currentDay, instruction, planContext } = req.body;
+        console.log(`🤖 [AI EDIT] User says: "${instruction}"`);
+
+        if (!currentDay || !instruction) {
+            console.error('[AI EDIT] Missing fields - currentDay:', !!currentDay, 'instruction:', !!instruction);
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        // In-memory cache variables (Global scope in module)
+        let cachedFoods = null;
+        let cachedWorkouts = null;
+        let lastCacheTime = 0;
+        const CACHE_DURATION = 1000 * 60 * 10; // 10 minutes
+
+        // ... inside editPlan ...
+        // Check cache validity
+        const now = Date.now();
+        if (!cachedFoods || !cachedWorkouts || (now - lastCacheTime > CACHE_DURATION)) {
+            console.log('[AI PERFORMANCE] Cache miss - Fetching DB data...');
+            const [foods, workouts] = await Promise.all([
+                Food.find().lean(),
+                Workout.find().lean()
+            ]);
+            cachedFoods = foods;
+            cachedWorkouts = workouts;
+            lastCacheTime = now;
+        } else {
+            console.log('[AI PERFORMANCE] Cache hit - Using in-memory data');
+        }
+
+        // Parallelize fetching user targets with using cached data
+        // (User targets are per-user, so always fetch fresh)
+        const [userTargets] = await Promise.all([
+            getUserTargets(req.userId)
+        ]);
+
+        const allFoods = cachedFoods;
+        const allWorkouts = cachedWorkouts;
+        const smartBuffet = createSmartBuffet(allFoods);
+
+        // Build context for AI
+        const contextPrompt = `You are an intelligent fitness plan editor.
+User Context: ${planContext || 'General fitness'}
+Targets: ${userTargets.calories}kcal, ${userTargets.protein}g protein, ${userTargets.carbs}g carbs, ${userTargets.fats}g fat
+Current Day Meals: ${JSON.stringify(currentDay.meals || {})}
+Current Day Workouts: ${JSON.stringify(currentDay.workouts || [])}
+
+User Request: "${instruction}"
+
+Analyze the request and respond with JSON ONLY (no markdown):
+{
+  "intent": "swap_food" | "add_meal" | "remove_meal" | "add_workout" | "remove_workout" | "update_workout" | "adjust_macros" | "general_edit",
+  "target": "breakfast" | "lunch" | "dinner" | "snacks" | "workout" | null,
+  "action": "detailed description of what to do",
+  "foodsToAdd": [{ "name": "food name", "quantity": 100, "mealType": "breakfast" }],
+  "foodsToRemove": [{ "mealType": "breakfast", "foodName": "current food" }],
+  "workoutsToAdd": ["workout name"],
+  "workoutsToRemove": ["workout name"],
+  "workoutsToUpdate": [{ 
+    "name": "workout name", 
+    "sets": 4, 
+    "reps": 12, 
+    "weight": 50,
+    "duration": 30
+  }],
+  "reasoning": "brief explanation for user"
+}`;
+
+        let aiPlan;
+        if (groqProvider.isAvailable()) {
+            try {
+                aiPlan = await groqProvider.generateJson(
+                    "You are a precise JSON generator for fitness plan editing.",
+                    contextPrompt
+                );
+                console.log('[AI EDIT] AI Response:', JSON.stringify(aiPlan, null, 2));
+            } catch (err) {
+                console.warn('AI intent detection failed:', err.message);
+            }
+        } else {
+            console.log('[AI EDIT] Groq not available, using fallback');
+        }
+
+        // Fallback to basic intent detection
+        if (!aiPlan || !aiPlan.intent) {
+            const lowerInstruction = instruction.toLowerCase();
+            const intent = lowerInstruction.includes('swap') || lowerInstruction.includes('replace') ? 'swap_food' :
+                lowerInstruction.includes('add') && lowerInstruction.includes('workout') ? 'add_workout' :
+                    lowerInstruction.includes('add') ? 'add_meal' :
+                        lowerInstruction.includes('remove') || lowerInstruction.includes('delete') ? 'remove_meal' :
+                            lowerInstruction.includes('protein') || lowerInstruction.includes('macro') ? 'adjust_macros' :
+                                'general_edit';
+
+            aiPlan = {
+                intent,
+                reasoning: "Processing your request..."
+            };
+
+            // Try to extract workout/food names from instruction
+            if (intent === 'add_workout') {
+                // Extract workout types from common keywords
+                const workoutKeywords = ['cardio', 'running', 'treadmill', 'cycling', 'bench press',
+                    'squat', 'deadlift', 'pull up', 'push up', 'plank', 'yoga'];
+                const foundWorkouts = workoutKeywords.filter(kw => lowerInstruction.includes(kw));
+
+                if (foundWorkouts.length > 0) {
+                    aiPlan.workoutsToAdd = foundWorkouts;
+                } else {
+                    // If no specific workout mentioned, assume they want generic cardio/strength
+                    aiPlan.workoutsToAdd = lowerInstruction.includes('strength') ? ['strength'] : ['cardio'];
+                }
+                console.log('[AI EDIT] Fallback extracted workouts:', aiPlan.workoutsToAdd);
+            } else if (intent === 'add_meal') {
+                // Try to extract meal type
+                const mealTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
+                const targetMeal = mealTypes.find(m => lowerInstruction.includes(m)) || 'snacks';
+                aiPlan.target = targetMeal;
+                aiPlan.foodsToAdd = [{ name: 'protein', quantity: 100, mealType: targetMeal }];
+            }
+        }
+
+        console.log(`📋 Intent detected: ${aiPlan.intent}`);
+
+        // Clone current day to modify
+        const modifiedDay = JSON.parse(JSON.stringify(currentDay));
+        let changesMade = [];
+
+        // Execute based on intent
+        switch (aiPlan.intent) {
+            case 'swap_food':
+                // Swap food items
+                if (aiPlan.foodsToRemove && aiPlan.foodsToAdd) {
+                    for (const toRemove of aiPlan.foodsToRemove) {
+                        const mealType = toRemove.mealType;
+                        if (modifiedDay.meals[mealType]) {
+                            modifiedDay.meals[mealType] = modifiedDay.meals[mealType].filter(
+                                item => !item.name.toLowerCase().includes(toRemove.foodName.toLowerCase())
+                            );
+                        }
+                    }
+
+                    for (const toAdd of aiPlan.foodsToAdd) {
+                        const foodMatch = smartBuffet.find(f =>
+                            f.name.toLowerCase().includes(toAdd.name.toLowerCase())
+                        );
+
+                        if (foodMatch) {
+                            if (!modifiedDay.meals[toAdd.mealType]) {
+                                modifiedDay.meals[toAdd.mealType] = [];
+                            }
+
+                            const qty = toAdd.quantity || 100;
+                            const ratio = qty / 100;
+
+                            modifiedDay.meals[toAdd.mealType].push({
+                                foodId: foodMatch._id,
+                                name: foodMatch.name,
+                                quantity: qty,
+                                unit: 'grams',
+                                calories: Math.round(foodMatch.cal * ratio),
+                                protein: Math.round(foodMatch.p * ratio),
+                                carbs: Math.round(foodMatch.c * ratio),
+                                fats: Math.round(foodMatch.f * ratio),
+                                caloriesPer100g: foodMatch.cal,
+                                proteinPer100g: foodMatch.p,
+                                carbsPer100g: foodMatch.c,
+                                fatsPer100g: foodMatch.f
+                            });
+                            changesMade.push(`Added ${foodMatch.name} to ${toAdd.mealType}`);
+                        }
+                    }
+                }
+                break;
+
+            case 'add_meal':
+                // Add new meal items
+                if (aiPlan.foodsToAdd) {
+                    for (const toAdd of aiPlan.foodsToAdd) {
+                        const foodMatch = smartBuffet.find(f =>
+                            f.name.toLowerCase().includes(toAdd.name.toLowerCase())
+                        ) || findBestFoodMatch(toAdd.name, smartBuffet, userTargets);
+
+                        if (foodMatch) {
+                            if (!modifiedDay.meals[toAdd.mealType]) {
+                                modifiedDay.meals[toAdd.mealType] = [];
+                            }
+
+                            const qty = toAdd.quantity || 100;
+                            const ratio = qty / 100;
+
+                            modifiedDay.meals[toAdd.mealType].push({
+                                foodId: foodMatch._id,
+                                name: foodMatch.name,
+                                quantity: qty,
+                                unit: 'grams',
+                                calories: Math.round(foodMatch.cal * ratio),
+                                protein: Math.round(foodMatch.p * ratio),
+                                carbs: Math.round(foodMatch.c * ratio),
+                                fats: Math.round(foodMatch.f * ratio),
+                                caloriesPer100g: foodMatch.cal,
+                                proteinPer100g: foodMatch.p,
+                                carbsPer100g: foodMatch.c,
+                                fatsPer100g: foodMatch.f
+                            });
+                            changesMade.push(`Added ${foodMatch.name} (${qty}g) to ${toAdd.mealType}`);
+                        }
+                    }
+                }
+                break;
+
+            case 'remove_meal':
+                // Remove meal items
+                if (aiPlan.foodsToRemove) {
+                    for (const toRemove of aiPlan.foodsToRemove) {
+                        const mealType = toRemove.mealType || aiPlan.target;
+                        if (modifiedDay.meals[mealType]) {
+                            const beforeCount = modifiedDay.meals[mealType].length;
+                            modifiedDay.meals[mealType] = modifiedDay.meals[mealType].filter(
+                                item => !item.name.toLowerCase().includes(toRemove.foodName.toLowerCase())
+                            );
+                            const afterCount = modifiedDay.meals[mealType].length;
+                            if (beforeCount > afterCount) {
+                                changesMade.push(`Removed ${toRemove.foodName} from ${mealType}`);
+                            }
+                        }
+                    }
+                } else if (aiPlan.target) {
+                    // Remove entire meal section
+                    if (modifiedDay.meals[aiPlan.target]) {
+                        modifiedDay.meals[aiPlan.target] = [];
+                        changesMade.push(`Cleared all ${aiPlan.target} items`);
+                    }
+                }
+                break;
+
+            case 'add_workout':
+                // Add workouts
+                console.log('[AI EDIT] Processing add_workout intent');
+                console.log('[AI EDIT] aiPlan.workoutsToAdd:', aiPlan.workoutsToAdd);
+                console.log('[AI EDIT] Available workouts count:', allWorkouts.length);
+
+                // Log first workout structure to understand schema
+                if (allWorkouts.length > 0) {
+                    console.log('[AI EDIT] Sample workout structure:', {
+                        name: allWorkouts[0].name,
+                        category: allWorkouts[0].category,
+                        muscle_group: allWorkouts[0].muscle_group,
+                        type: allWorkouts[0].type,
+                        muscleGroups: allWorkouts[0].muscleGroups
+                    });
+                }
+
+                if (aiPlan.workoutsToAdd && aiPlan.workoutsToAdd.length > 0) {
+                    for (const workoutName of aiPlan.workoutsToAdd) {
+                        console.log('[AI EDIT] Looking for workout:', workoutName);
+                        let lowerName = workoutName.toLowerCase().trim();
+
+                        // normalize "walking" -> "walking (outdoor)" to avoid matching "walking lunge"
+                        if (lowerName === 'walking' || lowerName === 'walk') {
+                            lowerName = 'walking (outdoor)';
+                        }
+
+                        // 1. Try exact or close name match
+                        let workoutMatch = allWorkouts.find(w =>
+                            w.name.toLowerCase() === lowerName ||
+                            w.name.toLowerCase().includes(lowerName) ||
+                            lowerName.includes(w.name.toLowerCase())
+                        );
+
+
+                        // 2. Specialized Fallbacks for common terms
+                        if (!workoutMatch) {
+                            if (lowerName.includes('treadmill') || lowerName.includes('running')) {
+                                workoutMatch = allWorkouts.find(w => w.name.toLowerCase().includes('treadmill') || w.name.toLowerCase().includes('running'));
+                            } else if (lowerName.includes('bike') || lowerName.includes('cycling')) {
+                                workoutMatch = allWorkouts.find(w => w.name.toLowerCase().includes('cycling') || w.name.toLowerCase().includes('bike'));
+                            } else if (lowerName.includes('walk')) {
+                                // Prefer outdoor walking if just 'walk' is requested
+                                workoutMatch = allWorkouts.find(w => w.name.toLowerCase() === 'walking (outdoor)');
+                                if (!workoutMatch) workoutMatch = allWorkouts.find(w => w.name.toLowerCase().includes('walking'));
+                            }
+                        }
+
+                        // 3. Fallback by category
+                        if (!workoutMatch) {
+                            workoutMatch = allWorkouts.find(w => {
+                                if (w.category && w.category.toLowerCase() === lowerName) return true;
+                                if (w.muscle_group && w.muscle_group.toLowerCase() === lowerName) return true;
+                                return false;
+                            });
+                        }
+
+                        if (workoutMatch) {
+                            console.log('[AI EDIT] Found workout match:', workoutMatch.name);
+                            if (!modifiedDay.workouts) modifiedDay.workouts = [];
+
+                            // Determine workoutType based on category
+                            const isCardio = (workoutMatch.category && workoutMatch.category.toLowerCase() === 'cardio') ||
+                                (workoutMatch.type && workoutMatch.type.toLowerCase() === 'cardio') ||
+                                (workoutMatch.name.toLowerCase().includes('run') || workoutMatch.name.toLowerCase().includes('cardio'));
+
+                            // Check if AI provided specific details for this new workout
+                            const specificUpdate = aiPlan.workoutsToUpdate?.find(u =>
+                                u.name.toLowerCase().includes(workoutMatch.name.toLowerCase()) ||
+                                workoutMatch.name.toLowerCase().includes(u.name.toLowerCase())
+                            );
+
+                            const workoutEntry = {
+                                workoutId: workoutMatch._id,
+                                name: workoutMatch.name,
+                                workoutType: isCardio ? 'cardio' : 'strength',
+                                muscle_group: workoutMatch.muscle_group || '',
+                            };
+
+                            if (isCardio) {
+                                let duration = 30;
+                                if (specificUpdate?.duration) {
+                                    duration = specificUpdate.duration;
+                                } else {
+                                    // Try to extract duration from the requested name (e.g. "Running 25 mins")
+                                    const durMatch = workoutName.match(/(\d+)\s*(min|minute)/i);
+                                    if (durMatch) {
+                                        duration = parseInt(durMatch[1]);
+                                        console.log(`[AI EDIT] Extracted duration from name: ${duration} min`);
+                                    }
+                                }
+                                workoutEntry.minutes = duration;
+                                console.log(`[AI EDIT] Added as cardio with duration: ${workoutEntry.minutes} minutes`);
+                            } else {
+                                const numSets = Math.max(1, Math.min(10, parseInt(specificUpdate?.sets) || 3));
+                                const repVal = Math.max(1, parseInt(specificUpdate?.reps) || 10);
+                                const weightVal = Math.max(0, parseFloat(specificUpdate?.weight) || 0);
+
+                                workoutEntry.sets = Array(numSets).fill(null).map(() => ({
+                                    reps: repVal,
+                                    weight: weightVal
+                                }));
+                                console.log(`[AI EDIT] Added as strength with ${numSets} sets of ${repVal} at ${weightVal}kg`);
+                            }
+
+                            modifiedDay.workouts.push(workoutEntry);
+                            changesMade.push(`Added ${workoutMatch.name}`);
+                        }
+                        else {
+                            console.warn('[AI EDIT] No workout found for:', workoutName);
+                            console.warn('[AI EDIT] Available categories:', [...new Set(allWorkouts.map(w => w.category).filter(Boolean))]);
+                            changesMade.push(`⚠️ Could not find workout: ${workoutName}`);
+                        }
+                    }
+                } else {
+                    console.warn('[AI EDIT] No workoutsToAdd in aiPlan');
+                    // Try to add a generic cardio workout as fallback
+                    const cardioWorkout = allWorkouts.find(w => w.category?.toLowerCase() === 'cardio' || w.type?.toLowerCase() === 'cardio');
+                    if (cardioWorkout) {
+                        if (!modifiedDay.workouts) modifiedDay.workouts = [];
+                        modifiedDay.workouts.push({
+                            workoutId: cardioWorkout._id,
+                            name: cardioWorkout.name,
+                            workoutType: 'cardio',
+                            muscle_group: cardioWorkout.muscle_group || '',
+                            minutes: 20,
+                            isCompleted: false
+                        });
+                        changesMade.push(`Added ${cardioWorkout.name} (20 min)`);
+                    } else {
+                        changesMade.push('⚠️ No cardio workouts available in database');
+                    }
+                }
+                break;
+
+            case 'remove_workout':
+                // Remove workouts
+                if (aiPlan.workoutsToRemove && modifiedDay.workouts) {
+                    for (const workoutName of aiPlan.workoutsToRemove) {
+                        const beforeCount = modifiedDay.workouts.length;
+                        modifiedDay.workouts = modifiedDay.workouts.filter(
+                            w => !w.name.toLowerCase().includes(workoutName.toLowerCase())
+                        );
+                        const afterCount = modifiedDay.workouts.length;
+                        if (beforeCount > afterCount) {
+                            changesMade.push(`Removed ${workoutName}`);
+                        }
+                    }
+                }
+                break;
+
+            case 'update_workout':
+                // Update specific workout details
+                if (aiPlan.workoutsToUpdate && modifiedDay.workouts) {
+                    for (const updateDef of aiPlan.workoutsToUpdate) {
+                        const workoutToUpdate = modifiedDay.workouts.find(w =>
+                            w.name.toLowerCase().includes(updateDef.name.toLowerCase()) ||
+                            updateDef.name.toLowerCase().includes(w.name.toLowerCase())
+                        );
+
+                        if (workoutToUpdate) {
+                            const isCardio = workoutToUpdate.workoutType === 'cardio' || !!workoutToUpdate.minutes;
+
+                            if (isCardio && updateDef.duration) {
+                                workoutToUpdate.minutes = updateDef.duration;
+                                changesMade.push(`Updated ${workoutToUpdate.name} duration to ${updateDef.duration} min`);
+                            } else {
+                                // Strength workout
+                                const numSets = updateDef.sets || workoutToUpdate.sets?.length || 3;
+                                const repVal = updateDef.reps || (workoutToUpdate.sets?.[0]?.reps) || 10;
+                                const weightVal = updateDef.weight !== undefined ? updateDef.weight : (workoutToUpdate.sets?.[0]?.weight) || 0;
+
+                                workoutToUpdate.sets = Array(numSets).fill(null).map(() => ({
+                                    reps: repVal,
+                                    weight: weightVal
+                                }));
+
+                                let updateMsg = `Updated ${workoutToUpdate.name}`;
+                                if (updateDef.sets) updateMsg += ` to ${updateDef.sets} sets`;
+                                if (updateDef.reps) updateMsg += ` with ${updateDef.reps} reps`;
+                                if (updateDef.weight !== undefined) updateMsg += ` at ${updateDef.weight}kg`;
+
+                                changesMade.push(updateMsg);
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case 'adjust_macros':
+                // Intelligent macro adjustment
+                const currentMacros = calculateDayMacros(modifiedDay.meals);
+                const deficit = {
+                    protein: userTargets.protein - currentMacros.protein,
+                    calories: userTargets.calories - currentMacros.calories
+                };
+
+                if (deficit.protein > 10) {
+                    // Add high-protein food
+                    const proteinFood = smartBuffet.find(f => f.p > 20 && f.name.toLowerCase().includes('chicken'));
+                    if (proteinFood && modifiedDay.meals.lunch) {
+                        const qty = Math.ceil((deficit.protein / proteinFood.p) * 100);
+                        const ratio = qty / 100;
+                        modifiedDay.meals.lunch.push({
+                            foodId: proteinFood._id,
+                            name: proteinFood.name,
+                            quantity: qty,
+                            unit: 'grams',
+                            calories: Math.round(proteinFood.cal * ratio),
+                            protein: Math.round(proteinFood.p * ratio),
+                            carbs: Math.round(proteinFood.c * ratio),
+                            fats: Math.round(proteinFood.f * ratio),
+                            caloriesPer100g: proteinFood.cal,
+                            proteinPer100g: proteinFood.p,
+                            carbsPer100g: proteinFood.c,
+                            fatsPer100g: proteinFood.f
+                        });
+                        changesMade.push(`Added ${proteinFood.name} (${qty}g) to boost protein`);
+                    }
+                }
+                break;
+
+            case 'general_edit':
+            default:
+                // General AI-driven edit
+                changesMade.push("Applied general modifications based on your request");
+                break;
+        }
+
+        const responseMessage = changesMade.length > 0
+            ? `✅ ${changesMade.join('. ')}\n${aiPlan.reasoning || ''}`
+            : `⚠️ No changes made. ${aiPlan.reasoning || 'Try being more specific.'}`;
+
+        res.json({
+            success: changesMade.length > 0,
+            modifiedDay,
+            message: responseMessage,
+            changes: changesMade,
+            aiReasoning: aiPlan.reasoning
+        });
+
+    } catch (error) {
+        console.error('[AI EDIT] Error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'AI edit failed',
+            error: error.message
+        });
+    }
+};
+
 exports.suggestPlanImprovements = async (req, res) => res.status(501).json({ message: 'Not implemented' });
+
+// Helper function to find best food match
+function findBestFoodMatch(query, buffet, targets) {
+    const lowerQuery = query.toLowerCase();
+
+    // Exact match
+    let match = buffet.find(f => f.name.toLowerCase() === lowerQuery);
+    if (match) return match;
+
+    // Partial match
+    match = buffet.find(f => f.name.toLowerCase().includes(lowerQuery));
+    if (match) return match;
+
+    // If query mentions protein, return high-protein food
+    if (lowerQuery.includes('protein')) {
+        return buffet.find(f => f.p > 20);
+    }
+
+    // Return a balanced food
+    return buffet.find(f => f.p > 15 && f.cal < 200);
+}
+
+// Helper to calculate day macros
+function calculateDayMacros(meals) {
+    let totals = { calories: 0, protein: 0, carbs: 0, fats: 0 };
+
+    if (!meals) return totals;
+
+    Object.values(meals).forEach(mealArray => {
+        if (Array.isArray(mealArray)) {
+            mealArray.forEach(item => {
+                totals.calories += item.calories || 0;
+                totals.protein += item.protein || 0;
+                totals.carbs += item.carbs || 0;
+                totals.fats += item.fats || 0;
+            });
+        }
+    });
+
+    return totals;
+}
+
 

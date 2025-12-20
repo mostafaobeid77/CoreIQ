@@ -5,7 +5,7 @@ const Food = require('../models/Food');
 exports.getMealsByDate = async (req, res) => {
   try {
     const { date } = req.params;
-    
+
     const meals = await Meal.find({
       userId: req.userId,
       date: new Date(date)
@@ -172,6 +172,22 @@ exports.getTotalNutrients = async (req, res) => {
     res.json(totals);
   } catch (error) {
     console.error('Get total nutrients error:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+// Delete all meals for a date
+exports.deleteMealsByDate = async (req, res) => {
+  try {
+    const { date } = req.params;
+
+    await Meal.deleteMany({
+      userId: req.userId,
+      date: new Date(date)
+    });
+
+    res.json({ message: 'All meals for the date deleted successfully' });
+  } catch (error) {
+    console.error('Delete meals by date error:', error.message);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

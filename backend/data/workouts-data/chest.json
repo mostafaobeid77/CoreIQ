@@ -1,0 +1,129 @@
+[
+    {
+      "name": "Push-up",
+      "description": "A bodyweight exercise that targets the chest, shoulders, and triceps.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Incline Push-up",
+      "description": "Push-up variation with hands elevated to target upper chest.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Decline Push-up",
+      "description": "Push-up variation with feet elevated to emphasize lower chest.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "Bench Press",
+      "description": "Classic barbell exercise for chest, shoulders, and triceps.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Incline Bench Press",
+      "description": "Targets the upper chest using a barbell on an inclined bench.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Decline Bench Press",
+      "description": "Barbell press on a decline bench to emphasize lower chest.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Dumbbell Bench Press",
+      "description": "Uses dumbbells for greater range of motion than barbell bench press.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Incline Dumbbell Press",
+      "description": "Incline bench variation with dumbbells to isolate the upper chest.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Decline Dumbbell Press",
+      "description": "Dumbbell press on decline bench for lower chest activation.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Dumbbell Fly",
+      "description": "Isolation exercise for chest using dumbbells in a wide arc.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Incline Dumbbell Fly",
+      "description": "Incline variation of dumbbell fly focusing on upper chest.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Cable Crossover",
+      "description": "Cable machine exercise for isolating chest with constant tension.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Incline Cable Fly",
+      "description": "Cable fly on an incline bench to target upper chest.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Decline Cable Fly",
+      "description": "Cable fly on a decline bench to emphasize lower chest.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Chest Dips",
+      "description": "Dip variation leaning forward to target chest more than triceps.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Dip Bars"
+    },
+    {
+      "name": "Pec Deck Machine",
+      "description": "Machine-based chest isolation exercise, also known as butterfly machine.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Machine"
+    },
+    {
+      "name": "Smith Machine Bench Press",
+      "description": "Bench press using a Smith machine for stability.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Smith Machine"
+    },
+    {
+      "name": "Floor Press",
+      "description": "Bench press variation performed on the floor to reduce shoulder strain.",
+      "category": "Strength",
+      "muscle_group": "Chest",
+      "equipment": "Barbell or Dumbbells"
+    }
+  ]
+  

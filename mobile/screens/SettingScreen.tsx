@@ -60,11 +60,14 @@ const SettingScreen = () => {
       content: {
         title: '💧 Time to drink water!',
         body: 'Stay hydrated! Log your water intake.',
+        sound: true,
+        priority: Notifications.AndroidNotificationPriority.MAX,
       },
       trigger: {
         seconds: 7200, // 2 hours
         repeats: true,
-      }as Notifications.NotificationTriggerInput,
+        channelId: 'reminders',
+      } as Notifications.NotificationTriggerInput,
     });
   };
 
@@ -85,11 +88,14 @@ const SettingScreen = () => {
       content: {
         title: '🌱 Wellness Reminder',
         body: 'Time for a workout, meal, or a motivational check-in!',
+        sound: true,
+        priority: Notifications.AndroidNotificationPriority.MAX,
       },
       trigger: {
         seconds: 21600, // 6 hours
         repeats: true,
-      }as Notifications.NotificationTriggerInput,
+        channelId: 'reminders',
+      } as Notifications.NotificationTriggerInput,
     });
   };
 
@@ -99,6 +105,24 @@ const SettingScreen = () => {
       if (n.content.title === '🌱 Wellness Reminder') {
         await Notifications.cancelScheduledNotificationAsync(n.identifier);
       }
+    }
+  };
+
+  const registerNotificationChannels = async () => {
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+
+      await Notifications.setNotificationChannelAsync('reminders', {
+        name: 'Reminders',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#2563eb',
+      });
     }
   };
 
@@ -128,6 +152,7 @@ const SettingScreen = () => {
     React.useCallback(() => {
       let isActive = true;
       (async () => {
+        await registerNotificationChannels();
         const water = await AsyncStorage.getItem('notifyWater');
         if (water !== null && isActive) setNotifyWater(JSON.parse(water));
         const wellness = await AsyncStorage.getItem('notifyWellness');
@@ -188,9 +213,9 @@ const SettingScreen = () => {
       {loading ? (
         <ActivityIndicator size="large" style={{ marginTop: 32 }} />
       ) : (
-        <ScrollView 
-          style={{ flex: 1 }} 
-          contentContainerStyle={{ paddingBottom: 32 }}
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ paddingBottom: 120 }}
           contentInsetAdjustmentBehavior="automatic"
           showsVerticalScrollIndicator={false}
         >
@@ -254,7 +279,7 @@ const SettingScreen = () => {
               </View>
               <Switch value={notifyWater} onValueChange={async (val) => {
                 setNotifyWater(val);
-                try { await AsyncStorage.setItem('notifyWater', JSON.stringify(val)); } catch {}
+                try { await AsyncStorage.setItem('notifyWater', JSON.stringify(val)); } catch { }
               }} />
             </View>
             <View style={styles.row}>
@@ -267,14 +292,14 @@ const SettingScreen = () => {
               </View>
               <Switch value={notifyWellness} onValueChange={async (val) => {
                 setNotifyWellness(val);
-                try { await AsyncStorage.setItem('notifyWellness', JSON.stringify(val)); } catch {}
+                try { await AsyncStorage.setItem('notifyWellness', JSON.stringify(val)); } catch { }
               }} />
             </View>
           </View>
           {/* Support */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Support</Text>
-            <TouchableOpacity style={styles.row} activeOpacity={0.8} onPress={() => Alert.alert('Report a Bug', 'Feature coming soon.') }>
+            <TouchableOpacity style={styles.row} activeOpacity={0.8} onPress={() => Alert.alert('Report a Bug', 'Feature coming soon.')}>
               <View style={styles.rowLeft}>
                 <Ionicons name="bug" size={18} color="#ef4444" style={styles.rowIcon} />
                 <Text style={styles.rowLabel}>Report a bug</Text>

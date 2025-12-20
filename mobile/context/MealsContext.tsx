@@ -42,6 +42,8 @@ interface MealsContextType {
   ) => Promise<void>;
   toggleMealCompletion: (date: string, mealType: string, itemId: string) => Promise<void>;
   removeMealItem: (date: string, mealType: string, itemId: string) => Promise<void>;
+  removeAllMealsForDate: (date: string) => Promise<void>;
+  updateMealItem: (date: string, mealType: string, itemId: string, data: { quantity: number; unit: 'grams' | 'servings'; mealType?: string }) => Promise<void>;
   getMealsForDate: (date: string) => { [mealType: string]: MealItem[] };
   getTotalNutrientsForDate: (date: string) => {
     totalCalories: number;
@@ -166,7 +168,7 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (!user) return;
       const response = await mealsService.toggleMeal(itemId);
       const updated = normalizeMeal(response.meal);
-    
+
       setMealsByDate((prev) => {
         const day = prev[date];
         if (!day || !day[mealType]) return prev;
@@ -179,7 +181,7 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             ),
           },
         };
-        });
+      });
     },
     [normalizeMeal, user]
   );
@@ -199,9 +201,50 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             [mealType]: day[mealType].filter((item) => item.id !== itemId),
           },
         };
-    });
+      });
     },
     [user]
+  );
+
+  const removeAllMealsForDate = useCallback(
+    async (date: string) => {
+      if (!user) return;
+      await mealsService.deleteMealsByDate(date);
+
+      setMealsByDate((prev) => {
+        const next = { ...prev };
+        delete next[date];
+        return next;
+      });
+    },
+    [user]
+  );
+
+  const updateMealItem = useCallback(
+    async (date: string, mealType: string, itemId: string, data: { quantity: number; unit: 'grams' | 'servings'; mealType?: string }) => {
+      if (!user) return;
+      const response = await mealsService.updateMeal(itemId, data);
+      const updated = normalizeMeal(response.meal);
+      const newMealType = data.mealType || mealType;
+
+      setMealsByDate((prev) => {
+        const next = { ...prev };
+        const day = { ...next[date] };
+
+        if (newMealType !== mealType) {
+          // Move item to different meal section
+          day[mealType] = (day[mealType] || []).filter(i => i.id !== itemId);
+          day[newMealType] = [...(day[newMealType] || []), updated];
+        } else {
+          // Update in place
+          day[mealType] = (day[mealType] || []).map(i => i.id === itemId ? updated : i);
+        }
+
+        next[date] = day;
+        return next;
+      });
+    },
+    [normalizeMeal, user]
   );
 
   const getMealsForDate = useCallback(
@@ -260,6 +303,8 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       addMealItem,
       toggleMealCompletion,
       removeMealItem,
+      removeAllMealsForDate,
+      updateMealItem,
       getMealsForDate,
       getTotalNutrientsForDate,
       getCompletedMealsCountForDate,
@@ -272,6 +317,8 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       addMealItem,
       toggleMealCompletion,
       removeMealItem,
+      removeAllMealsForDate,
+      updateMealItem,
       loadingDates,
       getMealsForDate,
       getTotalNutrientsForDate,

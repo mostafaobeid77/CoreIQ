@@ -111,36 +111,64 @@ exports.updatePlan = async (req, res) => {
     delete updateData.status;
     delete updateData.userId;
 
-    // If updating startDate, recalculate endDate and dates
+    // If updating startDate, recalculate endDate
     if (updateData.startDate) {
       const start = new Date(updateData.startDate);
       const end = new Date(start);
       end.setDate(end.getDate() + 13);
       updateData.endDate = end;
+    }
 
-      // Recalculate dates for mealPlan and workoutPlan if they exist
-      if (updateData.mealPlan) {
-        updateData.mealPlan = updateData.mealPlan.map((day, index) => {
-          const dayDate = new Date(start);
-          dayDate.setDate(dayDate.getDate() + index);
-          return {
-            ...day,
-            day: index + 1,
-            date: dayDate
-          };
-        });
-      }
+    // ALWAYS recalculate dates for mealPlan and workoutPlan if they are provided,
+    // using either the new startDate or the existing one.
+    if (updateData.mealPlan || updateData.workoutPlan) {
+      const existingPlan = await Plan.findById(id);
+      if (existingPlan) {
+        const start = new Date(updateData.startDate || existingPlan.startDate);
 
-      if (updateData.workoutPlan) {
-        updateData.workoutPlan = updateData.workoutPlan.map((day, index) => {
-          const dayDate = new Date(start);
-          dayDate.setDate(dayDate.getDate() + index);
-          return {
-            ...day,
-            day: index + 1,
-            date: dayDate
-          };
-        });
+        if (updateData.mealPlan) {
+          updateData.mealPlan = updateData.mealPlan.map((day, index) => {
+            const dayDate = new Date(start);
+            dayDate.setDate(dayDate.getDate() + index);
+            return {
+              ...day,
+              day: index + 1,
+              date: dayDate,
+              meals: (day.meals || []).map(m => ({
+                ...m,
+                mealType: m.mealType || 'snacks'
+              }))
+            };
+          });
+        }
+
+        if (updateData.workoutPlan) {
+          updateData.workoutPlan = updateData.workoutPlan.map((day, index) => {
+            const dayDate = new Date(start);
+            dayDate.setDate(dayDate.getDate() + index);
+            return {
+              ...day,
+              day: index + 1,
+              date: dayDate,
+              workouts: (day.workouts || [])
+                .filter(w => w.workoutId || w.id || w._id) // Remove corrupt entries
+                .map(w => {
+                  // Ensure workoutType is set (frontend often uses 'type')
+                  let wType = w.workoutType || w.type || 'strength';
+                  if (wType.toLowerCase() === 'cardio') wType = 'cardio';
+                  else wType = 'strength';
+
+                  return {
+                    ...w,
+                    workoutId: w.workoutId || w.id || w._id,
+                    workoutType: wType,
+                    // Ensure sets exist for strength
+                    sets: (wType === 'strength' && (!w.sets || w.sets.length === 0)) ? [{ reps: 10, weight: 0 }] : (w.sets || [])
+                  };
+                })
+            };
+          });
+        }
       }
     }
 
@@ -178,9 +206,41 @@ exports.activatePlan = async (req, res) => {
       return res.status(400).json({ message: 'Plan is already active' });
     }
 
-    if (plan.status === 'completed') {
-      return res.status(400).json({ message: 'Cannot activate completed plan' });
-    }
+    // 1. Collect all unique IDs for bulk lookup
+    const foodIds = new Set();
+    const workoutIds = new Set();
+    const foodNames = new Set();
+    const workoutNames = new Set();
+
+    plan.mealPlan.forEach(day => {
+      day.meals.forEach(m => {
+        if (m.foodId) foodIds.add(m.foodId.toString());
+        else if (m.name) foodNames.add(m.name);
+      });
+    });
+
+    plan.workoutPlan.forEach(day => {
+      day.workouts.forEach(w => {
+        if (w.workoutId) workoutIds.add(w.workoutId.toString());
+        else if (w.name) workoutNames.add(w.name);
+      });
+    });
+
+    // 2. Bulk fetch
+    const [foodsById, workoutsById, foodsByName, workoutsByName] = await Promise.all([
+      Food.find({ _id: { $in: Array.from(foodIds) } }).lean(),
+      Workout.find({ _id: { $in: Array.from(workoutIds) } }).lean(),
+      Food.find({ name: { $in: Array.from(foodNames) } }).lean(),
+      Workout.find({ name: { $in: Array.from(workoutNames) } }).lean()
+    ]);
+
+    const foodMap = new Map();
+    foodsById.forEach(f => foodMap.set(f._id.toString(), f));
+    foodsByName.forEach(f => foodMap.set(f.name, f));
+
+    const workoutMap = new Map();
+    workoutsById.forEach(w => workoutMap.set(w._id.toString(), w));
+    workoutsByName.forEach(w => workoutMap.set(w.name, w));
 
     // Deactivate any other active plan
     await Plan.updateMany(
@@ -188,24 +248,27 @@ exports.activatePlan = async (req, res) => {
       { status: 'draft' }
     );
 
-    // Create Meal entries for all planned meals
+    // 3. Create Meal entries
     const mealEntries = [];
+    let skippedMeals = 0;
     for (const day of plan.mealPlan) {
       for (const mealItem of day.meals) {
-        // Verify food exists
-        const food = await Food.findById(mealItem.foodId);
-        if (!food) {
-          console.warn(`Food ${mealItem.foodId} not found, skipping meal`);
+        const idStr = mealItem.foodId ? mealItem.foodId.toString() : null;
+        const food = idStr ? foodMap.get(idStr) : foodMap.get(mealItem.name);
+        const resolvedId = mealItem.foodId || food?._id;
+
+        if (!resolvedId) {
+          skippedMeals++;
           continue;
         }
 
-        const meal = new Meal({
+        mealEntries.push(new Meal({
           userId: req.userId,
           date: day.date,
           mealType: mealItem.mealType,
-          foodId: mealItem.foodId,
+          foodId: resolvedId,
           name: mealItem.name,
-          brand: food.brand || 'Generic',
+          brand: food?.brand || mealItem.brand || 'Generic',
           quantity: mealItem.quantity,
           unit: mealItem.unit,
           calories: mealItem.calories,
@@ -215,43 +278,60 @@ exports.activatePlan = async (req, res) => {
           isCompleted: false,
           planId: plan._id,
           planDay: day.day
-        });
-        mealEntries.push(meal);
+        }));
       }
     }
 
-    // Create WorkoutEntry for all planned workouts
+    // 4. Create Workout entries
     const workoutEntries = [];
+    let skippedWorkouts = 0;
     for (const day of plan.workoutPlan) {
       for (const workoutItem of day.workouts) {
-        // Verify workout exists
-        const workout = await Workout.findById(workoutItem.workoutId);
-        if (!workout) {
-          console.warn(`Workout ${workoutItem.workoutId} not found, skipping workout`);
+        const idStr = workoutItem.workoutId ? workoutItem.workoutId.toString() : null;
+        const workout = idStr ? workoutMap.get(idStr) : workoutMap.get(workoutItem.name);
+        const resolvedId = workoutItem.workoutId || workout?._id;
+
+        if (!resolvedId) {
+          skippedWorkouts++;
           continue;
         }
 
-        const entry = new WorkoutEntry({
+        // Ensure strength workouts have at least one set to pass validation
+        const type = workoutItem.workoutType || workout?.category?.toLowerCase() || 'strength';
+        let sets = workoutItem.sets || [];
+        let minutes = workoutItem.minutes || 0;
+
+        if (type === 'strength' && sets.length === 0) {
+          sets = [{ reps: 10, weight: 0 }]; // Fallback default set
+        }
+        if (type === 'cardio' && minutes <= 0) {
+          minutes = 30; // Fallback default minutes
+        }
+
+        workoutEntries.push(new WorkoutEntry({
           userId: req.userId,
           date: day.date,
-          workoutId: workoutItem.workoutId,
-          workoutType: workoutItem.workoutType,
+          workoutId: resolvedId,
+          workoutType: type === 'cardio' ? 'cardio' : 'strength',
           name: workoutItem.name,
-          description: workout.description || '',
-          muscle_group: workoutItem.muscle_group || workout.muscle_group,
-          sets: workoutItem.sets || [],
-          minutes: workoutItem.minutes || 0,
+          description: workout?.description || '',
+          muscle_group: workoutItem.muscle_group || workout?.muscle_group,
+          sets: sets,
+          minutes: minutes,
           isCompleted: false,
           planId: plan._id,
           planDay: day.day
-        });
-        workoutEntries.push(entry);
+        }));
       }
     }
 
-    // Save all entries
-    await Meal.insertMany(mealEntries);
-    await WorkoutEntry.insertMany(workoutEntries);
+    if (skippedMeals > 0 || skippedWorkouts > 0) {
+      console.warn(`[ACTIVATE] Skipped items with missing IDs - Meals: ${skippedMeals}, Workouts: ${skippedWorkouts}`);
+    }
+
+    // 5. Save all entries (faster with insertMany)
+    if (mealEntries.length > 0) await Meal.insertMany(mealEntries);
+    if (workoutEntries.length > 0) await WorkoutEntry.insertMany(workoutEntries);
 
     // Update plan status
     plan.status = 'active';
@@ -305,11 +385,9 @@ exports.deletePlan = async (req, res) => {
       return res.status(404).json({ message: 'Plan not found' });
     }
 
-    // If plan is active, delete associated meals/workouts
-    if (plan.status === 'active') {
-      await Meal.deleteMany({ planId: plan._id });
-      await WorkoutEntry.deleteMany({ planId: plan._id });
-    }
+    // Delete all associated meals and workouts tied to this plan ID
+    await Meal.deleteMany({ planId: plan._id });
+    await WorkoutEntry.deleteMany({ planId: plan._id });
 
     await Plan.findByIdAndDelete(id);
     res.json({ message: 'Plan deleted successfully' });

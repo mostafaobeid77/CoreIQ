@@ -26,87 +26,119 @@ const WaterModal: React.FC<WaterModalProps> = ({
   setIsEditingWater,
   styles,
   error
-}) => (
-  <Modal
-    visible={visible}
-    transparent={true}
-    animationType="slide"
-    onRequestClose={onClose}
-  >
-    <TouchableOpacity 
-      style={styles.modalOverlay} 
-      activeOpacity={1} 
-      onPress={onClose}
-    >
-      <TouchableOpacity 
-        style={styles.modalContent} 
-        activeOpacity={1} 
-        onPress={() => {}} // Prevent closing when tapping inside modal
-      >
-        <Text style={styles.modalTitle}>Water Consumption</Text>
-        <Text style={styles.modalSubtitle}>How much water did you drink? (ml)</Text>
-        
-        <TextInput
-          style={styles.waterInput}
-          placeholder="Enter amount in ml"
-          placeholderTextColor="#666"
-          keyboardType="numeric"
-          value={waterInput}
-          onChangeText={setWaterInput}
-          autoFocus={true}
-        />
-        {error ? (
-          <Text style={{ color: 'red', textAlign: 'center', marginBottom: 8 }}>{error}</Text>
-        ) : null}
-        {waterInput.length > 0 && (
-          <TouchableOpacity 
-            style={styles.clearButton}
-            onPress={() => setWaterInput('')}
-          >
-            <Ionicons name="close-circle" size={20} color="#666" />
-          </TouchableOpacity>
-        )}
-        <View style={styles.quickButtons}>
-          <TouchableOpacity 
-            style={styles.quickButton}
-            onPress={() => setWaterInput('250')}
-          >
-            <Text style={styles.quickButtonText}>250ml</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.quickButton}
-            onPress={() => setWaterInput('500')}
-          >
-            <Text style={styles.quickButtonText}>500ml</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.quickButton}
-            onPress={() => setWaterInput('1000')}
-          >
-            <Text style={styles.quickButtonText}>1L</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.modalButtons}>
-          {waterInput.length > 0 && stats.water > 0 && (
-            <TouchableOpacity 
-              style={[styles.modalButton, styles.subtractButton]}
-              onPress={handleWaterSubtract}
-              disabled={!!error}
-            >
-              <Text style={styles.subtractButtonText}>Subtract</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity 
-            style={[styles.modalButton, styles.confirmButton]}
-            onPress={handleWaterAdd}
-            disabled={!!error || waterInput.length === 0}
-          >
-            <Text style={styles.confirmButtonText}>Add</Text>
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-    </TouchableOpacity>
-  </Modal>
-);
+}) => {
+  const currentAmount = stats.water || 0;
+  const inputAmount = parseInt(waterInput) || 0;
 
-export default WaterModal; 
+  const adjustAmount = (delta: number) => {
+    const newVal = Math.max(0, inputAmount + delta);
+    setWaterInput(newVal.toString());
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
+        onPress={onClose}
+      >
+        <TouchableOpacity
+          style={[styles.modalContent, { padding: 24, borderRadius: 32 }]}
+          activeOpacity={1}
+          onPress={() => { }}
+        >
+          <View style={{ alignItems: 'center', marginBottom: 24 }}>
+            <View style={{ backgroundColor: 'rgba(139, 92, 246, 0.1)', padding: 12, borderRadius: 16, marginBottom: 12 }}>
+              <Ionicons name="water" size={32} color="#8b5cf6" />
+            </View>
+            <Text style={[styles.modalTitle, { marginBottom: 4 }]}>Water Intake</Text>
+            <Text style={styles.modalSubtitle}>Stay hydrated for peak performance</Text>
+          </View>
+
+          {/* Today's Intake Display */}
+          <View style={styles.currentWaterDisplay}>
+            <Text style={styles.currentWaterValue}>{currentAmount} ml</Text>
+            <Text style={styles.currentWaterGoal}>TODAY'S TOTAL</Text>
+          </View>
+
+          {/* Amount Selector */}
+          <View style={styles.waterAmountSelector}>
+            <TouchableOpacity
+              style={styles.waterCircleButton}
+              onPress={() => adjustAmount(-50)}
+            >
+              <Ionicons name="remove" size={24} color={styles.colors.text} />
+            </TouchableOpacity>
+
+            <View style={{ alignItems: 'center' }}>
+              <Text style={styles.waterAmountText}>{inputAmount} ml</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.waterCircleButton}
+              onPress={() => adjustAmount(50)}
+            >
+              <Ionicons name="add" size={24} color={styles.colors.text} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Presets */}
+          <View style={styles.waterPresetsContainer}>
+            {[
+              { label: 'Glass', amount: '250' },
+              { label: 'Bottle', amount: '500' },
+              { label: 'Large', amount: '1000' }
+            ].map((preset) => (
+              <TouchableOpacity
+                key={preset.amount}
+                style={[
+                  styles.waterPresetChip,
+                  waterInput === preset.amount && { borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.05)' }
+                ]}
+                onPress={() => setWaterInput(preset.amount)}
+              >
+                <Text style={[styles.waterPresetText, waterInput === preset.amount && { color: '#8b5cf6' }]}>
+                  {preset.label}
+                </Text>
+                <Text style={styles.waterPresetAmount}>{preset.amount}ml</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {error ? (
+            <Text style={{ color: '#ef4444', textAlign: 'center', marginBottom: 16, fontWeight: '600' }}>{error}</Text>
+          ) : null}
+
+          <View style={styles.waterActionButtons}>
+            {currentAmount > 0 && (
+              <TouchableOpacity
+                style={[styles.waterActionButton, styles.waterSubtractButton]}
+                onPress={handleWaterSubtract}
+                disabled={inputAmount <= 0}
+              >
+                <Ionicons name="remove-circle-outline" size={20} color="#ef4444" style={{ marginRight: 8 }} />
+                <Text style={styles.waterSubtractButtonText}>Remove</Text>
+              </TouchableOpacity>
+            )}
+
+            <TouchableOpacity
+              style={[styles.waterActionButton, styles.waterAddButton]}
+              onPress={handleWaterAdd}
+              disabled={inputAmount <= 0}
+            >
+              <Ionicons name="add-circle" size={20} color="#fff" style={{ marginRight: 8 }} />
+              <Text style={styles.waterAddButtonText}>Add Water</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
+
+export default WaterModal;

@@ -1,1 +1,1 @@
-mongodb://mkabalan285:mohamad2662004@ac-pfb6to1-shard-00-01.p5fbrni.mongodb.net:27017,ac-pfb6to1-shard-00-02.p5fbrni.mongodb.net:27017,ac-pfb6to1-shard-00-00.p5fbrni.mongodb.net:27017/?ssl=true&replicaSet=atlas-ojkqp8-shard-0&authSource=admin&retryWrites=true&w=majority
+mongodb://mkabalan285:mohamad2662004@ac-pfb6to1-shard-00-00.p5fbrni.mongodb.net:27017,ac-pfb6to1-shard-00-01.p5fbrni.mongodb.net:27017,ac-pfb6to1-shard-00-02.p5fbrni.mongodb.net:27017/?ssl=true&replicaSet=atlas-ojkqp8-shard-0&authSource=admin&retryWrites=true&w=majority

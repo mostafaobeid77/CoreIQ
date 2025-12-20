@@ -31,15 +31,15 @@ const ActivityModal: React.FC<ActivityModalProps> = ({
     animationType="slide"
     onRequestClose={onClose}
   >
-    <TouchableOpacity 
-      style={styles.modalOverlay} 
-      activeOpacity={1} 
+    <TouchableOpacity
+      style={styles.modalOverlay}
+      activeOpacity={1}
       onPress={onClose}
     >
-      <TouchableOpacity 
-        style={styles.modalContent} 
-        activeOpacity={1} 
-        onPress={() => {}} // Prevent closing when tapping inside modal
+      <TouchableOpacity
+        style={styles.modalContent}
+        activeOpacity={1}
+        onPress={() => { }} // Prevent closing when tapping inside modal
       >
         <Text style={styles.modalTitle}>Select Activity Level</Text>
         <Text style={styles.modalSubtitle}>How active are you on a daily basis?</Text>
@@ -53,7 +53,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({
               ]}
               onPress={() => handleActivityLevelSave(option.label)}
             >
-              <Ionicons name={option.icon as any} size={24} color="#60a5fa" />
+              <Ionicons name={option.icon as any} size={24} color={stats.activityLevel === option.label ? "#8b5cf6" : "#94a3b8"} />
               <View style={styles.activityOptionText}>
                 <Text style={[
                   styles.mentalOptionText,

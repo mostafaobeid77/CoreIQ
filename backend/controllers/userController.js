@@ -3,10 +3,22 @@ const User = require('../models/User');
 // Get user profile
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select('-password');
+    const user = await User.findById(req.userId)
+      .select('-password -profilePhoto') // Exclude heavy photo field
+      .lean();
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    // Check if photo exists (lightweight)
+    const photoCheck = await User.exists({ _id: req.userId, profilePhoto: { $exists: true, $ne: null } });
+    if (photoCheck) {
+      // Add cache buster based on updatedAt timestamp
+      const timestamp = user.updatedAt ? new Date(user.updatedAt).getTime() : Date.now();
+      user.profilePhoto = `/api/users/${user._id}/photo?v=${timestamp}`;
+    }
+
     res.json(user);
   } catch (error) {
     console.error('Get profile error:', error.message);
@@ -14,16 +26,69 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+// Stream Profile Photo
+exports.getProfilePhoto = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(`[Photo Service] Requesting photo for user: ${id}`);
+
+    // Select ONLY profilePhoto to minimize memory usage
+    const user = await User.findById(id).select('profilePhoto');
+
+    if (!user || !user.profilePhoto) {
+      return res.status(404).send('Photo not found');
+    }
+
+    // Cache for 24 hours (86400 seconds)
+    // Client will re-fetch only if URL changes or cache expires
+    res.set('Cache-Control', 'public, max-age=86400');
+
+    // Handle Base64 string (Stored format: "data:image/jpeg;base64,.....")
+    if (user.profilePhoto.startsWith('data:image')) {
+      const matches = user.profilePhoto.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+
+      if (!matches || matches.length !== 3) {
+        return res.status(500).send('Invalid image data');
+      }
+
+      const type = matches[1];
+      const buffer = Buffer.from(matches[2], 'base64');
+
+      res.set('Content-Type', type);
+      res.send(buffer);
+    } else {
+      // If securely stored as URL (future proofing) or raw buffer? 
+      // Assuming current storage is Base64 string.
+      // Fallback: just send it if it's somehow raw bytes (unlikely with Mongoose String type)
+      res.send(user.profilePhoto);
+    }
+  } catch (error) {
+    console.error('Get photo error:', error);
+    res.status(404).send('Photo not found');
+  }
+};
+
 // Update user profile
 exports.updateProfile = async (req, res) => {
   try {
-    const { fullName, username, email, profilePhoto } = req.body;
+    const { fullName, username, email, profilePhoto, birthDate } = req.body;
 
-    const updateData = {};
-    if (fullName) updateData.fullName = fullName;
-    if (username) updateData.username = username;
-    if (email) updateData.email = email;
-    if (profilePhoto !== undefined) updateData.profilePhoto = profilePhoto;
+    // Optimize: Don't load the heavy photo just to update text fields
+    const user = await User.findById(req.userId).select('-profilePhoto');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (fullName) user.fullName = fullName;
+    if (username) user.username = username;
+    if (email) user.email = email;
+
+    // Safety check: Only update photo if it's actual data, not a URL string
+    // And allow clearing it if explicitly set to null (though frontend doesn't do that yet)
+    if (profilePhoto && !profilePhoto.startsWith('http') && !profilePhoto.startsWith('/')) {
+      user.profilePhoto = profilePhoto;
+    }
+    if (birthDate) user.birthDate = birthDate;
 
     // Check if username or email already taken by another user
     if (username || email) {
@@ -40,13 +105,24 @@ exports.updateProfile = async (req, res) => {
       }
     }
 
-    const user = await User.findByIdAndUpdate(
-      req.userId,
-      updateData,
-      { new: true, runValidators: true }
-    ).select('-password');
+    // Recalculate targets if birthDate changed
+    if (birthDate || user.weight > 0) {
+      user.calculateNutritionTargets();
+    }
 
-    res.json({ message: 'Profile updated successfully', user });
+    await user.save();
+
+    // Return user without password
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    // Optimize response: replace heavy base64 photo with URL
+    if (userResponse.profilePhoto) {
+      const timestamp = userResponse.updatedAt ? new Date(userResponse.updatedAt).getTime() : Date.now();
+      userResponse.profilePhoto = `/api/users/${user._id}/photo?v=${timestamp}`;
+    }
+
+    res.json({ message: 'Profile updated successfully', user: userResponse });
   } catch (error) {
     console.error('Update profile error:', error.message);
     res.status(500).json({ message: 'Server error', error: error.message });

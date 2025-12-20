@@ -31,8 +31,16 @@ const MentalModal: React.FC<MentalModalProps> = ({
     animationType="slide"
     onRequestClose={onClose}
   >
-    <View style={styles.modalOverlay}>
-      <View style={styles.modalContent}>
+    <TouchableOpacity
+      style={styles.modalOverlay}
+      activeOpacity={1}
+      onPress={onClose}
+    >
+      <TouchableOpacity
+        style={styles.modalContent}
+        activeOpacity={1}
+        onPress={() => { }} // Prevent closing when tapping inside modal
+      >
         <Text style={styles.modalTitle}>How are you feeling today?</Text>
         <ScrollView style={styles.mentalOptionsContainer}>
           {mentalHealthOptions.map((option) => (
@@ -57,8 +65,8 @@ const MentalModal: React.FC<MentalModalProps> = ({
             </TouchableOpacity>
           ))}
         </ScrollView>
-      </View>
-    </View>
+      </TouchableOpacity>
+    </TouchableOpacity>
   </Modal>
 );
 

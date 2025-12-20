@@ -8,15 +8,19 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ActivityIndicator,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { submissionService, WorkoutSubmissionData } from '../../services/submissionService';
 import { api } from '../../services/api';
 import { useTheme } from '../../context/themeContext';
 import { Colors } from '../../constants/theme';
+import { useWorkoutSearch } from '../../hooks/workouts/useWorkoutSearch';
+import { useDebounce } from '../../hooks/meals/useDebounce';
+
+const { width } = Dimensions.get('window');
 
 interface AddWorkoutModalProps {
   visible: boolean;
@@ -28,11 +32,14 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ visible, onClose, onS
   const { theme } = useTheme();
   const isLight = theme === 'light';
   const colors = Colors[theme];
-  
+
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [muscleGroups, setMuscleGroups] = useState<string[]>([]);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [existsWarning, setExistsWarning] = useState(false);
+  const [searching, setSearching] = useState(false);
 
   const [formData, setFormData] = useState<WorkoutSubmissionData>({
     name: '',
@@ -42,12 +49,41 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ visible, onClose, onS
     equipment: '',
   });
 
+  const { searchWorkouts } = useWorkoutSearch();
+  const debouncedName = useDebounce(formData.name, 600);
+
   useEffect(() => {
     if (visible) {
       fetchMetadata();
       resetForm();
+      setIsSuccess(false);
     }
   }, [visible]);
+
+  // Real-time existence check
+  useEffect(() => {
+    const checkExistence = async () => {
+      if (debouncedName.trim().length < 3) {
+        setExistsWarning(false);
+        return;
+      }
+
+      setSearching(true);
+      try {
+        const results = await searchWorkouts(debouncedName);
+        const exactMatch = results.some(
+          (w: any) => w.name.toLowerCase() === debouncedName.trim().toLowerCase()
+        );
+        setExistsWarning(exactMatch);
+      } catch (error) {
+        console.error('Check existence failed:', error);
+      } finally {
+        setSearching(false);
+      }
+    };
+
+    checkExistence();
+  }, [debouncedName]);
 
   const fetchMetadata = async () => {
     try {
@@ -68,7 +104,6 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ visible, onClose, onS
       }
     } catch (error) {
       console.error('Failed to fetch metadata:', error);
-      // Fallback values
       setCategories(['Strength', 'Cardio']);
       setMuscleGroups(['Chest', 'Back', 'Legs', 'Arms', 'Shoulders', 'Core', 'Cardio']);
     } finally {
@@ -84,246 +119,168 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ visible, onClose, onS
       muscle_group: muscleGroups[0] || '',
       equipment: '',
     });
+    setExistsWarning(false);
   };
 
   const handleSubmit = async () => {
-    if (!formData.name.trim()) {
-      Alert.alert('Error', 'Please enter a workout name');
-      return;
-    }
-    if (!formData.description.trim()) {
-      Alert.alert('Error', 'Please enter a description');
-      return;
-    }
-    if (!formData.category) {
-      Alert.alert('Error', 'Please select a category');
-      return;
-    }
-    if (!formData.muscle_group) {
-      Alert.alert('Error', 'Please select a muscle group');
+    if (!formData.name.trim() || !formData.description.trim() || !formData.category || !formData.muscle_group) {
       return;
     }
 
     try {
       setSubmitting(true);
       await submissionService.submitWorkout(formData);
-      Alert.alert(
-        'Submission Sent',
-        'Your workout has been submitted for admin approval. You will be notified once it is reviewed.',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              resetForm();
-              onClose();
-              onSuccess?.();
-            },
-          },
-        ]
-      );
+      setIsSuccess(true);
+      setTimeout(() => {
+        onSuccess?.();
+        onClose();
+      }, 2000);
     } catch (error: any) {
-      Alert.alert('Submission Failed', error?.message || 'Failed to submit workout');
+      console.error('Submission failed:', error);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const dynamicStyles = {
-    overlay: { backgroundColor: 'rgba(0, 0, 0, 0.6)' },
-    modalContent: { 
-      backgroundColor: colors.background,
-      width: '92%',
-      maxWidth: 500,
-    },
-    header: { borderBottomColor: isLight ? '#e2e8f0' : '#334155' },
-    title: { color: colors.text },
-    closeButton: {
-      position: 'absolute',
-      right: 16,
-      top: 16,
-      zIndex: 10,
-      width: 36,
-      height: 36,
-      borderRadius: 18,
-      backgroundColor: isLight ? '#f1f5f9' : '#334155',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    closeButtonIcon: { color: colors.text },
-    infoBox: { backgroundColor: isLight ? '#eff6ff' : '#1e3a5f' },
-    infoText: { color: isLight ? '#1e40af' : '#93c5fd' },
-    label: { color: colors.text },
-    input: { 
-      borderColor: isLight ? '#cbd5e1' : '#475569',
-      color: colors.text,
-      backgroundColor: isLight ? '#fff' : '#1e293b',
-    },
-    categoryChip: { backgroundColor: isLight ? '#f1f5f9' : '#334155' },
-    categoryChipActive: { backgroundColor: '#2563eb' },
-    categoryChipText: { color: isLight ? '#64748b' : '#94a3b8' },
-    categoryChipTextActive: { color: '#fff' },
-    cancelButton: { backgroundColor: isLight ? '#f1f5f9' : '#334155' },
-    cancelButtonText: { color: colors.text },
-  };
+  if (isSuccess) {
+    return (
+      <Modal visible={visible} transparent animationType="fade">
+        <View style={styles.overlay}>
+          <View style={[styles.card, { alignItems: 'center', padding: 40, backgroundColor: colors.background }]}>
+            <View style={styles.successCircle}>
+              <Ionicons name="checkmark" size={50} color="#fff" />
+            </View>
+            <Text style={[styles.title, { color: colors.text, marginTop: 24 }]}>Submission Sent!</Text>
+            <Text style={[styles.subtitle, { color: isLight ? '#64748b' : '#94a3b8', textAlign: 'center', marginTop: 12 }]}>
+              Our admins will review your workout soon. You'll be notified once it's live!
+            </Text>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onClose}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <TouchableOpacity 
-          style={[styles.overlay, dynamicStyles.overlay]} 
-          activeOpacity={1}
-          onPress={onClose}
-        >
-          <TouchableOpacity 
-            style={[styles.modalContent, dynamicStyles.modalContent]} 
-            activeOpacity={1}
-            onPress={(e) => e.stopPropagation()}
-          >
-            <TouchableOpacity 
-              onPress={onClose} 
-              style={dynamicStyles.closeButton}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <Ionicons name="close" size={20} color={dynamicStyles.closeButtonIcon.color} />
-            </TouchableOpacity>
-            
-            <View style={[styles.header, dynamicStyles.header]}>
-              <Text style={[styles.title, dynamicStyles.title]}>Add New Workout</Text>
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+        <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
+          <View style={[StyleSheet.absoluteFill, { backgroundColor: isLight ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.6)' }]} />
+
+          <TouchableOpacity activeOpacity={1} onPress={e => e.stopPropagation()} style={[styles.card, { backgroundColor: colors.background }]}>
+            <View style={styles.header}>
+              <Text style={[styles.title, { color: colors.text }]}>Add New Workout</Text>
+              <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: isLight ? '#f1f5f9' : '#334155' }]}>
+                <Ionicons name="close" size={20} color={colors.text} />
+              </TouchableOpacity>
             </View>
 
-            <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-              <View style={[styles.infoBox, dynamicStyles.infoBox]}>
-                <Ionicons name="information-circle" size={20} color="#2563eb" />
-                <Text style={[styles.infoText, dynamicStyles.infoText]}>
-                  Your submission will be reviewed by an admin before being added to the database.
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
+              <View style={[styles.infoBanner, { backgroundColor: isLight ? '#f5f3ff' : 'rgba(139, 92, 246, 0.1)' }]}>
+                <Ionicons name="sparkles" size={18} color="#8b5cf6" />
+                <Text style={[styles.infoText, { color: isLight ? '#7c3aed' : '#a78bfa' }]}>
+                  Help us grow! Submit workouts for review.
                 </Text>
               </View>
 
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, dynamicStyles.label]}>Workout Name *</Text>
-                <TextInput
-                  style={[styles.input, dynamicStyles.input]}
-                  placeholder="e.g., Barbell Bench Press"
-                  placeholderTextColor={colors.icon}
-                  value={formData.name}
-                  onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
-                />
+              <View style={styles.inputGroup}>
+                <Text style={[styles.label, { color: colors.text }]}>Workout Name</Text>
+                <View style={[styles.inputContainer, { borderColor: existsWarning ? '#ef4444' : isLight ? '#e2e8f0' : '#334155' }]}>
+                  <TextInput
+                    style={[styles.input, { color: colors.text }]}
+                    placeholder="e.g. Barbell Bench Press"
+                    placeholderTextColor={isLight ? '#94a3b8' : '#64748b'}
+                    value={formData.name}
+                    onChangeText={text => setFormData(prev => ({ ...prev, name: text }))}
+                  />
+                  {searching && <ActivityIndicator size="small" color="#8b5cf6" style={{ marginRight: 12 }} />}
+                </View>
+                {existsWarning && (
+                  <View style={styles.warningBox}>
+                    <Ionicons name="warning" size={14} color="#ef4444" />
+                    <Text style={styles.warningText}>This workout already exists!</Text>
+                  </View>
+                )}
               </View>
 
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, dynamicStyles.label]}>Description *</Text>
+              <View style={styles.inputGroup}>
+                <Text style={[styles.label, { color: colors.text }]}>Category</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll}>
+                  {categories.map(cat => (
+                    <TouchableOpacity
+                      key={cat}
+                      onPress={() => setFormData(prev => ({ ...prev, category: cat }))}
+                      style={[
+                        styles.chip,
+                        { backgroundColor: isLight ? '#f1f5f9' : '#1e1e1e' },
+                        formData.category === cat && styles.chipActive
+                      ]}
+                    >
+                      <Text style={[styles.chipText, { color: isLight ? '#64748b' : '#94a3b8' }, formData.category === cat && styles.chipTextActive]}>
+                        {cat}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={[styles.label, { color: colors.text }]}>Muscle Group</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll}>
+                  {muscleGroups.map(group => (
+                    <TouchableOpacity
+                      key={group}
+                      onPress={() => setFormData(prev => ({ ...prev, muscle_group: group }))}
+                      style={[
+                        styles.chip,
+                        { backgroundColor: isLight ? '#f1f5f9' : '#1e1e1e' },
+                        formData.muscle_group === group && styles.chipActive
+                      ]}
+                    >
+                      <Text style={[styles.chipText, { color: isLight ? '#64748b' : '#94a3b8' }, formData.muscle_group === group && styles.chipTextActive]}>
+                        {group}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={[styles.label, { color: colors.text }]}>Description</Text>
                 <TextInput
-                  style={[styles.input, styles.textArea, dynamicStyles.input]}
-                  placeholder="Brief description of the workout, including proper form and benefits"
-                  placeholderTextColor={colors.icon}
-                  value={formData.description}
-                  onChangeText={(text) => setFormData(prev => ({ ...prev, description: text }))}
+                  style={[styles.input, styles.textArea, { color: colors.text, borderColor: isLight ? '#e2e8f0' : '#334155' }]}
+                  placeholder="How to perform it, safety tips, etc."
+                  placeholderTextColor={isLight ? '#94a3b8' : '#64748b'}
                   multiline
-                  numberOfLines={4}
+                  value={formData.description}
+                  onChangeText={text => setFormData(prev => ({ ...prev, description: text }))}
                 />
               </View>
 
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, dynamicStyles.label]}>Category *</Text>
-                {loading ? (
-                  <ActivityIndicator size="small" color="#2563eb" />
-                ) : (
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroll}>
-                    {categories.map((cat) => (
-                      <TouchableOpacity
-                        key={cat}
-                        style={[
-                          styles.categoryChip,
-                          dynamicStyles.categoryChip,
-                          formData.category === cat && dynamicStyles.categoryChipActive,
-                        ]}
-                        onPress={() => setFormData(prev => ({ ...prev, category: cat }))}
-                      >
-                        <Text
-                          style={[
-                            styles.categoryChipText,
-                            dynamicStyles.categoryChipText,
-                            formData.category === cat && dynamicStyles.categoryChipTextActive,
-                          ]}
-                        >
-                          {cat}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                )}
-              </View>
-
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, dynamicStyles.label]}>Muscle Group *</Text>
-                {loading ? (
-                  <ActivityIndicator size="small" color="#2563eb" />
-                ) : (
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroll}>
-                    {muscleGroups.map((group) => (
-                      <TouchableOpacity
-                        key={group}
-                        style={[
-                          styles.categoryChip,
-                          dynamicStyles.categoryChip,
-                          formData.muscle_group === group && dynamicStyles.categoryChipActive,
-                        ]}
-                        onPress={() => setFormData(prev => ({ ...prev, muscle_group: group }))}
-                      >
-                        <Text
-                          style={[
-                            styles.categoryChipText,
-                            dynamicStyles.categoryChipText,
-                            formData.muscle_group === group && dynamicStyles.categoryChipTextActive,
-                          ]}
-                        >
-                          {group}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                )}
-              </View>
-
-              <View style={styles.formGroup}>
-                <Text style={[styles.label, dynamicStyles.label]}>Equipment (Optional)</Text>
+              <View style={styles.inputGroup}>
+                <Text style={[styles.label, { color: colors.text }]}>Equipment (Optional)</Text>
                 <TextInput
-                  style={[styles.input, dynamicStyles.input]}
-                  placeholder="e.g., Barbell, Dumbbells, Bodyweight"
-                  placeholderTextColor={colors.icon}
+                  style={[styles.input, { color: colors.text, borderColor: isLight ? '#e2e8f0' : '#334155', borderBottomWidth: 1, paddingVertical: 12 }]}
+                  placeholder="e.g. Barbell, Dumbbells"
+                  placeholderTextColor={isLight ? '#94a3b8' : '#64748b'}
                   value={formData.equipment}
-                  onChangeText={(text) => setFormData(prev => ({ ...prev, equipment: text }))}
+                  onChangeText={text => setFormData(prev => ({ ...prev, equipment: text }))}
                 />
               </View>
 
-              <View style={styles.buttonRow}>
-                <TouchableOpacity
-                  style={[styles.button, styles.cancelButton, dynamicStyles.cancelButton]}
-                  onPress={onClose}
-                  disabled={submitting}
-                >
-                  <Text style={[styles.cancelButtonText, dynamicStyles.cancelButtonText]}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, styles.submitButton, submitting && styles.submitButtonDisabled]}
-                  onPress={handleSubmit}
-                  disabled={submitting}
-                >
-                  {submitting ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.submitButtonText}>Submit for Review</Text>
-                  )}
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={handleSubmit}
+                disabled={submitting || !formData.name || !formData.description}
+                style={[styles.submitButton, (submitting || !formData.name || !formData.description) && { opacity: 0.6 }]}
+              >
+                {submitting ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <>
+                    <Text style={styles.submitText}>Submit for Review</Text>
+                    <Ionicons name="arrow-forward" size={18} color="#fff" style={{ marginLeft: 8 }} />
+                  </>
+                )}
+              </TouchableOpacity>
             </ScrollView>
           </TouchableOpacity>
         </TouchableOpacity>
@@ -333,124 +290,141 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ visible, onClose, onS
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   overlay: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  modalContent: {
-    borderRadius: 20,
-    maxHeight: '88%',
-    paddingTop: 20,
-    paddingBottom: 24,
-    paddingHorizontal: 20,
-    elevation: 10,
+  card: {
+    width: width * 0.92,
+    maxHeight: '85%',
+    borderRadius: 32,
+    padding: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 20,
+    elevation: 10,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 16,
-    marginBottom: 8,
-    borderBottomWidth: 1,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontSize: 22,
+    fontWeight: '800',
+    letterSpacing: -0.5,
   },
-  closeButton: {
-    padding: 4,
+  closeBtn: {
+    padding: 8,
+    borderRadius: 12,
   },
-  scrollView: {
-    // Padding handled by modalContent
-  },
-  infoBox: {
+  infoBanner: {
     flexDirection: 'row',
+    alignItems: 'center',
     padding: 12,
-    borderRadius: 8,
-    marginTop: 16,
-    marginBottom: 8,
-    alignItems: 'flex-start',
+    borderRadius: 16,
+    marginBottom: 24,
   },
   infoText: {
-    flex: 1,
-    marginLeft: 8,
     fontSize: 13,
-    lineHeight: 18,
+    fontWeight: '600',
+    marginLeft: 8,
   },
-  formGroup: {
-    marginTop: 16,
+  inputGroup: {
+    marginBottom: 20,
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: 8,
+    marginLeft: 4,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderRadius: 16,
   },
   input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
+    flex: 1,
+    padding: 16,
     fontSize: 16,
+    fontWeight: '500',
   },
   textArea: {
     minHeight: 100,
     textAlignVertical: 'top',
+    borderWidth: 1.5,
+    borderRadius: 16,
+    padding: 16,
   },
-  categoryScroll: {
-    marginTop: 8,
+  chipScroll: {
+    flexDirection: 'row',
+    marginTop: 4,
   },
-  categoryChip: {
+  chip: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingVertical: 10,
+    borderRadius: 12,
     marginRight: 8,
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
-  categoryChipActive: {
-    backgroundColor: '#2563eb',
+  chipActive: {
+    backgroundColor: '#8b5cf6',
+    borderColor: '#8b5cf6',
   },
-  categoryChipText: {
+  chipText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '600',
   },
-  categoryChipTextActive: {
+  chipTextActive: {
     color: '#fff',
   },
-  buttonRow: {
+  warningBox: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 24,
-    marginBottom: 8,
-  },
-  button: {
-    flex: 1,
-    padding: 16,
-    borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 6,
+    marginLeft: 4,
   },
-  cancelButton: {
-    // Dynamic color applied in component
-  },
-  cancelButtonText: {
+  warningText: {
+    color: '#ef4444',
+    fontSize: 12,
     fontWeight: '600',
-    fontSize: 16,
+    marginLeft: 4,
   },
   submitButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#8b5cf6',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 18,
+    borderRadius: 20,
+    marginTop: 10,
   },
-  submitButtonDisabled: {
-    opacity: 0.6,
-  },
-  submitButtonText: {
+  submitText: {
     color: '#fff',
-    fontWeight: '600',
     fontSize: 16,
+    fontWeight: '700',
+  },
+  successCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#22c55e',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#22c55e',
+    shadowOpacity: 0.4,
+    shadowRadius: 15,
+  },
+  subtitle: {
+    fontSize: 15,
+    lineHeight: 22,
+    fontWeight: '500',
   },
 });
 

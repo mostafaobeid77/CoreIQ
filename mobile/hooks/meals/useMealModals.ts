@@ -3,15 +3,18 @@ import { useState } from 'react';
 export function useMealModals() {
   const [isFoodDetailsModalVisible, setIsFoodDetailsModalVisible] = useState(false);
   const [selectedFood, setSelectedFood] = useState<any>(null);
+  const [editingItem, setEditingItem] = useState<{ id: string; mealType: string } | null>(null);
 
-  const openFoodDetailsModal = (food: any) => {
+  const openFoodDetailsModal = (food: any, editData?: { id: string; mealType: string }) => {
     setSelectedFood(food);
     setIsFoodDetailsModalVisible(true);
+    setEditingItem(editData || null);
   };
 
   const closeFoodDetailsModal = () => {
     setIsFoodDetailsModalVisible(false);
     setSelectedFood(null);
+    setEditingItem(null);
   };
 
   const handleAddToMeal = (food: any, quantity: number) => {
@@ -23,6 +26,7 @@ export function useMealModals() {
   return {
     isFoodDetailsModalVisible,
     selectedFood,
+    editingItem,
     openFoodDetailsModal,
     closeFoodDetailsModal,
     handleAddToMeal,

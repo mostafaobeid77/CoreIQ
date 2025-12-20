@@ -28,11 +28,11 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
   const { theme } = useTheme();
   const isLight = theme === 'light';
   const colors = Colors[theme];
-  
+
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
-  
+
   const [formData, setFormData] = useState<FoodSubmissionData>({
     name: '',
     description: '',
@@ -69,7 +69,7 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
     } catch (error) {
       console.error('Failed to fetch categories:', error);
       // Fallback categories
-      setCategories(['fruits', 'vegetables', 'grains_carbs', 'protiens', 'salads', 'fastfoods', 'drinks']);
+      setCategories(['fruits', 'vegetables', 'grains_carbs', 'proteins', 'salads', 'fastfoods', 'drinks']);
     } finally {
       setLoading(false);
     }
@@ -174,15 +174,15 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
 
   const dynamicStyles = {
     overlay: { backgroundColor: 'rgba(0, 0, 0, 0.6)' },
-    modalContent: { 
+    modalContent: {
       backgroundColor: colors.background,
-      width: '92%',
+      width: '92%' as const,
       maxWidth: 500,
     },
     header: { borderBottomColor: isLight ? '#e2e8f0' : '#334155' },
     title: { color: colors.text },
     closeButton: {
-      position: 'absolute',
+      position: 'absolute' as const,
       right: 16,
       top: 16,
       zIndex: 10,
@@ -190,20 +190,20 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
       height: 36,
       borderRadius: 18,
       backgroundColor: isLight ? '#f1f5f9' : '#334155',
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'center' as const,
+      alignItems: 'center' as const,
     },
     closeButtonIcon: { color: colors.text },
-    infoBox: { backgroundColor: isLight ? '#eff6ff' : '#1e3a5f' },
-    infoText: { color: isLight ? '#1e40af' : '#93c5fd' },
+    infoBox: { backgroundColor: isLight ? '#f5f3ff' : 'rgba(139, 92, 246, 0.1)' },
+    infoText: { color: isLight ? '#8b5cf6' : '#a78bfa' },
     label: { color: colors.text },
-    input: { 
+    input: {
       borderColor: isLight ? '#cbd5e1' : '#475569',
       color: colors.text,
       backgroundColor: isLight ? '#fff' : '#1e293b',
     },
     categoryChip: { backgroundColor: isLight ? '#f1f5f9' : '#334155' },
-    categoryChipActive: { backgroundColor: '#2563eb' },
+    categoryChipActive: { backgroundColor: '#8b5cf6' },
     categoryChipText: { color: isLight ? '#64748b' : '#94a3b8' },
     categoryChipTextActive: { color: '#fff' },
     sectionTitle: { color: colors.text },
@@ -213,8 +213,8 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
       color: colors.text,
       backgroundColor: isLight ? '#fff' : '#1e293b',
     },
-    addServingButton: { backgroundColor: isLight ? '#eff6ff' : '#1e3a5f' },
-    addServingText: { color: '#2563eb' },
+    addServingButton: { backgroundColor: isLight ? '#f5f3ff' : 'rgba(139, 92, 246, 0.1)' },
+    addServingText: { color: '#8b5cf6' },
     servingItem: { backgroundColor: isLight ? '#f8fafc' : '#1e293b' },
     servingItemText: { color: colors.text },
     servingItemNutrients: { color: colors.icon },
@@ -234,31 +234,31 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        <TouchableOpacity 
-          style={[styles.overlay, dynamicStyles.overlay]} 
+        <TouchableOpacity
+          style={[styles.overlay, dynamicStyles.overlay]}
           activeOpacity={1}
           onPress={onClose}
         >
-          <TouchableOpacity 
-            style={[styles.modalContent, dynamicStyles.modalContent]} 
+          <TouchableOpacity
+            style={[styles.modalContent, dynamicStyles.modalContent]}
             activeOpacity={1}
             onPress={(e) => e.stopPropagation()}
           >
-            <TouchableOpacity 
-              onPress={onClose} 
+            <TouchableOpacity
+              onPress={onClose}
               style={dynamicStyles.closeButton}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Ionicons name="close" size={20} color={dynamicStyles.closeButtonIcon.color} />
             </TouchableOpacity>
-            
+
             <View style={[styles.header, dynamicStyles.header]}>
               <Text style={[styles.title, dynamicStyles.title]}>Add New Food</Text>
             </View>
 
             <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
               <View style={[styles.infoBox, dynamicStyles.infoBox]}>
-                <Ionicons name="information-circle" size={20} color="#2563eb" />
+                <Ionicons name="information-circle" size={20} color="#8b5cf6" />
                 <Text style={[styles.infoText, dynamicStyles.infoText]}>
                   Your submission will be reviewed by an admin before being added to the database.
                 </Text>
@@ -300,7 +300,7 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
                   Select the food category that best matches this item
                 </Text>
                 {loading ? (
-                  <ActivityIndicator size="small" color="#2563eb" />
+                  <ActivityIndicator size="small" color="#8b5cf6" />
                 ) : (
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroll}>
                     {categories.map((cat) => (
@@ -331,7 +331,7 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
               <View style={styles.formGroup}>
                 <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>Nutrition Information *</Text>
                 <View style={[styles.infoBox, dynamicStyles.infoBox, { marginTop: 8, marginBottom: 12 }]}>
-                  <Ionicons name="help-circle" size={16} color="#2563eb" />
+                  <Ionicons name="help-circle" size={16} color="#8b5cf6" />
                   <Text style={[styles.helperText, dynamicStyles.helperText, { marginLeft: 6, flex: 1 }]}>
                     Enter the nutrition values for 100 grams of this food. You can find this on the food label or nutrition database.
                   </Text>
@@ -471,7 +471,7 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
                     </View>
                   </View>
                   <TouchableOpacity style={[styles.addServingButton, dynamicStyles.addServingButton]} onPress={addServing}>
-                    <Ionicons name="add-circle-outline" size={20} color="#2563eb" />
+                    <Ionicons name="add-circle-outline" size={20} color="#8b5cf6" />
                     <Text style={[styles.addServingText, dynamicStyles.addServingText]}>Add This Serving Size</Text>
                   </TouchableOpacity>
                 </View>
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   categoryChipActive: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#8b5cf6',
   },
   categoryChipText: {
     fontSize: 14,
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   submitButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#8b5cf6',
   },
   submitButtonDisabled: {
     opacity: 0.6,

@@ -1,0 +1,184 @@
+[
+    {
+      "name": "Pull-up",
+      "description": "Bodyweight vertical pull targeting lats, biceps, and upper back; grip width alters emphasis.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Pull-up Bar"
+    },
+    {
+      "name": "Chin-up",
+      "description": "Underhand grip pull-up emphasizing biceps and lower lats more than standard pull-up.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Pull-up Bar"
+    },
+    {
+      "name": "Lat Pulldown",
+      "description": "Machine-based vertical pull mimicking pull-up; great for controlled lat development.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Wide-Grip Lat Pulldown",
+      "description": "Wider grip emphasizes upper lats and teres major for broader back appearance.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Close-Grip Lat Pulldown",
+      "description": "Narrow grip targets lower lats and increases biceps involvement.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Straight-Arm Pulldown",
+      "description": "Isolation movement keeping arms straight to target lats with minimal biceps involvement.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Barbell Row",
+      "description": "Bent-over horizontal row using barbell to build thickness in mid-back and lats.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Pendlay Row",
+      "description": "Explosive barbell row from floor to chest, resetting each rep for power and strict form.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Dumbbell Row",
+      "description": "Unilateral row allowing full range of motion and addressing muscle imbalances.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Seated Cable Row",
+      "description": "Cable-based horizontal row with multiple handle options to target mid-back and lats.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "T-Bar Row",
+      "description": "Angled rowing movement using T-bar or landmine setup for heavy mid-back loading.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "T-Bar or Landmine"
+    },
+    {
+      "name": "Chest-Supported Row",
+      "description": "Row performed lying prone on incline bench to eliminate momentum and isolate mid-back.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Dumbbells or Barbell"
+    },
+    {
+      "name": "Inverted Row",
+      "description": "Bodyweight horizontal row under a bar or rings; scalable by adjusting body angle.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Bar or TRX"
+    },
+    {
+      "name": "Deadlift",
+      "description": "Full posterior chain compound lift targeting spinal erectors, glutes, hamstrings, and traps.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Romanian Deadlift",
+      "description": "Hip-hinge movement emphasizing hamstrings and spinal erectors with minimal knee bend.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell or Dumbbells"
+    },
+    {
+      "name": "Stiff-Leg Deadlift",
+      "description": "Similar to RDL but with straighter legs to increase hamstring and lower back stretch.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Rack Pull",
+      "description": "Partial deadlift from pins or rack to overload top portion and build trap/lower back strength.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Shrugs",
+      "description": "Elevates shoulders to target upper traps; can be done with barbell, dumbbells, or machine.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell, Dumbbells, or Machine"
+    },
+    {
+      "name": "Face Pull",
+      "description": "Cable row to the face targeting rear delts, rhomboids, and improving shoulder health.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Reverse Fly (Bent-Over or Machine)",
+      "description": "Horizontal abduction targeting rear delts and rhomboids for upper back thickness.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Dumbbells or Machine"
+    },
+    {
+      "name": "Single-Arm Lat Pulldown",
+      "description": "Unilateral pulldown for correcting imbalances and increasing mind-muscle connection.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Meadows Row",
+      "description": "Landmine unilateral row emphasizing mid-back and lats with unique leverage.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell (Landmine)"
+    },
+    {
+      "name": "Kroc Row",
+      "description": "High-rep, heavy dumbbell row with body English to build mass and grip strength.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Snatch-Grip Deadlift",
+      "description": "Wide-grip deadlift increasing upper back and trap engagement through greater range.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Good Morning",
+      "description": "Hip hinge with barbell on back to target spinal erectors and hamstrings; advanced movement.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Hyperextension (Back Extension)",
+      "description": "Isolates spinal erectors and glutes on a Roman chair or 45° bench.",
+      "category": "Strength",
+      "muscle_group": "Back",
+      "equipment": "Roman Chair or Bench"
+    }
+  ]

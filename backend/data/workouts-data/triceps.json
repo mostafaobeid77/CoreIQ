@@ -1,0 +1,107 @@
+[
+    {
+      "name": "Triceps Pushdown",
+      "description": "Cable machine exercise targeting the triceps with a bar or rope attachment.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Overhead Dumbbell Triceps Extension",
+      "description": "Performed seated or standing, extends dumbbell overhead to target long head of triceps.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Skull Crushers (Lying Triceps Extension)",
+      "description": "Barbell or EZ-bar exercise lying on bench, lowering weight toward forehead to isolate triceps.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Barbell or EZ-Bar"
+    },
+    {
+      "name": "Close-Grip Bench Press",
+      "description": "Bench press variation with narrow hand placement to emphasize triceps over chest.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Barbell"
+    },
+    {
+      "name": "Dips (Triceps Focus)",
+      "description": "Bodyweight exercise on parallel bars with upright torso to target triceps primarily.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Dip Bars"
+    },
+    {
+      "name": "Cable Overhead Triceps Extension",
+      "description": "Standing cable extension overhead using rope attachment for constant tension.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Triceps Kickback",
+      "description": "Isolation exercise performed bent over, extending dumbbell backward to contract triceps.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Dumbbells"
+    },
+    {
+      "name": "Diamond Push-up",
+      "description": "Push-up variation with hands close together forming a diamond to emphasize triceps.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Bodyweight"
+    },
+    {
+      "name": "JM Press",
+      "description": "Hybrid movement between skull crusher and close-grip bench, targets triceps intensely.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Barbell or EZ-Bar"
+    },
+    {
+      "name": "Single-Arm Cable Pushdown",
+      "description": "Unilateral cable pushdown for focused triceps contraction and muscle imbalance correction.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Bench Dips",
+      "description": "Bodyweight triceps exercise using a bench or chair, great for beginners or home workouts.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Bench or Chair"
+    },
+    {
+      "name": "EZ-Bar Skull Crushers",
+      "description": "Skull crusher variation using EZ-bar to reduce wrist strain while targeting all triceps heads.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "EZ-Bar"
+    },
+    {
+      "name": "Rope Pushdown",
+      "description": "Cable pushdown using rope attachment to allow full elbow extension and peak contraction.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Cable Machine"
+    },
+    {
+      "name": "Incline Bench Triceps Extension",
+      "description": "Dumbbell or barbell extension performed lying face-up on incline bench for long head emphasis.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Dumbbells or Barbell"
+    },
+    {
+      "name": "Machine Triceps Press",
+      "description": "Lever or plate-loaded machine designed to isolate triceps with controlled resistance.",
+      "category": "Strength",
+      "muscle_group": "Triceps",
+      "equipment": "Machine"
+    }
+  ]

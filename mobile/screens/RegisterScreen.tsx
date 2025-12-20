@@ -105,7 +105,7 @@ const RegisterScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, { backgroundColor: isLight ? "#ffffff" : "#0f0f0f" }]}>
+      <View style={[styles.container, { backgroundColor: isLight ? "#f8fafc" : "#0f0f0f" }]}>
         <Animated.ScrollView
           contentContainerStyle={[styles.scrollContent, { paddingBottom: animatedPadding }]}
           keyboardShouldPersistTaps="handled"
@@ -223,7 +223,7 @@ const RegisterScreen = () => {
               >
                 <View style={{ alignItems: "flex-end", padding: 12 }}>
                   <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                    <Text style={{ color: "#2563eb", fontSize: 17, fontWeight: "600" }}>Done</Text>
+                    <Text style={{ color: "#8b5cf6", fontSize: 17, fontWeight: "600" }}>Done</Text>
                   </TouchableOpacity>
                 </View>
                 <DateTimePicker
@@ -258,7 +258,7 @@ const RegisterScreen = () => {
               style={[
                 styles.genderOption,
                 { backgroundColor: isLight ? "#f8fafc" : "#1f1f1f" },
-                gender === "male" && { backgroundColor: "#2563eb" },
+                gender === "male" && { backgroundColor: "#8b5cf6" },
               ]}
               onPress={() => setGender("male")}
             >
@@ -275,7 +275,7 @@ const RegisterScreen = () => {
               style={[
                 styles.genderOption,
                 { backgroundColor: isLight ? "#f8fafc" : "#1f1f1f" },
-                gender === "female" && { backgroundColor: "#2563eb" },
+                gender === "female" && { backgroundColor: "#8b5cf6" },
               ]}
               onPress={() => setGender("female")}
             >
@@ -341,7 +341,7 @@ const RegisterScreen = () => {
 
           {/* Register Button */}
           <TouchableOpacity style={styles.loginButton} onPress={handleRegister}>
-            <LinearGradient colors={["#2563eb", "#1d4ed8"]} style={styles.loginGradient}>
+            <LinearGradient colors={["#8b5cf6", "#7c3aed"]} style={styles.loginGradient}>
               <Text style={styles.loginText}>Register</Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -349,7 +349,7 @@ const RegisterScreen = () => {
           {/* Already a member? */}
           <View style={{ alignItems: "center", marginTop: 16 }}>
             <TouchableOpacity onPress={() => router.push("/login")}>
-              <Text style={{ color: "#2563eb", fontSize: 15, fontWeight: "600" }}>
+              <Text style={{ color: "#8b5cf6", fontSize: 15, fontWeight: "600" }}>
                 Already a member? Login
               </Text>
             </TouchableOpacity>

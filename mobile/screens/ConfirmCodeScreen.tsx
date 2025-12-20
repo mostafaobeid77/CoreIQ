@@ -49,7 +49,7 @@ const ConfirmCodeScreen = () => {
   const isLight = theme === 'light';
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, { backgroundColor: isLight ? '#ffffff' : '#0f0f0f' }]}>
+      <View style={[styles.container, { backgroundColor: isLight ? '#f8fafc' : '#0f0f0f' }]}>
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={styles.logoWrapper}>
             <Image
@@ -88,14 +88,14 @@ const ConfirmCodeScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={submitting}>
-            <LinearGradient colors={["#2563eb", "#1d4ed8"]} style={styles.submitGradient}>
+            <LinearGradient colors={["#8b5cf6", "#7c3aed"]} style={styles.submitGradient}>
               <Text style={styles.submitText}>{submitting ? 'Verifying…' : 'Verify Code'}</Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <View style={{ alignItems: 'center', marginTop: 24 }}>
             <TouchableOpacity onPress={() => router.push('/login')}>
-              <Text style={{ color: '#2563eb', fontSize: 15, fontWeight: '600' }}>
+              <Text style={{ color: '#8b5cf6', fontSize: 15, fontWeight: '600' }}>
                 Back to Login
               </Text>
             </TouchableOpacity>
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   codeBoxActive: {
-    borderColor: '#2563eb',
+    borderColor: '#8b5cf6',
   },
   codeDigit: {
     color: '#fff',

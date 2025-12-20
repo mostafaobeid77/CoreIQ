@@ -1,0 +1,3376 @@
+[
+  {
+    "name": "Chicken Breast (Grilled)",
+    "description": "Skinless, boneless grilled chicken breast, lean protein source.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 165,
+      "protein": 31.0,
+      "fat": 3.6,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 medium breast (120g)",
+        "calories": 198,
+        "protein": 37.2,
+        "fat": 4.3,
+        "carbs": 0
+      },
+      {
+        "size": "3 oz (85g)",
+        "calories": 140,
+        "protein": 26.4,
+        "fat": 3.1,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Salmon Fillet (Baked)",
+    "description": "Baked salmon fillet, rich in omega-3 fatty acids and protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 208,
+      "protein": 20.0,
+      "fat": 13.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 fillet (150g)",
+        "calories": 312,
+        "protein": 30.0,
+        "fat": 19.5,
+        "carbs": 0
+      },
+      {
+        "size": "3 oz (85g)",
+        "calories": 177,
+        "protein": 17.0,
+        "fat": 11.1,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Hard-Boiled Egg",
+    "description": "Large hard-boiled egg, complete protein source.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 155,
+      "protein": 13.0,
+      "fat": 11.0,
+      "carbs": 1.1
+    },
+    "servings": [
+      {
+        "size": "1 large egg (50g)",
+        "calories": 78,
+        "protein": 6.5,
+        "fat": 5.5,
+        "carbs": 0.6
+      }
+    ]
+  },
+  {
+    "name": "Whey Protein Shake",
+    "description": "Protein powder mixed with water, quick post-workout recovery.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 80,
+      "protein": 18.0,
+      "fat": 1.0,
+      "carbs": 2
+    },
+    "servings": [
+      {
+        "size": "1 scoop (30g powder in 200ml water)",
+        "calories": 120,
+        "protein": 27.0,
+        "fat": 1.5,
+        "carbs": 3
+      }
+    ]
+  },
+  {
+    "name": "Beef Steak (Lean, Grilled)",
+    "description": "Grilled lean beef steak (e.g., sirloin), excellent source of iron and zinc.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 250,
+      "protein": 26.0,
+      "fat": 15.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "4 oz (113g)",
+        "calories": 283,
+        "protein": 29.4,
+        "fat": 17.0,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Tofu (Firm, Cooked)",
+    "description": "Cooked firm tofu, versatile plant-based protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 76,
+      "protein": 8.0,
+      "fat": 4.8,
+      "carbs": 1.9
+    },
+    "servings": [
+      {
+        "size": "1/2 cup (126g)",
+        "calories": 96,
+        "protein": 10.1,
+        "fat": 6.1,
+        "carbs": 2.4
+      }
+    ]
+  },
+  {
+    "name": "Lentils (Cooked)",
+    "description": "Cooked brown lentils, high in fiber and plant-based protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 116,
+      "protein": 9.0,
+      "fat": 0.4,
+      "carbs": 20.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (198g)",
+        "calories": 230,
+        "protein": 17.8,
+        "fat": 0.8,
+        "carbs": 39.6
+      }
+    ]
+  },
+  {
+    "name": "Greek Yogurt (Plain, Non-Fat)",
+    "description": "Thick, creamy plain non-fat Greek yogurt, high in protein and probiotics.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 59,
+      "protein": 10.0,
+      "fat": 0.4,
+      "carbs": 3.6
+    },
+    "servings": [
+      {
+        "size": "1 cup (227g)",
+        "calories": 134,
+        "protein": 22.7,
+        "fat": 0.9,
+        "carbs": 8.2
+      }
+    ]
+  },
+  {
+    "name": "Cottage Cheese (Low-Fat)",
+    "description": "Low-fat cottage cheese, slow-digesting casein protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 72,
+      "protein": 12.0,
+      "fat": 1.0,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "1/2 cup (113g)",
+        "calories": 81,
+        "protein": 13.6,
+        "fat": 1.1,
+        "carbs": 3.4
+      }
+    ]
+  },
+  {
+    "name": "Shrimp (Cooked)",
+    "description": "Cooked shrimp, very lean and low-calorie protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 85,
+      "protein": 20.0,
+      "fat": 0.3,
+      "carbs": 0.2
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 72,
+        "protein": 17.0,
+        "fat": 0.3,
+        "carbs": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Turkey Breast (Ground, Lean)",
+    "description": "Lean ground turkey breast, versatile for many dishes.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 147,
+      "protein": 22.0,
+      "fat": 6.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "4 oz (113g)",
+        "calories": 166,
+        "protein": 24.9,
+        "fat": 6.8,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Pork Tenderloin (Roasted)",
+    "description": "Roasted pork tenderloin, a lean cut of pork.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 143,
+      "protein": 26.0,
+      "fat": 3.5,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "4 oz (113g)",
+        "calories": 162,
+        "protein": 29.4,
+        "fat": 4.0,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Cod (Baked)",
+    "description": "Baked cod fillet, flaky white fish, very low in fat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 82,
+      "protein": 18.0,
+      "fat": 0.7,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 70,
+        "protein": 15.3,
+        "fat": 0.6,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Peanut Butter",
+    "description": "Creamy peanut butter, good source of plant protein and healthy fats.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 588,
+      "protein": 25.0,
+      "fat": 50.0,
+      "carbs": 20
+    },
+    "servings": [
+      {
+        "size": "2 tbsp (32g)",
+        "calories": 188,
+        "protein": 8.0,
+        "fat": 16.0,
+        "carbs": 6
+      }
+    ]
+  },
+  {
+    "name": "Almonds",
+    "description": "Raw almonds, crunchy and packed with protein and healthy fats.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 579,
+      "protein": 21.0,
+      "fat": 49.9,
+      "carbs": 21.6
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 164,
+        "protein": 5.9,
+        "fat": 14.1,
+        "carbs": 6.1
+      }
+    ]
+  },
+  {
+    "name": "Black Beans (Cooked)",
+    "description": "Cooked black beans, versatile plant-based protein and fiber.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 132,
+      "protein": 8.9,
+      "fat": 0.5,
+      "carbs": 23.7
+    },
+    "servings": [
+      {
+        "size": "1 cup (172g)",
+        "calories": 227,
+        "protein": 15.3,
+        "fat": 0.9,
+        "carbs": 40.8
+      }
+    ]
+  },
+  {
+    "name": "Chickpeas (Cooked)",
+    "description": "Cooked chickpeas (garbanzo beans), great for hummus or salads.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 164,
+      "protein": 8.9,
+      "fat": 2.6,
+      "carbs": 27.4
+    },
+    "servings": [
+      {
+        "size": "1 cup (164g)",
+        "calories": 269,
+        "protein": 14.6,
+        "fat": 4.3,
+        "carbs": 45.0
+      }
+    ]
+  },
+  {
+    "name": "Quinoa (Cooked)",
+    "description": "Cooked quinoa, complete protein grain.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 120,
+      "protein": 4.4,
+      "fat": 1.9,
+      "carbs": 21.3
+    },
+    "servings": [
+      {
+        "size": "1 cup (185g)",
+        "calories": 222,
+        "protein": 8.1,
+        "fat": 3.5,
+        "carbs": 39.4
+      }
+    ]
+  },
+  {
+    "name": "Soy Milk (Unsweetened)",
+    "description": "Unsweetened soy milk, plant-based milk alternative.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 54,
+      "protein": 3.3,
+      "fat": 1.8,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 130,
+        "protein": 8.0,
+        "fat": 4.3,
+        "carbs": 7.2
+      }
+    ]
+  },
+  {
+    "name": "Tempeh (Cooked)",
+    "description": "Fermented soybean product, firm texture, nutty flavor.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 195,
+      "protein": 19.0,
+      "fat": 11.0,
+      "carbs": 9.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 166,
+        "protein": 16.2,
+        "fat": 9.4,
+        "carbs": 7.7
+      }
+    ]
+  },
+  {
+    "name": "Edamame (Shelled, Cooked)",
+    "description": "Cooked shelled edamame, whole soybeans.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 122,
+      "protein": 11.9,
+      "fat": 5.2,
+      "carbs": 9.9
+    },
+    "servings": [
+      {
+        "size": "1 cup (155g)",
+        "calories": 189,
+        "protein": 18.4,
+        "fat": 8.1,
+        "carbs": 15.3
+      }
+    ]
+  },
+  {
+    "name": "Tuna (Canned in Water)",
+    "description": "Canned tuna in water, lean and convenient protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 116,
+      "protein": 25.0,
+      "fat": 1.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 99,
+        "protein": 21.3,
+        "fat": 0.9,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Sardines (Canned in Oil)",
+    "description": "Canned sardines in oil, rich in omega-3s and calcium.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 208,
+      "protein": 24.6,
+      "fat": 11.4,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 can (92g)",
+        "calories": 191,
+        "protein": 22.6,
+        "fat": 10.5,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Beef Jerky",
+    "description": "Dried beef strips, convenient high-protein snack.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 410,
+      "protein": 40.0,
+      "fat": 20.0,
+      "carbs": 10
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 115,
+        "protein": 11.2,
+        "fat": 5.6,
+        "carbs": 2.8
+      }
+    ]
+  },
+  {
+    "name": "Ham (Deli Sliced, Lean)",
+    "description": "Lean deli-sliced ham, quick protein for sandwiches.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 145,
+      "protein": 20.0,
+      "fat": 7.0,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "2 slices (56g)",
+        "calories": 81,
+        "protein": 11.2,
+        "fat": 3.9,
+        "carbs": 0.6
+      }
+    ]
+  },
+  {
+    "name": "Bacon (Cooked)",
+    "description": "Crispy cooked bacon strips.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 541,
+      "protein": 37.0,
+      "fat": 42.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "2 slices (16g)",
+        "calories": 87,
+        "protein": 5.9,
+        "fat": 6.7,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Peas (Green, Cooked)",
+    "description": "Cooked green peas, small but mighty source of plant protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 81,
+      "protein": 5.4,
+      "fat": 0.4,
+      "carbs": 14.5
+    },
+    "servings": [
+      {
+        "size": "1 cup (145g)",
+        "calories": 117,
+        "protein": 7.8,
+        "fat": 0.6,
+        "carbs": 21.0
+      }
+    ]
+  },
+  {
+    "name": "Spinach (Cooked)",
+    "description": "Cooked spinach, surprisingly good source of protein for a leafy green.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 23,
+      "protein": 2.9,
+      "fat": 0.4,
+      "carbs": 3.6
+    },
+    "servings": [
+      {
+        "size": "1 cup (180g)",
+        "calories": 41,
+        "protein": 5.2,
+        "fat": 0.7,
+        "carbs": 6.5
+      }
+    ]
+  },
+  {
+    "name": "Broccoli (Cooked)",
+    "description": "Cooked broccoli florets, contains protein along with vitamins.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 34,
+      "protein": 2.8,
+      "fat": 0.4,
+      "carbs": 6.6
+    },
+    "servings": [
+      {
+        "size": "1 cup (156g)",
+        "calories": 53,
+        "protein": 4.4,
+        "fat": 0.6,
+        "carbs": 10.3
+      }
+    ]
+  },
+  {
+    "name": "Mushrooms (White, Cooked)",
+    "description": "Cooked white button mushrooms, low-calorie protein source.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 22,
+      "protein": 3.1,
+      "fat": 0.3,
+      "carbs": 3.3
+    },
+    "servings": [
+      {
+        "size": "1 cup (100g)",
+        "calories": 22,
+        "protein": 3.1,
+        "fat": 0.3,
+        "carbs": 3.3
+      }
+    ]
+  },
+  {
+    "name": "Artichoke (Cooked)",
+    "description": "Cooked artichoke, good source of fiber and some protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 47,
+      "protein": 3.3,
+      "fat": 0.2,
+      "carbs": 10.5
+    },
+    "servings": [
+      {
+        "size": "1 medium (120g)",
+        "calories": 56,
+        "protein": 4.0,
+        "fat": 0.2,
+        "carbs": 12.6
+      }
+    ]
+  },
+  {
+    "name": "Bamieh (Okra Stew with Beef/Lamb)",
+    "description": "Traditional Middle Eastern okra stew, typically made with tender okra pods, tomato sauce, and chunks of beef or lamb.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 120,
+      "protein": 8.0,
+      "fat": 7.0,
+      "carbs": 6.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (200g)",
+        "calories": 240,
+        "protein": 16.0,
+        "fat": 14.0,
+        "carbs": 12.0
+      }
+    ]
+  },
+  {
+    "name": "Mloukhiyeh (Jute Mallow Stew with Chicken)",
+    "description": "Popular Middle Eastern dish made from jute mallow leaves, often cooked with chicken or rabbit, garlic, and coriander.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 90,
+      "protein": 10.0,
+      "fat": 4.0,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (200g)",
+        "calories": 180,
+        "protein": 20.0,
+        "fat": 8.0,
+        "carbs": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Kibbeh Nayyeh",
+    "description": "Raw ground lamb or beef mixed with fine bulgur, spices, and onion. A traditional Levantine dish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 280,
+      "protein": 20.0,
+      "fat": 18.0,
+      "carbs": 10.0
+    },
+    "servings": [
+      {
+        "size": "1/2 cup (100g)",
+        "calories": 280,
+        "protein": 20.0,
+        "fat": 18.0,
+        "carbs": 10.0
+      }
+    ]
+  },
+  {
+    "name": "Shish Tawook (Grilled Chicken Skewers)",
+    "description": "Marinated chicken skewers, grilled to perfection, common in Middle Eastern cuisine.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 180,
+      "protein": 28.0,
+      "fat": 7.0,
+      "carbs": 2.0
+    },
+    "servings": [
+      {
+        "size": "1 skewer (100g)",
+        "calories": 180,
+        "protein": 28.0,
+        "fat": 7.0,
+        "carbs": 2.0
+      }
+    ]
+  },
+  {
+    "name": "Kafta (Ground Meat Skewers)",
+    "description": "Ground beef or lamb mixed with parsley, onion, and spices, grilled on skewers.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 260,
+      "protein": 25.0,
+      "fat": 18.0,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "1 skewer (100g)",
+        "calories": 260,
+        "protein": 25.0,
+        "fat": 18.0,
+        "carbs": 1.0
+      }
+    ]
+  },
+  {
+    "name": "Fasolia (Green Bean Stew with Meat)",
+    "description": "Green bean stew cooked with tomato sauce and chunks of beef or lamb, a hearty Middle Eastern dish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 100,
+      "protein": 7.0,
+      "fat": 5.0,
+      "carbs": 6.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (200g)",
+        "calories": 200,
+        "protein": 14.0,
+        "fat": 10.0,
+        "carbs": 12.0
+      }
+    ]
+  },
+  {
+    "name": "Mujadara (Lentils and Rice)",
+    "description": "A comforting Middle Eastern dish of cooked lentils and rice, topped with caramelized onions.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 140,
+      "protein": 5.0,
+      "fat": 4.0,
+      "carbs": 20.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (180g)",
+        "calories": 252,
+        "protein": 9.0,
+        "fat": 7.2,
+        "carbs": 36.0
+      }
+    ]
+  },
+  {
+    "name": "Hummus with Meat",
+    "description": "Creamy chickpea hummus topped with seasoned ground meat (beef or lamb).",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 220,
+      "protein": 12.0,
+      "fat": 15.0,
+      "carbs": 8.0
+    },
+    "servings": [
+      {
+        "size": "1/2 cup (100g)",
+        "calories": 220,
+        "protein": 12.0,
+        "fat": 15.0,
+        "carbs": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Labneh (Strained Yogurt)",
+    "description": "Thick, creamy strained yogurt, high in protein, often served with olive oil.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 90,
+      "protein": 10.0,
+      "fat": 5.0,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "1/2 cup (120g)",
+        "calories": 108,
+        "protein": 12.0,
+        "fat": 6.0,
+        "carbs": 4.8
+      }
+    ]
+  },
+  {
+    "name": "Foul Medames (Fava Bean Dip)",
+    "description": "Cooked fava beans seasoned with lemon juice, garlic, and olive oil, a staple breakfast.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 110,
+      "protein": 8.0,
+      "fat": 4.0,
+      "carbs": 12.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (200g)",
+        "calories": 220,
+        "protein": 16.0,
+        "fat": 8.0,
+        "carbs": 24.0
+      }
+    ]
+  },
+  {
+    "name": "Halloumi Cheese (Grilled)",
+    "description": "Salty, semi-hard cheese that holds its shape when grilled, popular in the Middle East.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 321,
+      "protein": 22.0,
+      "fat": 25.0,
+      "carbs": 2.0
+    },
+    "servings": [
+      {
+        "size": "1 slice (30g)",
+        "calories": 96,
+        "protein": 6.6,
+        "fat": 7.5,
+        "carbs": 0.6
+      }
+    ]
+  },
+  {
+    "name": "Chicken Shawarma (Meat Only)",
+    "description": "Thinly sliced marinated chicken, cooked on a vertical spit.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 220,
+      "protein": 28.0,
+      "fat": 12.0,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 187,
+        "protein": 23.8,
+        "fat": 10.2,
+        "carbs": 0.9
+      }
+    ]
+  },
+  {
+    "name": "Beef Shawarma (Meat Only)",
+    "description": "Thinly sliced marinated beef, cooked on a vertical spit.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 250,
+      "protein": 25.0,
+      "fat": 16.0,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 213,
+        "protein": 21.3,
+        "fat": 13.6,
+        "carbs": 0.9
+      }
+    ]
+  },
+  {
+    "name": "Lamb Chops (Grilled)",
+    "description": "Grilled lamb chops, tender and flavorful.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 280,
+      "protein": 25.0,
+      "fat": 20.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 chop (100g)",
+        "calories": 280,
+        "protein": 25.0,
+        "fat": 20.0,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Goat Meat (Cooked)",
+    "description": "Cooked goat meat, lean and flavorful.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 143,
+      "protein": 27.0,
+      "fat": 3.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 122,
+        "protein": 23.0,
+        "fat": 2.6,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Duck Breast (Cooked)",
+    "description": "Cooked duck breast, rich and flavorful.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 337,
+      "protein": 19.0,
+      "fat": 28.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 286,
+        "protein": 16.2,
+        "fat": 23.8,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Venison (Cooked)",
+    "description": "Cooked venison, very lean game meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 158,
+      "protein": 30.0,
+      "fat": 3.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 134,
+        "protein": 25.5,
+        "fat": 2.6,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Bison (Ground, Lean)",
+    "description": "Lean ground bison, a healthier alternative to beef.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 143,
+      "protein": 20.0,
+      "fat": 6.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "4 oz (113g)",
+        "calories": 162,
+        "protein": 22.6,
+        "fat": 6.8,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Ostrich Meat (Cooked)",
+    "description": "Cooked ostrich meat, very lean red meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 110,
+      "protein": 22.0,
+      "fat": 2.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 93,
+        "protein": 18.7,
+        "fat": 1.7,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Rabbit Meat (Cooked)",
+    "description": "Cooked rabbit meat, lean and tender.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 173,
+      "protein": 33.0,
+      "fat": 4.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 147,
+        "protein": 28.0,
+        "fat": 3.4,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Lamb Liver (Cooked)",
+    "description": "Cooked lamb liver, rich in iron and vitamins.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 135,
+      "protein": 20.0,
+      "fat": 5.0,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 115,
+        "protein": 17.0,
+        "fat": 4.3,
+        "carbs": 2.6
+      }
+    ]
+  },
+  {
+    "name": "Beef Liver (Cooked)",
+    "description": "Cooked beef liver, highly nutritious organ meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 135,
+      "protein": 20.0,
+      "fat": 5.0,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 115,
+        "protein": 17.0,
+        "fat": 4.3,
+        "carbs": 2.6
+      }
+    ]
+  },
+  {
+    "name": "Chicken Liver (Cooked)",
+    "description": "Cooked chicken liver, rich in iron and Vitamin A.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 167,
+      "protein": 24.0,
+      "fat": 6.0,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 142,
+        "protein": 20.4,
+        "fat": 5.1,
+        "carbs": 0.9
+      }
+    ]
+  },
+  {
+    "name": "Kidney Beans (Cooked)",
+    "description": "Cooked kidney beans, good source of plant protein and fiber.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 127,
+      "protein": 8.7,
+      "fat": 0.5,
+      "carbs": 22.8
+    },
+    "servings": [
+      {
+        "size": "1 cup (177g)",
+        "calories": 225,
+        "protein": 15.4,
+        "fat": 0.9,
+        "carbs": 40.4
+      }
+    ]
+  },
+  {
+    "name": "Pinto Beans (Cooked)",
+    "description": "Cooked pinto beans, popular in Mexican cuisine.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 143,
+      "protein": 9.0,
+      "fat": 0.6,
+      "carbs": 26.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (171g)",
+        "calories": 245,
+        "protein": 15.4,
+        "fat": 1.0,
+        "carbs": 44.5
+      }
+    ]
+  },
+  {
+    "name": "Navy Beans (Cooked)",
+    "description": "Cooked navy beans, small white beans, great for soups.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 139,
+      "protein": 8.7,
+      "fat": 0.6,
+      "carbs": 25.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (182g)",
+        "calories": 253,
+        "protein": 15.8,
+        "fat": 1.1,
+        "carbs": 45.5
+      }
+    ]
+  },
+  {
+    "name": "Great Northern Beans (Cooked)",
+    "description": "Cooked great northern beans, mild flavor, creamy texture.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 133,
+      "protein": 8.9,
+      "fat": 0.5,
+      "carbs": 24.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (177g)",
+        "calories": 235,
+        "protein": 15.8,
+        "fat": 0.9,
+        "carbs": 42.5
+      }
+    ]
+  },
+  {
+    "name": "Cannellini Beans (Cooked)",
+    "description": "Cooked cannellini beans, white kidney beans, popular in Italian dishes.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 137,
+      "protein": 9.0,
+      "fat": 0.6,
+      "carbs": 24.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (177g)",
+        "calories": 243,
+        "protein": 15.9,
+        "fat": 1.1,
+        "carbs": 42.5
+      }
+    ]
+  },
+  {
+    "name": "Mung Beans (Cooked)",
+    "description": "Cooked mung beans, small green beans, often used in Asian cuisine.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 105,
+      "protein": 7.0,
+      "fat": 0.4,
+      "carbs": 19.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (200g)",
+        "calories": 210,
+        "protein": 14.0,
+        "fat": 0.8,
+        "carbs": 38.0
+      }
+    ]
+  },
+  {
+    "name": "Adzuki Beans (Cooked)",
+    "description": "Cooked adzuki beans, small red beans, sweet flavor.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 128,
+      "protein": 7.5,
+      "fat": 0.2,
+      "carbs": 24.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (200g)",
+        "calories": 256,
+        "protein": 15.0,
+        "fat": 0.4,
+        "carbs": 48.0
+      }
+    ]
+  },
+  {
+    "name": "Lima Beans (Cooked)",
+    "description": "Cooked lima beans, large flat beans, creamy texture.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 115,
+      "protein": 7.8,
+      "fat": 0.4,
+      "carbs": 20.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (170g)",
+        "calories": 196,
+        "protein": 13.3,
+        "fat": 0.7,
+        "carbs": 34.0
+      }
+    ]
+  },
+  {
+    "name": "Split Peas (Cooked)",
+    "description": "Cooked split peas, often used in soups.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 118,
+      "protein": 8.0,
+      "fat": 0.4,
+      "carbs": 21.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (196g)",
+        "calories": 231,
+        "protein": 15.7,
+        "fat": 0.8,
+        "carbs": 41.2
+      }
+    ]
+  },
+  {
+    "name": "Triticale (Cooked)",
+    "description": "Cooked triticale, a hybrid of wheat and rye, good protein content.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 120,
+      "protein": 5.0,
+      "fat": 0.8,
+      "carbs": 25.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (180g)",
+        "calories": 216,
+        "protein": 9.0,
+        "fat": 1.4,
+        "carbs": 45.0
+      }
+    ]
+  },
+  {
+    "name": "Amaranth (Cooked)",
+    "description": "Cooked amaranth, a gluten-free pseudo-cereal, complete protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 103,
+      "protein": 3.8,
+      "fat": 1.9,
+      "carbs": 18.7
+    },
+    "servings": [
+      {
+        "size": "1 cup (246g)",
+        "calories": 253,
+        "protein": 9.3,
+        "fat": 4.7,
+        "carbs": 46.0
+      }
+    ]
+  },
+  {
+    "name": "Buckwheat (Cooked)",
+    "description": "Cooked buckwheat, a gluten-free pseudo-cereal, good protein source.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 92,
+      "protein": 3.4,
+      "fat": 0.6,
+      "carbs": 19.9
+    },
+    "servings": [
+      {
+        "size": "1 cup (168g)",
+        "calories": 155,
+        "protein": 5.7,
+        "fat": 1.0,
+        "carbs": 33.4
+      }
+    ]
+  },
+  {
+    "name": "Millet (Cooked)",
+    "description": "Cooked millet, a gluten-free grain, good protein content.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 119,
+      "protein": 3.5,
+      "fat": 0.8,
+      "carbs": 23.7
+    },
+    "servings": [
+      {
+        "size": "1 cup (174g)",
+        "calories": 207,
+        "protein": 6.1,
+        "fat": 1.4,
+        "carbs": 41.2
+      }
+    ]
+  },
+  {
+    "name": "Spelt (Cooked)",
+    "description": "Cooked spelt, an ancient grain, good source of protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 127,
+      "protein": 5.5,
+      "fat": 0.8,
+      "carbs": 26.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (194g)",
+        "calories": 246,
+        "protein": 10.7,
+        "fat": 1.6,
+        "carbs": 50.4
+      }
+    ]
+  },
+  {
+    "name": "Oats (Rolled, Cooked)",
+    "description": "Cooked rolled oats, good source of soluble fiber and some protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 68,
+      "protein": 2.4,
+      "fat": 1.4,
+      "carbs": 12.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (234g)",
+        "calories": 159,
+        "protein": 5.6,
+        "fat": 3.3,
+        "carbs": 28.1
+      }
+    ]
+  },
+  {
+    "name": "Brown Rice (Cooked)",
+    "description": "Cooked brown rice, contains more protein than white rice.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 111,
+      "protein": 2.6,
+      "fat": 0.9,
+      "carbs": 23.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (195g)",
+        "calories": 216,
+        "protein": 5.1,
+        "fat": 1.8,
+        "carbs": 44.9
+      }
+    ]
+  },
+  {
+    "name": "Wild Rice (Cooked)",
+    "description": "Cooked wild rice, higher in protein than many other rice varieties.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 101,
+      "protein": 4.0,
+      "fat": 0.3,
+      "carbs": 21.3
+    },
+    "servings": [
+      {
+        "size": "1 cup (164g)",
+        "calories": 166,
+        "protein": 6.6,
+        "fat": 0.5,
+        "carbs": 35.0
+      }
+    ]
+  },
+  {
+    "name": "Whole Wheat Pasta (Cooked)",
+    "description": "Cooked whole wheat pasta, good source of protein and fiber.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 124,
+      "protein": 5.0,
+      "fat": 0.6,
+      "carbs": 25.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (140g)",
+        "calories": 174,
+        "protein": 7.0,
+        "fat": 0.8,
+        "carbs": 35.0
+      }
+    ]
+  },
+  {
+    "name": "Whole Wheat Bread",
+    "description": "Slice of whole wheat bread, contains more protein than white bread.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 247,
+      "protein": 13.0,
+      "fat": 3.3,
+      "carbs": 41.0
+    },
+    "servings": [
+      {
+        "size": "1 slice (30g)",
+        "calories": 74,
+        "protein": 3.9,
+        "fat": 1.0,
+        "carbs": 12.3
+      }
+    ]
+  },
+  {
+    "name": "Peanut (Roasted, Salted)",
+    "description": "Roasted and salted peanuts, a popular protein-rich snack.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 567,
+      "protein": 25.8,
+      "fat": 49.2,
+      "carbs": 16.1
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 160,
+        "protein": 7.3,
+        "fat": 13.8,
+        "carbs": 4.5
+      }
+    ]
+  },
+  {
+    "name": "Cashews (Roasted, Salted)",
+    "description": "Roasted and salted cashews, creamy texture, good protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 553,
+      "protein": 18.2,
+      "fat": 43.8,
+      "carbs": 30.2
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 156,
+        "protein": 5.1,
+        "fat": 12.3,
+        "carbs": 8.5
+      }
+    ]
+  },
+  {
+    "name": "Walnuts",
+    "description": "Raw walnuts, rich in omega-3s and protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 654,
+      "protein": 15.2,
+      "fat": 65.2,
+      "carbs": 13.7
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 185,
+        "protein": 4.3,
+        "fat": 18.4,
+        "carbs": 3.9
+      }
+    ]
+  },
+  {
+    "name": "Pistachios (Roasted, Salted)",
+    "description": "Roasted and salted pistachios, vibrant green, good protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 562,
+      "protein": 20.2,
+      "fat": 45.3,
+      "carbs": 27.5
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 159,
+        "protein": 5.7,
+        "fat": 12.8,
+        "carbs": 7.8
+      }
+    ]
+  },
+  {
+    "name": "Sunflower Seeds",
+    "description": "Shelled sunflower seeds, great for snacking or salads.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 584,
+      "protein": 20.7,
+      "fat": 51.5,
+      "carbs": 20.0
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 165,
+        "protein": 5.8,
+        "fat": 14.6,
+        "carbs": 5.6
+      }
+    ]
+  },
+  {
+    "name": "Pumpkin Seeds",
+    "description": "Roasted pumpkin seeds, crunchy and nutritious.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 574,
+      "protein": 24.5,
+      "fat": 49.0,
+      "carbs": 14.7
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 162,
+        "protein": 6.9,
+        "fat": 13.8,
+        "carbs": 4.1
+      }
+    ]
+  },
+  {
+    "name": "Chia Seeds",
+    "description": "Tiny black seeds, excellent source of fiber, omega-3s, and protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 486,
+      "protein": 17.0,
+      "fat": 30.7,
+      "carbs": 42.1
+    },
+    "servings": [
+      {
+        "size": "1 tbsp (12g)",
+        "calories": 58,
+        "protein": 2.0,
+        "fat": 3.7,
+        "carbs": 5.0
+      }
+    ]
+  },
+  {
+    "name": "Flaxseeds (Ground)",
+    "description": "Ground flaxseeds, rich in omega-3s, fiber, and protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 534,
+      "protein": 18.3,
+      "fat": 42.2,
+      "carbs": 28.9
+    },
+    "servings": [
+      {
+        "size": "1 tbsp (7g)",
+        "calories": 37,
+        "protein": 1.3,
+        "fat": 2.9,
+        "carbs": 2.0
+      }
+    ]
+  },
+  {
+    "name": "Hemp Seeds",
+    "description": "Shelled hemp seeds, complete protein, nutty flavor.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 553,
+      "protein": 30.0,
+      "fat": 49.0,
+      "carbs": 8.0
+    },
+    "servings": [
+      {
+        "size": "2 tbsp (20g)",
+        "calories": 111,
+        "protein": 6.0,
+        "fat": 9.8,
+        "carbs": 1.6
+      }
+    ]
+  },
+  {
+    "name": "Spirulina Powder",
+    "description": "Blue-green algae powder, highly concentrated protein source.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 290,
+      "protein": 57.0,
+      "fat": 7.7,
+      "carbs": 24.0
+    },
+    "servings": [
+      {
+        "size": "1 tbsp (7g)",
+        "calories": 20,
+        "protein": 4.0,
+        "fat": 0.5,
+        "carbs": 1.7
+      }
+    ]
+  },
+  {
+    "name": "Nutritional Yeast",
+    "description": "Flaky yellow yeast, cheesy flavor, complete protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 380,
+      "protein": 50.0,
+      "fat": 5.0,
+      "carbs": 30.0
+    },
+    "servings": [
+      {
+        "size": "2 tbsp (10g)",
+        "calories": 38,
+        "protein": 5.0,
+        "fat": 0.5,
+        "carbs": 3.0
+      }
+    ]
+  },
+  {
+    "name": "Seitan (Wheat Gluten)",
+    "description": "Meat substitute made from wheat gluten, very high in protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 120,
+      "protein": 25.0,
+      "fat": 1.0,
+      "carbs": 5.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 102,
+        "protein": 21.3,
+        "fat": 0.9,
+        "carbs": 4.3
+      }
+    ]
+  },
+  {
+    "name": "Ezekiel Bread",
+    "description": "Sprouted grain bread, higher in protein than regular bread.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 240,
+      "protein": 12.0,
+      "fat": 2.0,
+      "carbs": 48.0
+    },
+    "servings": [
+      {
+        "size": "1 slice (34g)",
+        "calories": 82,
+        "protein": 4.1,
+        "fat": 0.7,
+        "carbs": 16.3
+      }
+    ]
+  },
+  {
+    "name": "Protein Bar (Typical)",
+    "description": "Common protein bar, varies by brand.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 350,
+      "protein": 30.0,
+      "fat": 15.0,
+      "carbs": 30.0
+    },
+    "servings": [
+      {
+        "size": "1 bar (60g)",
+        "calories": 210,
+        "protein": 18.0,
+        "fat": 9.0,
+        "carbs": 18.0
+      }
+    ]
+  },
+  {
+    "name": "Protein Powder (Casein)",
+    "description": "Slow-digesting casein protein powder.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 360,
+      "protein": 80.0,
+      "fat": 2.0,
+      "carbs": 8.0
+    },
+    "servings": [
+      {
+        "size": "1 scoop (30g)",
+        "calories": 108,
+        "protein": 24.0,
+        "fat": 0.6,
+        "carbs": 2.4
+      }
+    ]
+  },
+  {
+    "name": "Protein Powder (Plant-Based Blend)",
+    "description": "Blend of plant proteins (e.g., pea, rice, hemp).",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 380,
+      "protein": 70.0,
+      "fat": 5.0,
+      "carbs": 15.0
+    },
+    "servings": [
+      {
+        "size": "1 scoop (30g)",
+        "calories": 114,
+        "protein": 21.0,
+        "fat": 1.5,
+        "carbs": 4.5
+      }
+    ]
+  },
+  {
+    "name": "Egg Whites",
+    "description": "Pure egg whites, fat-free and cholesterol-free protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 52,
+      "protein": 11.0,
+      "fat": 0.2,
+      "carbs": 0.7
+    },
+    "servings": [
+      {
+        "size": "1 large egg white (33g)",
+        "calories": 17,
+        "protein": 3.6,
+        "fat": 0.1,
+        "carbs": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Duck Egg",
+    "description": "Larger egg with a richer yolk, higher in nutrients.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 185,
+      "protein": 13.0,
+      "fat": 14.0,
+      "carbs": 1.4
+    },
+    "servings": [
+      {
+        "size": "1 medium egg (70g)",
+        "calories": 130,
+        "protein": 9.1,
+        "fat": 9.8,
+        "carbs": 1.0
+      }
+    ]
+  },
+  {
+    "name": "Quail Egg",
+    "description": "Small, speckled eggs, often used as a delicacy.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 158,
+      "protein": 13.0,
+      "fat": 11.0,
+      "carbs": 0.4
+    },
+    "servings": [
+      {
+        "size": "1 egg (9g)",
+        "calories": 14,
+        "protein": 1.2,
+        "fat": 1.0,
+        "carbs": 0.0
+      }
+    ]
+  },
+  {
+    "name": "Goat Cheese",
+    "description": "Tangy goat cheese, good protein source.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 364,
+      "protein": 22.0,
+      "fat": 30.0,
+      "carbs": 0.5
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 102,
+        "protein": 6.2,
+        "fat": 8.4,
+        "carbs": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Feta Cheese",
+    "description": "Salty, crumbly Greek cheese, good protein content.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 264,
+      "protein": 14.0,
+      "fat": 21.0,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 74,
+        "protein": 3.9,
+        "fat": 5.9,
+        "carbs": 1.1
+      }
+    ]
+  },
+  {
+    "name": "Parmesan Cheese",
+    "description": "Hard, granular Italian cheese, high in protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 431,
+      "protein": 38.0,
+      "fat": 29.0,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 121,
+        "protein": 10.7,
+        "fat": 8.1,
+        "carbs": 1.1
+      }
+    ]
+  },
+  {
+    "name": "Swiss Cheese",
+    "description": "Nutty, mild cheese with holes, good protein source.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 380,
+      "protein": 27.0,
+      "fat": 30.0,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "1 slice (28g)",
+        "calories": 106,
+        "protein": 7.6,
+        "fat": 8.4,
+        "carbs": 0.3
+      }
+    ]
+  },
+  {
+    "name": "Provolone Cheese",
+    "description": "Semi-hard Italian cheese, mild to sharp flavor.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 351,
+      "protein": 25.0,
+      "fat": 27.0,
+      "carbs": 2.0
+    },
+    "servings": [
+      {
+        "size": "1 slice (28g)",
+        "calories": 98,
+        "protein": 7.0,
+        "fat": 7.6,
+        "carbs": 0.6
+      }
+    ]
+  },
+  {
+    "name": "Ricotta Cheese (Part-Skim)",
+    "description": "Soft, creamy Italian cheese, good for baking or spreading.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 138,
+      "protein": 11.0,
+      "fat": 7.0,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "1/2 cup (124g)",
+        "calories": 171,
+        "protein": 13.6,
+        "fat": 8.7,
+        "carbs": 3.7
+      }
+    ]
+  },
+  {
+    "name": "Mozzarella Cheese (Part-Skim)",
+    "description": "Soft, fresh Italian cheese, good for melting.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 250,
+      "protein": 28.0,
+      "fat": 14.0,
+      "carbs": 2.0
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 70,
+        "protein": 7.8,
+        "fat": 3.9,
+        "carbs": 0.6
+      }
+    ]
+  },
+  {
+    "name": "Cheddar Cheese",
+    "description": "Popular hard cheese, sharp flavor.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 404,
+      "protein": 25.0,
+      "fat": 33.0,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 113,
+        "protein": 7.0,
+        "fat": 9.2,
+        "carbs": 0.3
+      }
+    ]
+  },
+  {
+    "name": "Blue Cheese",
+    "description": "Strong, pungent cheese with blue veins.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 350,
+      "protein": 21.0,
+      "fat": 29.0,
+      "carbs": 2.0
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 98,
+        "protein": 5.9,
+        "fat": 8.1,
+        "carbs": 0.6
+      }
+    ]
+  },
+  {
+    "name": "Goat Milk",
+    "description": "Milk from goats, alternative to cow's milk.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 69,
+      "protein": 3.6,
+      "fat": 4.1,
+      "carbs": 4.5
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 166,
+        "protein": 8.6,
+        "fat": 9.8,
+        "carbs": 10.8
+      }
+    ]
+  },
+  {
+    "name": "Kefir (Plain, Low-Fat)",
+    "description": "Fermented milk drink, similar to thin yogurt, rich in probiotics and protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 50,
+      "protein": 3.5,
+      "fat": 1.5,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 120,
+        "protein": 8.4,
+        "fat": 3.6,
+        "carbs": 9.6
+      }
+    ]
+  },
+  {
+    "name": "Skim Milk",
+    "description": "Fat-free cow's milk, good source of calcium and protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 34,
+      "protein": 3.4,
+      "fat": 0.1,
+      "carbs": 5.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 82,
+        "protein": 8.2,
+        "fat": 0.2,
+        "carbs": 12.0
+      }
+    ]
+  },
+  {
+    "name": "2% Milk",
+    "description": "Reduced-fat cow's milk, balanced nutrition.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 50,
+      "protein": 3.3,
+      "fat": 2.0,
+      "carbs": 5.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 120,
+        "protein": 7.9,
+        "fat": 4.8,
+        "carbs": 12.0
+      }
+    ]
+  },
+  {
+    "name": "Whole Milk",
+    "description": "Full-fat cow's milk, rich and creamy.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 61,
+      "protein": 3.2,
+      "fat": 3.3,
+      "carbs": 4.7
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 146,
+        "protein": 7.7,
+        "fat": 7.9,
+        "carbs": 11.3
+      }
+    ]
+  },
+  {
+    "name": "Buttermilk",
+    "description": "Cultured milk, tangy flavor, good for baking.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 40,
+      "protein": 3.3,
+      "fat": 0.9,
+      "carbs": 4.8
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 96,
+        "protein": 7.9,
+        "fat": 2.2,
+        "carbs": 11.5
+      }
+    ]
+  },
+  {
+    "name": "Egg Drop Soup",
+    "description": "Chinese soup with wispy beaten eggs in chicken broth.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 30,
+      "protein": 3.0,
+      "fat": 1.0,
+      "carbs": 2.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 72,
+        "protein": 7.2,
+        "fat": 2.4,
+        "carbs": 4.8
+      }
+    ]
+  },
+  {
+    "name": "Beef Broth",
+    "description": "Savory liquid made from simmering beef bones and meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 10,
+      "protein": 2.0,
+      "fat": 0.5,
+      "carbs": 0.5
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 24,
+        "protein": 4.8,
+        "fat": 1.2,
+        "carbs": 1.2
+      }
+    ]
+  },
+  {
+    "name": "Chicken Broth",
+    "description": "Flavorful liquid made from simmering chicken bones and meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 10,
+      "protein": 2.0,
+      "fat": 0.5,
+      "carbs": 0.5
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 24,
+        "protein": 4.8,
+        "fat": 1.2,
+        "carbs": 1.2
+      }
+    ]
+  },
+  {
+    "name": "Vegetable Broth",
+    "description": "Savory liquid made from simmering vegetables.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 5,
+      "protein": 0.5,
+      "fat": 0.1,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 12,
+        "protein": 1.2,
+        "fat": 0.2,
+        "carbs": 2.4
+      }
+    ]
+  },
+  {
+    "name": "Bone Broth",
+    "description": "Broth made from simmering bones for extended periods, rich in collagen and amino acids.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 20,
+      "protein": 5.0,
+      "fat": 0.5,
+      "carbs": 0.5
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 48,
+        "protein": 12.0,
+        "fat": 1.2,
+        "carbs": 1.2
+      }
+    ]
+  },
+  {
+    "name": "Soy Protein Isolate",
+    "description": "Highly purified soy protein, often used in supplements.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 330,
+      "protein": 90.0,
+      "fat": 1.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 scoop (30g)",
+        "calories": 99,
+        "protein": 27.0,
+        "fat": 0.3,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Pea Protein Isolate",
+    "description": "Protein extracted from yellow peas, popular plant-based option.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 370,
+      "protein": 80.0,
+      "fat": 5.0,
+      "carbs": 5.0
+    },
+    "servings": [
+      {
+        "size": "1 scoop (30g)",
+        "calories": 111,
+        "protein": 24.0,
+        "fat": 1.5,
+        "carbs": 1.5
+      }
+    ]
+  },
+  {
+    "name": "Rice Protein Isolate",
+    "description": "Protein extracted from brown rice, hypoallergenic plant protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 360,
+      "protein": 80.0,
+      "fat": 3.0,
+      "carbs": 5.0
+    },
+    "servings": [
+      {
+        "size": "1 scoop (30g)",
+        "calories": 108,
+        "protein": 24.0,
+        "fat": 0.9,
+        "carbs": 1.5
+      }
+    ]
+  },
+  {
+    "name": "Egg White Protein Powder",
+    "description": "Protein powder made from dried egg whites.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 370,
+      "protein": 80.0,
+      "fat": 0.5,
+      "carbs": 5.0
+    },
+    "servings": [
+      {
+        "size": "1 scoop (30g)",
+        "calories": 111,
+        "protein": 24.0,
+        "fat": 0.2,
+        "carbs": 1.5
+      }
+    ]
+  },
+  {
+    "name": "Collagen Peptides",
+    "description": "Hydrolyzed collagen, beneficial for skin, hair, and joints.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 370,
+      "protein": 90.0,
+      "fat": 0.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 scoop (10g)",
+        "calories": 37,
+        "protein": 9.0,
+        "fat": 0.0,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Gelatin",
+    "description": "Protein derived from collagen, used as a thickener.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 335,
+      "protein": 85.0,
+      "fat": 0.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 tbsp (7g)",
+        "calories": 23,
+        "protein": 6.0,
+        "fat": 0.0,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Nutritional Yeast Flakes",
+    "description": "Savory, cheesy-flavored yeast flakes, a good source of B vitamins and protein.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 380,
+      "protein": 50.0,
+      "fat": 5.0,
+      "carbs": 30.0
+    },
+    "servings": [
+      {
+        "size": "2 tbsp (10g)",
+        "calories": 38,
+        "protein": 5.0,
+        "fat": 0.5,
+        "carbs": 3.0
+      }
+    ]
+  },
+  {
+    "name": "Sprouted Lentils (Raw)",
+    "description": "Raw sprouted lentils, increased nutrient availability.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 105,
+      "protein": 8.0,
+      "fat": 0.5,
+      "carbs": 18.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (198g)",
+        "calories": 208,
+        "protein": 15.8,
+        "fat": 1.0,
+        "carbs": 35.6
+      }
+    ]
+  },
+  {
+    "name": "Sprouted Chickpeas (Raw)",
+    "description": "Raw sprouted chickpeas, good for salads or snacking.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 150,
+      "protein": 9.0,
+      "fat": 2.0,
+      "carbs": 25.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (164g)",
+        "calories": 246,
+        "protein": 14.8,
+        "fat": 3.3,
+        "carbs": 41.0
+      }
+    ]
+  },
+  {
+    "name": "Mackerel (Baked)",
+    "description": "Baked mackerel, oily fish rich in omega-3s.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 205,
+      "protein": 18.6,
+      "fat": 13.9,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 174,
+        "protein": 15.8,
+        "fat": 11.8,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Halibut (Baked)",
+    "description": "Baked halibut, lean white fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 111,
+      "protein": 20.0,
+      "fat": 2.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 94,
+        "protein": 17.0,
+        "fat": 1.7,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Trout (Baked)",
+    "description": "Baked trout, freshwater fish, good source of omega-3s.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 148,
+      "protein": 20.0,
+      "fat": 7.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 126,
+        "protein": 17.0,
+        "fat": 5.9,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Clams (Cooked)",
+    "description": "Cooked clams, low-calorie seafood, rich in iron.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 74,
+      "protein": 13.0,
+      "fat": 1.0,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 63,
+        "protein": 11.1,
+        "fat": 0.9,
+        "carbs": 2.6
+      }
+    ]
+  },
+  {
+    "name": "Mussels (Cooked)",
+    "description": "Cooked mussels, sustainable seafood option.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 86,
+      "protein": 12.0,
+      "fat": 2.0,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 73,
+        "protein": 10.2,
+        "fat": 1.7,
+        "carbs": 2.6
+      }
+    ]
+  },
+  {
+    "name": "Oysters (Cooked)",
+    "description": "Cooked oysters, rich in zinc.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 81,
+      "protein": 9.0,
+      "fat": 2.0,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 69,
+        "protein": 7.7,
+        "fat": 1.7,
+        "carbs": 3.4
+      }
+    ]
+  },
+  {
+    "name": "Scallops (Cooked)",
+    "description": "Cooked scallops, sweet and tender seafood.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 80,
+      "protein": 15.0,
+      "fat": 0.5,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 68,
+        "protein": 12.8,
+        "fat": 0.4,
+        "carbs": 2.6
+      }
+    ]
+  },
+  {
+    "name": "Octopus (Cooked)",
+    "description": "Cooked octopus, lean and chewy seafood.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 82,
+      "protein": 15.0,
+      "fat": 1.0,
+      "carbs": 2.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 70,
+        "protein": 12.8,
+        "fat": 0.9,
+        "carbs": 1.7
+      }
+    ]
+  },
+  {
+    "name": "Squid (Cooked)",
+    "description": "Cooked squid (calamari), low-calorie seafood.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 92,
+      "protein": 16.0,
+      "fat": 1.4,
+      "carbs": 3.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 78,
+        "protein": 13.6,
+        "fat": 1.2,
+        "carbs": 2.6
+      }
+    ]
+  },
+  {
+    "name": "Crab Meat",
+    "description": "Cooked crab meat, sweet and delicate flavor.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 83,
+      "protein": 18.0,
+      "fat": 0.6,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 71,
+        "protein": 15.3,
+        "fat": 0.5,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Lobster",
+    "description": "Cooked lobster meat, rich and luxurious seafood.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 89,
+      "protein": 19.0,
+      "fat": 0.9,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 76,
+        "protein": 16.2,
+        "fat": 0.8,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Tilapia (Baked)",
+    "description": "Baked tilapia fillet, mild white fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 96,
+      "protein": 20.0,
+      "fat": 1.7,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 82,
+        "protein": 17.0,
+        "fat": 1.4,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Haddock (Baked)",
+    "description": "Baked haddock, lean white fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 86,
+      "protein": 19.0,
+      "fat": 0.7,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 73,
+        "protein": 16.2,
+        "fat": 0.6,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Flounder (Baked)",
+    "description": "Baked flounder, very lean and delicate white fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 83,
+      "protein": 17.0,
+      "fat": 1.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 71,
+        "protein": 14.5,
+        "fat": 0.9,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Perch (Baked)",
+    "description": "Baked perch, freshwater fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 91,
+      "protein": 18.0,
+      "fat": 1.5,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 77,
+        "protein": 15.3,
+        "fat": 1.3,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Catfish (Baked)",
+    "description": "Baked catfish, mild and flaky fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 105,
+      "protein": 18.0,
+      "fat": 3.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 89,
+        "protein": 15.3,
+        "fat": 2.6,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Mahi-Mahi (Baked)",
+    "description": "Baked mahi-mahi, firm white fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 85,
+      "protein": 18.0,
+      "fat": 0.7,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 72,
+        "protein": 15.3,
+        "fat": 0.6,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Grouper (Baked)",
+    "description": "Baked grouper, firm white fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 92,
+      "protein": 19.0,
+      "fat": 1.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 78,
+        "protein": 16.2,
+        "fat": 0.9,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Snapper (Baked)",
+    "description": "Baked snapper, lean white fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 100,
+      "protein": 21.0,
+      "fat": 1.5,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 85,
+        "protein": 17.9,
+        "fat": 1.3,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Swordfish (Grilled)",
+    "description": "Grilled swordfish, firm, meaty fish.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 121,
+      "protein": 19.0,
+      "fat": 4.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 103,
+        "protein": 16.2,
+        "fat": 3.4,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Tuna Steak (Grilled)",
+    "description": "Grilled tuna steak, firm and flavorful.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 144,
+      "protein": 23.0,
+      "fat": 4.9,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 122,
+        "protein": 19.6,
+        "fat": 4.2,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Anchovies (Canned in Oil)",
+    "description": "Small, salty fish, packed with flavor and omega-3s.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 210,
+      "protein": 29.0,
+      "fat": 9.7,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 oz (28g)",
+        "calories": 59,
+        "protein": 8.1,
+        "fat": 2.7,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Goat Yogurt (Plain)",
+    "description": "Plain goat yogurt, tangy and creamy.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 65,
+      "protein": 4.0,
+      "fat": 3.5,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240g)",
+        "calories": 156,
+        "protein": 9.6,
+        "fat": 8.4,
+        "carbs": 9.6
+      }
+    ]
+  },
+  {
+    "name": "Sheep Milk Yogurt (Plain)",
+    "description": "Plain sheep milk yogurt, rich and thick.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 90,
+      "protein": 6.0,
+      "fat": 5.0,
+      "carbs": 6.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240g)",
+        "calories": 216,
+        "protein": 14.4,
+        "fat": 12.0,
+        "carbs": 14.4
+      }
+    ]
+  },
+  {
+    "name": "Camel Milk",
+    "description": "Milk from camels, lower in fat than cow's milk.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 48,
+      "protein": 3.0,
+      "fat": 2.0,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 115,
+        "protein": 7.2,
+        "fat": 4.8,
+        "carbs": 9.6
+      }
+    ]
+  },
+  {
+    "name": "Buffalo Milk",
+    "description": "Milk from water buffalo, richer and creamier than cow's milk.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 97,
+      "protein": 3.8,
+      "fat": 6.9,
+      "carbs": 5.2
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 233,
+        "protein": 9.1,
+        "fat": 16.6,
+        "carbs": 12.5
+      }
+    ]
+  },
+  {
+    "name": "Duck Eggs (Scrambled)",
+    "description": "Scrambled duck eggs, fluffy and rich.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 185,
+      "protein": 13.0,
+      "fat": 14.0,
+      "carbs": 1.4
+    },
+    "servings": [
+      {
+        "size": "1 medium egg (70g)",
+        "calories": 130,
+        "protein": 9.1,
+        "fat": 9.8,
+        "carbs": 1.0
+      }
+    ]
+  },
+  {
+    "name": "Quail Eggs (Hard-Boiled)",
+    "description": "Hard-boiled quail eggs, small and convenient.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 158,
+      "protein": 13.0,
+      "fat": 11.0,
+      "carbs": 0.4
+    },
+    "servings": [
+      {
+        "size": "5 eggs (45g)",
+        "calories": 71,
+        "protein": 5.9,
+        "fat": 5.0,
+        "carbs": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Smoked Salmon",
+    "description": "Smoked salmon slices, great for breakfast or appetizers.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 117,
+      "protein": 18.0,
+      "fat": 4.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "2 oz (56g)",
+        "calories": 66,
+        "protein": 10.1,
+        "fat": 2.2,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Cod Liver Oil",
+    "description": "Oil extracted from cod liver, rich in omega-3s and vitamins A and D.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 900,
+      "protein": 0.0,
+      "fat": 100.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 tsp (4.5g)",
+        "calories": 41,
+        "protein": 0.0,
+        "fat": 4.5,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Fish Roe (Caviar)",
+    "description": "Fish eggs (caviar), rich and salty, high in omega-3s.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 250,
+      "protein": 25.0,
+      "fat": 18.0,
+      "carbs": 4.0
+    },
+    "servings": [
+      {
+        "size": "1 tbsp (16g)",
+        "calories": 40,
+        "protein": 4.0,
+        "fat": 2.9,
+        "carbs": 0.6
+      }
+    ]
+  },
+  {
+    "name": "Chicken Thigh (Skin On, Cooked)",
+    "description": "Cooked chicken thigh with skin, more flavorful than breast.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 209,
+      "protein": 26.0,
+      "fat": 11.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 medium thigh (90g)",
+        "calories": 188,
+        "protein": 23.4,
+        "fat": 9.9,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Beef Ribs (Cooked)",
+    "description": "Cooked beef ribs, rich and tender.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 350,
+      "protein": 25.0,
+      "fat": 28.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 rib (150g)",
+        "calories": 525,
+        "protein": 37.5,
+        "fat": 42.0,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Lamb Shank (Cooked)",
+    "description": "Slow-cooked lamb shank, very tender and flavorful.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 250,
+      "protein": 25.0,
+      "fat": 16.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 shank (300g)",
+        "calories": 750,
+        "protein": 75.0,
+        "fat": 48.0,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Veal Chop (Grilled)",
+    "description": "Grilled veal chop, tender and mild-flavored.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 180,
+      "protein": 28.0,
+      "fat": 7.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 chop (150g)",
+        "calories": 270,
+        "protein": 42.0,
+        "fat": 10.5,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Duck Leg (Cooked)",
+    "description": "Cooked duck leg, rich and fatty.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 300,
+      "protein": 25.0,
+      "fat": 22.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "1 leg (150g)",
+        "calories": 450,
+        "protein": 37.5,
+        "fat": 33.0,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Goose Meat (Cooked)",
+    "description": "Cooked goose meat, rich and fatty poultry.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 370,
+      "protein": 25.0,
+      "fat": 30.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 315,
+        "protein": 21.3,
+        "fat": 25.5,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Pheasant (Cooked)",
+    "description": "Cooked pheasant, lean game bird.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 135,
+      "protein": 25.0,
+      "fat": 3.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 115,
+        "protein": 21.3,
+        "fat": 2.6,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Bison Steak (Grilled)",
+    "description": "Grilled bison steak, lean and flavorful.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 150,
+      "protein": 28.0,
+      "fat": 4.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "4 oz (113g)",
+        "calories": 170,
+        "protein": 31.6,
+        "fat": 4.5,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Ostrich Steak (Grilled)",
+    "description": "Grilled ostrich steak, very lean red meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 110,
+      "protein": 22.0,
+      "fat": 2.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "4 oz (113g)",
+        "calories": 124,
+        "protein": 24.9,
+        "fat": 2.3,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Rabbit Stew (Meat Only)",
+    "description": "Cooked rabbit meat from a stew, tender and savory.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 180,
+      "protein": 30.0,
+      "fat": 5.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 153,
+        "protein": 25.5,
+        "fat": 4.3,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Beef Heart (Cooked)",
+    "description": "Cooked beef heart, lean and nutrient-dense organ meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 110,
+      "protein": 17.0,
+      "fat": 4.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 94,
+        "protein": 14.5,
+        "fat": 3.4,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Lamb Kidney (Cooked)",
+    "description": "Cooked lamb kidney, rich in vitamins and minerals.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 100,
+      "protein": 17.0,
+      "fat": 3.0,
+      "carbs": 1.0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 85,
+        "protein": 14.5,
+        "fat": 2.6,
+        "carbs": 0.9
+      }
+    ]
+  },
+  {
+    "name": "Chicken Gizzards (Cooked)",
+    "description": "Cooked chicken gizzards, chewy and flavorful organ meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 155,
+      "protein": 26.0,
+      "fat": 5.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 132,
+        "protein": 22.1,
+        "fat": 4.3,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Chicken Hearts (Cooked)",
+    "description": "Cooked chicken hearts, small and tender organ meat.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 153,
+      "protein": 26.0,
+      "fat": 5.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 130,
+        "protein": 22.1,
+        "fat": 4.3,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Beef Tongue (Cooked)",
+    "description": "Cooked beef tongue, tender and flavorful.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 230,
+      "protein": 18.0,
+      "fat": 17.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 196,
+        "protein": 15.3,
+        "fat": 14.5,
+        "carbs": 0
+      }
+    ]
+  },
+  {
+    "name": "Beef Tripe (Cooked)",
+    "description": "Cooked beef tripe, chewy texture, often used in stews.",
+    "category": "proteins",
+    "nutrients_per_100g": {
+      "calories": 85,
+      "protein": 15.0,
+      "fat": 2.0,
+      "carbs": 0
+    },
+    "servings": [
+      {
+        "size": "3 oz (85g)",
+        "calories": 72,
+        "protein": 12.8,
+        "fat": 1.7,
+        "carbs": 0
+      }
+    ]
+  }
+]

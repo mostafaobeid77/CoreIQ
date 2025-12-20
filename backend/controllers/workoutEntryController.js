@@ -5,7 +5,7 @@ const Workout = require('../models/Workout');
 exports.getWorkoutEntriesByDate = async (req, res) => {
   try {
     const { date } = req.params;
-    
+
     const entries = await WorkoutEntry.find({
       userId: req.userId,
       date: new Date(date)
@@ -51,8 +51,8 @@ exports.addWorkoutEntry = async (req, res) => {
     }
 
     // Determine workout type
-    const isCardio = workout.category?.toLowerCase() === 'cardio' || 
-                     workout.muscle_group?.toLowerCase() === 'cardio';
+    const isCardio = workout.category?.toLowerCase() === 'cardio' ||
+      workout.muscle_group?.toLowerCase() === 'cardio';
     const workoutType = isCardio ? 'cardio' : 'strength';
 
     // Validate based on type
@@ -121,4 +121,27 @@ exports.deleteWorkoutEntry = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+// Update workout entry
+exports.updateWorkoutEntry = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { sets, minutes } = req.body;
 
+    const entry = await WorkoutEntry.findOne({ _id: id, userId: req.userId });
+    if (!entry) {
+      return res.status(404).json({ message: 'Workout entry not found' });
+    }
+
+    if (entry.workoutType === 'strength') {
+      if (sets) entry.sets = sets;
+    } else {
+      if (minutes) entry.minutes = minutes;
+    }
+
+    await entry.save();
+    res.json({ message: 'Workout entry updated successfully', entry });
+  } catch (error) {
+    console.error('Update workout entry error:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

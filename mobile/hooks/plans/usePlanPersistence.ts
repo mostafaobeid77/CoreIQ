@@ -5,6 +5,7 @@ const DRAFT_PLAN_KEY = '@coreiq_draft_plan';
 
 export interface DraftPlan {
     name: string;
+    startDate?: string;
     days: { [key: number]: any }; // simplified structure for storage
     lastUpdated: number;
 }
@@ -29,10 +30,11 @@ export function usePlanPersistence() {
         }
     };
 
-    const saveDraft = useCallback(async (name: string, days: any[]) => {
+    const saveDraft = useCallback(async (name: string, days: any[], startDate?: string) => {
         try {
             const draft: DraftPlan = {
                 name,
+                startDate,
                 days: days.reduce((acc, day) => ({ ...acc, [day.day]: day }), {}),
                 lastUpdated: Date.now(),
             };
@@ -43,7 +45,7 @@ export function usePlanPersistence() {
         }
     }, []);
 
-    const loadDraft = useCallback(async (): Promise<{ name: string; days: any[] } | null> => {
+    const loadDraft = useCallback(async (): Promise<{ name: string; days: any[]; startDate?: string } | null> => {
         try {
             const json = await AsyncStorage.getItem(DRAFT_PLAN_KEY);
             if (!json) return null;
@@ -54,7 +56,8 @@ export function usePlanPersistence() {
 
             return {
                 name: draft.name,
-                days: daysArray
+                days: daysArray,
+                startDate: draft.startDate
             };
         } catch (error) {
             console.error('Error loading draft:', error);

@@ -45,6 +45,10 @@ class MealsService {
     return api.delete(`/meals/${id}`);
   }
 
+  async deleteMealsByDate(date: string): Promise<{ message: string }> {
+    return api.delete(`/meals/date/${date}`);
+  }
+
   async getTotalNutrients(date: string): Promise<{
     calories: number;
     protein: number;
