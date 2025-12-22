@@ -14,8 +14,10 @@ const MAIL_DISABLED = sanitize(process.env.MAIL_DISABLED)
 const SENDGRID_API_KEY = sanitize(process.env.SENDGRID_API_KEY)
 const MAILERSEND_SMTP_USER = sanitize(process.env.MAILERSEND_SMTP_USER)
 const MAILERSEND_SMTP_PASSWORD = sanitize(process.env.MAILERSEND_SMTP_PASSWORD)
+const BREVO_SMTP_USER = sanitize(process.env.BREVO_SMTP_USER)
+const BREVO_SMTP_KEY = sanitize(process.env.BREVO_SMTP_KEY)
 
-const mailDisabled = MAIL_DISABLED === 'true' || (!MAILERSEND_SMTP_PASSWORD && !SENDGRID_API_KEY && (!MAIL_USER || !MAIL_APP_PASSWORD))
+const mailDisabled = MAIL_DISABLED === 'true' || (!BREVO_SMTP_KEY && !MAILERSEND_SMTP_PASSWORD && !SENDGRID_API_KEY && (!MAIL_USER || !MAIL_APP_PASSWORD))
 
 let transporter = null
 
@@ -25,7 +27,34 @@ const createTransporter = () => {
 		return null
 	}
 
-	// Prefer MailerSend (easiest signup, 3K emails/month free)
+	// Prefer Brevo (best deliverability to Hotmail/Yahoo, 300 emails/day free)
+	if (BREVO_SMTP_KEY) {
+		console.log('[mailer] Using Brevo (Sendinblue) for email delivery.')
+		const transport = nodemailer.createTransport({
+			host: 'smtp-relay.brevo.com',
+			port: 587,
+			secure: false,
+			auth: {
+				user: BREVO_SMTP_USER,
+				pass: BREVO_SMTP_KEY,
+			},
+			connectionTimeout: 15000,
+			greetingTimeout: 15000,
+		})
+
+		// Verify in background
+		transport.verify()
+			.then(() => {
+				console.log('[mailer] Brevo transporter verified successfully.')
+			})
+			.catch((error) => {
+				console.error('[mailer] Brevo verification warning (will still try to send):', error.message)
+			})
+
+		return transport
+	}
+
+	// Fallback to MailerSend
 	if (MAILERSEND_SMTP_PASSWORD) {
 		console.log('[mailer] Using MailerSend for email delivery.')
 		const transport = nodemailer.createTransport({
