@@ -56,11 +56,7 @@ const CategoryCards: React.FC<CategoryCardsProps> = ({
         <Ionicons name="nutrition" size={36} color="#f59e0b" />
         <Text style={styles.categoryTitle}>Nutritions</Text>
         <Text style={styles.categorySummary}>
-          {consumedNutrients.totalCalories}
-          {stats.totalCaloriesBurned > 0 && (
-            <Text style={{ color: '#22c55e' }}> -{stats.totalCaloriesBurned}</Text>
-          )}
-          {' '}/ {dailyTargets.calories} kcal
+          {consumedNutrients.totalCalories - (stats.totalCaloriesBurned || 0)} / {dailyTargets.calories} kcal
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
