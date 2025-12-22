@@ -30,14 +30,14 @@ const createTransporter = () => {
 		console.log('[mailer] Using MailerSend for email delivery.')
 		const transport = nodemailer.createTransport({
 			host: 'smtp.mailersend.net',
-			port: 587,
+			port: 2525, // Use 2525 instead of 587 for better cloud platform compatibility
 			secure: false,
 			auth: {
 				user: MAILERSEND_SMTP_USER,
 				pass: MAILERSEND_SMTP_PASSWORD,
 			},
-			connectionTimeout: 10000, // 10 seconds
-			greetingTimeout: 10000,
+			connectionTimeout: 15000, // Increase to 15 seconds for cloud platforms
+			greetingTimeout: 15000,
 		})
 
 		// Verify in background - don't block startup
