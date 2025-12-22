@@ -1,5 +1,8 @@
 const WorkoutEntry = require('../models/WorkoutEntry');
 const Workout = require('../models/Workout');
+const DailyStats = require('../models/DailyStats');
+const User = require('../models/User');
+const { calculateCaloriesFromWorkout } = require('../utils/calorieCalculator');
 
 // Get all workout entries for a date
 exports.getWorkoutEntriesByDate = async (req, res) => {
@@ -95,7 +98,61 @@ exports.toggleWorkout = async (req, res) => {
       return res.status(404).json({ message: 'Workout entry not found' });
     }
 
+    const wasCompleted = entry.isCompleted;
     entry.isCompleted = !entry.isCompleted;
+
+    // Calculate calories if workout is being marked as complete
+    if (!wasCompleted && entry.isCompleted) {
+      // Get user weight for accurate calorie calculation
+      const user = await User.findById(req.userId).select('weight');
+      const userWeight = user?.weight || 70; // Default 70kg if no weight set
+
+      // Determine duration (use minutes field or estimate from sets)
+      let durationMinutes = entry.minutes || 0;
+      if (!durationMinutes && entry.sets && entry.sets.length > 0) {
+        // Estimate: 3 minutes per set for strength training
+        durationMinutes = entry.sets.length * 3;
+      }
+
+      // Calculate calories burned
+      const caloriesBurned = calculateCaloriesFromWorkout({
+        workoutType: entry.muscle_group || entry.name || 'general',
+        durationMinutes,
+        userWeight
+      });
+
+      // Store calories in workout entry
+      entry.caloriesBurned = caloriesBurned;
+
+      // Update DailyStats
+      const stats = await DailyStats.findOne({
+        userId: req.userId,
+        date: entry.date
+      });
+
+      if (stats) {
+        stats.caloriesBurnedWorkouts += caloriesBurned;
+        stats.totalCaloriesBurned = stats.caloriesBurnedWorkouts + stats.caloriesBurnedSteps;
+        await stats.save();
+      }
+    } else if (wasCompleted && !entry.isCompleted) {
+      // If unmarking as complete, subtract calories
+      if (entry.caloriesBurned) {
+        const stats = await DailyStats.findOne({
+          userId: req.userId,
+          date: entry.date
+        });
+
+        if (stats) {
+          stats.caloriesBurnedWorkouts = Math.max(0, stats.caloriesBurnedWorkouts - entry.caloriesBurned);
+          stats.totalCaloriesBurned = stats.caloriesBurnedWorkouts + stats.caloriesBurnedSteps;
+          await stats.save();
+        }
+
+        entry.caloriesBurned = 0;
+      }
+    }
+
     await entry.save();
 
     res.json({ message: 'Workout completion toggled', entry });

@@ -1,24 +1,88 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useAuth } from '../context/AuthContext';
+import { authService } from '../services/authService';
+import { userService } from '../services/userService';
 
 export default function ChangePasswordScreen() {
   const router = useRouter();
+  const { user } = useAuth();
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [sendingResetEmail, setSendingResetEmail] = useState(false);
 
-  const onSave = () => {
-    if (newPassword !== confirmPassword) {
-      alert('New passwords do not match');
+  const onSave = async () => {
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      Alert.alert('Missing Fields', 'Please fill in all fields');
       return;
     }
-    alert('Password changed');
+
+    if (newPassword !== confirmPassword) {
+      Alert.alert('Passwords Mismatch', 'New passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      Alert.alert('Weak Password', 'Password must be at least 6 characters');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      await userService.changePassword(oldPassword, newPassword);
+      Alert.alert('Success', 'Password changed successfully');
+      router.back();
+    } catch (error: any) {
+      Alert.alert('Error', error?.message || 'Failed to change password');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!user?.email) {
+      Alert.alert('Error', 'User email not found');
+      return;
+    }
+
+    Alert.alert(
+      'Reset Password',
+      'A verification code will be sent to your email. You will need to verify it and then set a new password.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Send Code',
+          onPress: async () => {
+            try {
+              setSendingResetEmail(true);
+              await authService.forgotPassword(user.email);
+              Alert.alert(
+                'Email Sent',
+                'Check your email for the verification code',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => router.push(`/confirm-code?email=${encodeURIComponent(user.email)}`),
+                  },
+                ]
+              );
+            } catch (error: any) {
+              Alert.alert('Error', error?.message || 'Failed to send reset email');
+            } finally {
+              setSendingResetEmail(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const navigateBack = () => {
@@ -82,12 +146,28 @@ export default function ChangePasswordScreen() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={onSave} style={{ backgroundColor: '#2563eb', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginTop: 6 }}>
-          <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>Save</Text>
+        <TouchableOpacity
+          onPress={onSave}
+          disabled={saving}
+          style={{ backgroundColor: '#2563eb', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginTop: 6, opacity: saving ? 0.6 : 1 }}
+        >
+          {saving ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>Save</Text>
+          )}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/confirm-code')} style={{ alignItems: 'center', marginTop: 16 }}>
-          <Text style={{ color: '#60a5fa', fontSize: 15, fontWeight: '600' }}>Forgot password?</Text>
+        <TouchableOpacity
+          onPress={handleForgotPassword}
+          disabled={sendingResetEmail}
+          style={{ alignItems: 'center', marginTop: 16 }}
+        >
+          {sendingResetEmail ? (
+            <ActivityIndicator size="small" color="#60a5fa" />
+          ) : (
+            <Text style={{ color: '#60a5fa', fontSize: 15, fontWeight: '600' }}>Forgot password?</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>

@@ -59,6 +59,11 @@ const WorkoutEntrySchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  caloriesBurned: {
+    type: Number,
+    default: 0,
+    min: [0, 'Calories burned cannot be negative']
+  },
   planId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Plan',
@@ -76,7 +81,7 @@ const WorkoutEntrySchema = new mongoose.Schema({
 });
 
 // Custom validation
-WorkoutEntrySchema.pre('validate', function(next) {
+WorkoutEntrySchema.pre('validate', function (next) {
   if (this.workoutType === 'strength') {
     if (!this.sets || this.sets.length === 0) {
       return next(new Error('Strength workouts must have at least one set'));

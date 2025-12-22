@@ -181,6 +181,44 @@ exports.updateUserStats = async (req, res) => {
   }
 };
 
+// Change password (for logged-in users)
+exports.changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: 'Both old and new passwords are required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters' });
+    }
+
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Verify old password
+    const bcrypt = require('bcryptjs');
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Current password is incorrect' });
+    }
+
+    // Hash and save new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    // Note: We DON'T invalidate the token - user stays logged in
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Change password error:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 // Delete user account
 exports.deleteAccount = async (req, res) => {
   try {

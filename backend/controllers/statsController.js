@@ -1,4 +1,5 @@
 const DailyStats = require('../models/DailyStats');
+const { calculateCaloriesFromSteps } = require('../utils/calorieCalculator');
 
 // Get stats for a specific date
 exports.getStats = async (req, res) => {
@@ -99,6 +100,12 @@ exports.updateStats = async (req, res) => {
       });
     }
 
+    // Calculate calories burned from steps if walking was updated
+    if (updateData.walking !== undefined) {
+      stats.caloriesBurnedSteps = calculateCaloriesFromSteps(stats.walking);
+      stats.totalCaloriesBurned = stats.caloriesBurnedWorkouts + stats.caloriesBurnedSteps;
+    }
+
     // Check if weight goal is achieved and auto-clear it
     if (stats.weight && stats.goalWeight && checkGoalAchieved(stats.weight, stats.goalWeight)) {
       stats.goalWeight = 'Not set';
@@ -151,6 +158,12 @@ exports.patchStats = async (req, res) => {
         ...defaults,
         ...updateData
       });
+    }
+
+    // Calculate calories burned from steps if walking was updated
+    if (updateData.walking !== undefined) {
+      stats.caloriesBurnedSteps = calculateCaloriesFromSteps(stats.walking);
+      stats.totalCaloriesBurned = stats.caloriesBurnedWorkouts + stats.caloriesBurnedSteps;
     }
 
     // Check if weight goal is achieved and auto-clear it

@@ -10,6 +10,8 @@ import { useAuth } from "../context/AuthContext";
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import DeleteAccountModal from '../components/settings/DeleteAccountModal';
+import { userService } from '../services/userService';
 
 const SettingScreen = () => {
   const router = useRouter();
@@ -22,6 +24,7 @@ const SettingScreen = () => {
   const [notifyWater, setNotifyWater] = useState(false);
   const [notifyWellness, setNotifyWellness] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const prevNotifyWater = React.useRef<boolean | null>(null);
   const prevNotifyWellness = React.useRef<boolean | null>(null);
 
@@ -46,6 +49,16 @@ const SettingScreen = () => {
   const onLogout = async () => {
     await logout();
     router.replace('/login');
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      await userService.deleteAccount();
+      await logout(); // Clear auth state
+      router.replace('/login');
+    } catch (error: any) {
+      throw error; // Let modal handle error display
+    }
   };
 
   const openLink = (url: string) => {
@@ -332,6 +345,27 @@ const SettingScreen = () => {
               <Ionicons name="chevron-forward" size={18} color="#8a8a8a" />
             </TouchableOpacity>
           </View>
+
+          {/* Danger Zone */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: '#ef4444' }]}>Danger Zone</Text>
+            <View style={[styles.row, { backgroundColor: '#fef2f2', borderRadius: 8, borderWidth: 1, borderColor: '#fee2e2' }]}>
+              <View style={styles.rowLeft}>
+                <Ionicons name="trash" size={18} color="#ef4444" style={styles.rowIcon} />
+                <View>
+                  <Text style={[styles.rowLabel, { color: '#dc2626' }]}>Delete Account</Text>
+                  <Text style={[styles.rowSub, { color: '#991b1b' }]}>Permanently delete your account and data</Text>
+                </View>
+              </View>
+              <TouchableOpacity
+                onPress={() => setIsDeleteModalVisible(true)}
+                style={{ padding: 8 }}
+              >
+                <Ionicons name="chevron-forward" size={18} color="#ef4444" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
           {/* Logout */}
           <View style={{ paddingHorizontal: 16, paddingBottom: 24 }}>
             <TouchableOpacity style={styles.dangerButton} activeOpacity={0.9} onPress={onLogout}>
@@ -370,6 +404,14 @@ const SettingScreen = () => {
           </View>
         </View>
       </Modal>
+
+      {/* Delete Account Modal */}
+      <DeleteAccountModal
+        visible={isDeleteModalVisible}
+        onClose={() => setIsDeleteModalVisible(false)}
+        username={user?.username || ''}
+        onDelete={handleDeleteAccount}
+      />
     </View>
   );
 };

@@ -25,6 +25,7 @@ interface CategoryCardsProps {
   setIsWaterModalVisible: (val: boolean) => void;
   mentalHealthOptions: MentalHealthOption[];
   styles: { [key: string]: any };
+  isFutureDate?: boolean; // Disable interactions for future dates
 }
 
 const CategoryCards: React.FC<CategoryCardsProps> = ({
@@ -36,7 +37,8 @@ const CategoryCards: React.FC<CategoryCardsProps> = ({
   setIsEditingWater,
   setIsWaterModalVisible,
   mentalHealthOptions,
-  styles
+  styles,
+  isFutureDate = false
 }) => {
   // Determine meals target (range or value)
   let mealsTarget = dailyTargets.meals;
@@ -46,29 +48,53 @@ const CategoryCards: React.FC<CategoryCardsProps> = ({
 
   return (
     <View style={styles.categoryGrid}>
-      <TouchableOpacity style={styles.categoryCard} onPress={() => openSheetSafely('nutritions')}>
+      <TouchableOpacity
+        style={[styles.categoryCard, isFutureDate && { opacity: 0.6 }]}
+        onPress={() => !isFutureDate && openSheetSafely('nutritions')}
+        disabled={isFutureDate}
+      >
         <Ionicons name="nutrition" size={36} color="#f59e0b" />
         <Text style={styles.categoryTitle}>Nutritions</Text>
-        <Text style={styles.categorySummary}>{consumedNutrients.totalCalories} / {dailyTargets.calories} kcal</Text>
+        <Text style={styles.categorySummary}>
+          {consumedNutrients.totalCalories}
+          {stats.totalCaloriesBurned > 0 && (
+            <Text style={{ color: '#22c55e' }}> -{stats.totalCaloriesBurned}</Text>
+          )}
+          {' '}/ {dailyTargets.calories} kcal
+        </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.categoryCard} onPress={() => openSheetSafely('mind')}>
-        <Ionicons 
-          name={mentalHealthOptions.find((option) => option.label === stats.mental)?.icon as any} 
-          size={36} 
-          color={mentalHealthOptions.find((option) => option.label === stats.mental)?.color} 
+      <TouchableOpacity
+        style={[styles.categoryCard, isFutureDate && { opacity: 0.6 }]}
+        onPress={() => !isFutureDate && openSheetSafely('mind')}
+        disabled={isFutureDate}
+      >
+        <Ionicons
+          name={mentalHealthOptions.find((option) => option.label === stats.mental)?.icon as any}
+          size={36}
+          color={mentalHealthOptions.find((option) => option.label === stats.mental)?.color}
         />
         <Text style={styles.categoryTitle}>Mind & Sleep</Text>
         <Text style={styles.categorySummary}>{stats.sleep}h, {stats.mental}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.categoryCard} onPress={() => openSheetSafely('activity')}>
+      <TouchableOpacity
+        style={[styles.categoryCard, isFutureDate && { opacity: 0.6 }]}
+        onPress={() => !isFutureDate && openSheetSafely('activity')}
+        disabled={isFutureDate}
+      >
         <Ionicons name="walk" size={36} color="#34d399" />
         <Text style={styles.categoryTitle}>Activity</Text>
         <Text style={styles.categorySummary}>{stats.walking} / {dailyTargets.steps.toLocaleString()} steps</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.categoryCard} onPress={() => {
-        if (stats.water > 0) setIsEditingWater(true);
-        setIsWaterModalVisible(true);
-      }}>
+      <TouchableOpacity
+        style={[styles.categoryCard, isFutureDate && { opacity: 0.6 }]}
+        onPress={() => {
+          if (!isFutureDate) {
+            if (stats.water > 0) setIsEditingWater(true);
+            setIsWaterModalVisible(true);
+          }
+        }}
+        disabled={isFutureDate}
+      >
         <Ionicons name="water" size={36} color="#60a5fa" />
         <Text style={styles.categoryTitle}>Water</Text>
         <Text style={styles.categorySummary}>{stats.water} / {dailyTargets.water}ml</Text>

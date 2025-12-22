@@ -51,6 +51,10 @@ class UserService {
     return api.patch('/users/stats', data);
   }
 
+  async changePassword(oldPassword: string, newPassword: string): Promise<{ message: string }> {
+    return api.post('/users/change-password', { oldPassword, newPassword });
+  }
+
   async deleteAccount(): Promise<{ message: string }> {
     return api.delete('/users/account');
   }

@@ -78,6 +78,21 @@ const DailyStatsSchema = new mongoose.Schema({
     default: 0,
     min: [0, 'Target fats cannot be negative']
   },
+  caloriesBurnedWorkouts: {
+    type: Number,
+    default: 0,
+    min: [0, 'Calories burned from workouts cannot be negative']
+  },
+  caloriesBurnedSteps: {
+    type: Number,
+    default: 0,
+    min: [0, 'Calories burned from steps cannot be negative']
+  },
+  totalCaloriesBurned: {
+    type: Number,
+    default: 0,
+    min: [0, 'Total calories burned cannot be negative']
+  },
   workoutsCompleted: {
     type: Number,
     default: 0,
