@@ -42,6 +42,9 @@ class MealTemplateService {
                 url += `&mealSections=${mealSections.join(',')}`;
             }
 
+            console.log('🚀 [MOBILE] Generating plan with URL:', url);
+            console.log('🎯 [MOBILE] LOW-CARB DEBUG - typeId:', typeId, 'targetCarbs:', targetCarbs, 'targetProtein:', targetProtein, 'targetFats:', targetFats);
+
             const response = await fetch(url);
             const data = await response.json();
 
