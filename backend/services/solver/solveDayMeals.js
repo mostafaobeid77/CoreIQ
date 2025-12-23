@@ -97,7 +97,26 @@ function solveDayMeals(dayMeals, smartBuffet, targets) {
         });
     }
 
-    // PHASE 3: Re-fix calories (protein adjustments threw them off)
+    // PHASE 3.5: Cap protein if it's way over (reduce high-protein foods)
+    const finalCheck = calculateDayTotals(processedMeals);
+    if (finalCheck.protein > targets.protein * 1.25) { // If protein is >25% over target
+        console.log(`⚠️ Protein too high (${finalCheck.protein}g), capping to target range...`);
+        for (let iter = 0; iter < 10; iter++) {
+            const totals = calculateDayTotals(processedMeals);
+            if (totals.protein <= targets.protein * 1.15) break; // Stop if within 15% of target
+
+            // Reduce the highest protein foods slightly
+            const allItems = processedMeals.flatMap(m => m.items);
+            const highProItems = allItems.filter(i => i.p > 20).sort((a, b) => b.p - a.p).slice(0, 2);
+
+            highProItems.forEach(item => {
+                item.grams *= 0.92; // Reduce by 8%
+                item.grams = Math.max(30, item.grams);
+            });
+        }
+    }
+
+    // PHASE 4: Re-fix calories (protein adjustments threw them off)
     for (let iter = 0; iter < 5; iter++) {
         const totals = calculateDayTotals(processedMeals);
         const calRatio = targets.calories / Math.max(1, totals.calories);
