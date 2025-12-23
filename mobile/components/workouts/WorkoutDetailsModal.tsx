@@ -21,7 +21,7 @@ interface WorkoutDetailsModalProps {
 
 const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onClose, workout, onSave }) => {
   const { theme } = useTheme();
-  const { preferences } = usePreferences();
+  const { units } = usePreferences();
   const styles = useMemo(() => createWorkoutStyles(theme === 'light'), [theme]);
 
   const [numSets, setNumSets] = useState(0);
@@ -35,7 +35,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
   const showDuration = isCardio || isHoldExercise;
 
   // Get user's weight unit preference (default to kg)
-  const weightUnit = preferences?.weightUnit || 'kg';
+  const weightUnit = units === 'imperial' ? 'lb' : 'kg';
 
   // Initialize from workout prop
   React.useEffect(() => {
