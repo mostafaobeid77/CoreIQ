@@ -83,12 +83,18 @@ class ApiService {
       }
 
       if (!response.ok) {
-        throw new Error(data?.message || `Server error: ${response.status}`);
+        const errorMessage = data?.message || `Server error: ${response.status}`;
+        // Only log unexpected server errors (500+), not auth/validation errors (400s)
+        if (response.status >= 500) {
+          console.error('Server error:', errorMessage);
+        }
+        throw new Error(errorMessage);
       }
 
       return data as T;
     } catch (error) {
-      console.error('Fetch error:', error);
+      // Re-throw without logging - let the calling code handle it
+      // This prevents React Native error overlay from showing expected errors (like login failures)
       throw error;
     }
   }
