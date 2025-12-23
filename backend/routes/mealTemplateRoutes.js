@@ -33,6 +33,8 @@ router.get('/generate/:type', async (req, res) => {
         if (targetFats) options.targetFats = targetFats;
         if (mealSections) options.mealSections = mealSections;
 
+        console.log(`🎯 [ROUTE] LOW-CARB DEBUG - Type: ${type}, Received targetCarbs: ${targetCarbs}, targetProtein: ${targetProtein}, targetFats: ${targetFats}`);
+
         // Default to 14 days
         const plan = await mealTemplateService.generateTemplate(type, 14, options);
         res.json({ success: true, plan });
