@@ -63,21 +63,25 @@ class WorkoutTemplatesService {
             } else {
                 const exercises = template.workouts[workoutName] || [];
                 planDays.push({
-                    workouts: exercises.map((ex: any) => ({
-                        // Schema requires workoutId (fake it for template items)
-                        workoutId: '000000000000000000000000',
-                        name: ex.name,
-                        // Schema requires workoutType: 'strength' | 'cardio'
-                        workoutType: ['cardio', 'plyo'].includes(ex.type) ? 'cardio' : 'strength',
-                        muscle_group: ex.muscleGroup,
-                        // Schema requires sets: [{reps, weight}]
-                        sets: Array(ex.sets).fill({ reps: ex.reps, weight: 0 }),
-                        minutes: 0,
-                        completed: false
+                    workouts: exercises.map((ex: any) => {
+                        const holdExercises = ['plank', 'wall sit', 'dead hang', 'hollow hold'];
+                        const isHold = holdExercises.some(h => ex.name.toLowerCase().includes(h));
+                        return {
+                            // Schema requires workoutId (fake it for template items)
+                            workoutId: '000000000000000000000000',
+                            name: ex.name,
+                            // Schema requires workoutType: 'strength' | 'cardio'
+                            workoutType: ['cardio', 'plyo'].includes(ex.type) ? 'cardio' : 'strength',
+                            muscle_group: ex.muscleGroup,
+                            // For hold exercises: use minutes, for others: use sets
+                            sets: isHold ? [] : Array(ex.sets).fill({ reps: ex.reps, weight: 0 }),
+                            minutes: isHold ? (ex.reps / 60) * ex.sets : 0,
+                            completed: false
+                        };
                     }))
-                });
-            }
+            });
         }
+    }
 
         return planDays;
     }
