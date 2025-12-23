@@ -77,6 +77,12 @@ async function generateJson(systemPrompt, userPrompt) {
         }
 
         console.error('❌ Groq Service Failed:', err.message);
+        console.error('Error details:', {
+            name: err.name,
+            message: err.message,
+            status: err.status,
+            code: err.code,
+        });
         throw new Error(errorMessage);
     }
 }
