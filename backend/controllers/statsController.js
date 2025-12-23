@@ -5,6 +5,27 @@ const { calculateCaloriesFromSteps } = require('../utils/calorieCalculator');
 exports.getStats = async (req, res) => {
   try {
     const { date } = req.params;
+    const requestedDate = new Date(date);
+
+    // Check if user exists and get their creation date
+    const User = require('../models/User');
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Don't return data for dates before account was created
+    const accountCreated = new Date(user.createdAt);
+    accountCreated.setHours(0, 0, 0, 0); // Start of day
+    requestedDate.setHours(0, 0, 0, 0);
+
+    if (requestedDate < accountCreated) {
+      return res.status(404).json({
+        message: 'No data available before account creation',
+        accountCreatedAt: accountCreated.toISOString()
+      });
+    }
 
     const stats = await DailyStats.findOne({
       userId: req.userId,
