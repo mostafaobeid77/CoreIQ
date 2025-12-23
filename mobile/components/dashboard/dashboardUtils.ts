@@ -23,6 +23,9 @@ export type DashboardStats = {
   targetProtein?: number;
   targetCarbs?: number;
   targetFats?: number;
+  caloriesBurnedWorkouts?: number;
+  caloriesBurnedSteps?: number;
+  totalCaloriesBurned?: number;
 };
 
 export const defaultStats: DashboardStats = {
