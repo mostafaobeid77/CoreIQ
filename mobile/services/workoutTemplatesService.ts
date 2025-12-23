@@ -78,13 +78,12 @@ class WorkoutTemplatesService {
                             minutes: isHold ? (ex.reps / 60) * ex.sets : 0,
                             completed: false
                         };
-                    }))
-            });
-        }
+                    })
+                }
+        
     }
-
+        }
         return planDays;
     }
-}
 
-export const workoutTemplatesService = new WorkoutTemplatesService();
+    export const workoutTemplatesService = new WorkoutTemplatesService();
