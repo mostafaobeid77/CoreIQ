@@ -57,7 +57,21 @@ export default function LoginScreen() {
       // We don't await this to ensure navigation is instant
       refreshUser().catch(err => console.error('Background profile fetch failed', err));
     } catch (error: any) {
-      const message = (error?.message || "Invalid credentials").toString();
+      // Clean up error message - remove technical prefixes
+      let message = error?.message || "Login failed";
+
+      // Remove technical error prefixes
+      message = message.replace(/^(Network error:|Error:)\s*/i, '').trim();
+
+      // Map common technical errors to user-friendly messages
+      if (message.toLowerCase().includes('invalid credentials')) {
+        message = 'Incorrect email or password';
+      } else if (message.toLowerCase().includes('network') || message.toLowerCase().includes('fetch')) {
+        message = 'Connection error. Please check your internet.';
+      } else if (message.toLowerCase().includes('timeout')) {
+        message = 'Request timed out. Please try again.';
+      }
+
       if (message.toLowerCase().includes("verify your email")) {
         Alert.alert("Verify Email", message, [
           { text: "Cancel", style: "cancel" },
@@ -175,7 +189,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginBottom: 30,
     borderWidth: 2,
-    borderColor: "#1E90FF", // blue border for circle
+    borderColor: "#6366f1",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -226,12 +240,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   forgotText: {
-    color: "#1E90FF",
+    color: "#6366f1",
   },
   loginButton: {
     width: "100%",
     height: 50,
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#6366f1",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -250,7 +264,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   registerText: {
-    color: "#1E90FF",
+    color: "#6366f1",
     fontWeight: "bold",
   },
 });
