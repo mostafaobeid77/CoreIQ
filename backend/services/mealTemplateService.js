@@ -248,22 +248,42 @@ class MealTemplateService {
             // Pick 2-3 foods based on meal type
             let primaryPool, secondaryPool;
 
+            // Apply strategy filter if exists
+            const filterForSection = strategy.filters ? strategy.filters[section] : null;
+
             if (isBreakfast) {
                 // Breakfast: eggs/oats + fruit/toast
                 primaryPool = breakfastFoods.length > 10 ? breakfastFoods : proteinFoods;
                 secondaryPool = carbFoods;
+                // Apply low-carb filter if exists
+                if (filterForSection) {
+                    primaryPool = primaryPool.filter(filterForSection);
+                    secondaryPool = secondaryPool.filter(filterForSection);
+                }
             } else if (isSnack) {
-                // Snack: bar/fruit + nuts/yogurt
+                // Snack: bar/fruit + nuts/yogurt  
                 primaryPool = snackFoods.length > 10 ? snackFoods : carbFoods;
                 secondaryPool = snackFoods.length > 10 ? snackFoods : fatFoods;
+                if (filterForSection) {
+                    primaryPool = primaryPool.filter(filterForSection);
+                    secondaryPool = secondaryPool.filter(filterForSection);
+                }
             } else if (isLunch || isDinner) {
                 // Main meals: protein + carb
                 primaryPool = proteinFoods;
                 secondaryPool = carbFoods;
+                if (filterForSection) {
+                    primaryPool = primaryPool.filter(filterForSection);
+                    secondaryPool = secondaryPool.filter(filterForSection);
+                }
             } else {
                 // Default
                 primaryPool = proteinFoods;
                 secondaryPool = carbFoods;
+                if (filterForSection) {
+                    primaryPool = primaryPool.filter(filterForSection);
+                    secondaryPool = secondaryPool.filter(filterForSection);
+                }
             }
 
             // Pick primary food
