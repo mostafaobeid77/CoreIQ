@@ -102,12 +102,13 @@ export default function CreatePlanWizard({
             // Adjust macros based on selected meal template type
             let targetProtein, targetCarbs, targetFats;
 
-            if (selectedMealType.id.toLowerCase().includes('low-carb') || selectedMealType.id.toLowerCase().includes('low carb')) {
+            const templateId = selectedMealType.id.toLowerCase();
+            if (templateId.includes('low') && (templateId.includes('carb') || templateId.includes(' carb'))) {
                 // LOW CARB: <100g carbs, high fat, moderate protein
                 targetProtein = userTargets?.protein || Math.round(targetCals * 0.25 / 4); // 25% protein
                 targetCarbs = 80; // Fixed low carbs (~80g/day)
                 targetFats = Math.round((targetCals - (targetProtein * 4) - (targetCarbs * 4)) / 9); // Fill rest with fats
-            } else if (selectedMealType.id.toLowerCase().includes('high-protein') || selectedMealType.id.toLowerCase().includes('high protein')) {
+            } else if (templateId.includes('high') && (templateId.includes('protein') || templateId.includes(' protein'))) {
                 // HIGH PROTEIN: High protein, moderate carbs, lower fat
                 targetProtein = Math.round(targetCals * 0.35 / 4); // 35% protein
                 targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.35 / 4); // 35% carbs
