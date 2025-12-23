@@ -34,6 +34,10 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
   const isCardio = (workout?.category?.toLowerCase() === 'cardio') || (workout?.muscle_group?.toLowerCase() === 'cardio');
   const showDuration = isCardio || isHoldExercise;
 
+  // Check if bodyweight exercise (no weight needed)
+  const bodyweightExercises = ['burpees', 'mountain climbers', 'jump squats', 'high knees', 'crunches', 'push-ups', 'push ups', 'pull-ups', 'pull ups', 'sit-ups', 'sit ups', 'jumping jacks', 'lunges', 'bodyweight squats', 'glute bridges', 'walking lunges'];
+  const isBodyweight = bodyweightExercises.some(ex => workout?.name?.toLowerCase().includes(ex));
+
   // Get user's weight unit preference (default to kg)
   const weightUnit = units === 'imperial' ? 'lb' : 'kg';
 
