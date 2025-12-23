@@ -41,7 +41,13 @@ async function generateJson(systemPrompt, userPrompt) {
 
     try {
         console.log('🤖 Generating with Groq Service...');
-        const completion = await callAIWithRetry(() => groqClient.chat.completions.create({
+
+        // Add timeout wrapper to prevent hanging
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), 30000) // 30s timeout
+        );
+
+        const apiCall = callAIWithRetry(() => groqClient.chat.completions.create({
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt }
@@ -52,11 +58,26 @@ async function generateJson(systemPrompt, userPrompt) {
             response_format: { type: 'json_object' }
         }));
 
+        const completion = await Promise.race([apiCall, timeoutPromise]);
+
         const result = JSON.parse(completion.choices[0].message.content);
         return result;
     } catch (err) {
+        // Better error messages
+        let errorMessage = 'AI service unavailable';
+
+        if (err.message.includes('timeout')) {
+            errorMessage = 'Request timeout. Please try again.';
+        } else if (err.message.includes('fetch') || err.message.includes('network')) {
+            errorMessage = 'Connection error. Check your internet.';
+        } else if (err.status === 429) {
+            errorMessage = 'Too many requests. Please wait a moment.';
+        } else if (err.message.includes('API key')) {
+            errorMessage = 'AI service configuration error.';
+        }
+
         console.error('❌ Groq Service Failed:', err.message);
-        throw err;
+        throw new Error(errorMessage);
     }
 }
 
