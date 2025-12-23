@@ -185,21 +185,25 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
                           />
                         </View>
 
-                        <Text style={styles.inputDivider}>×</Text>
+                        {!isBodyweight && (
+                          <>
+                            <Text style={styles.inputDivider}>×</Text>
 
-                        <View style={styles.inputGroup}>
-                          <Text style={styles.inputLabel}>Weight ({weightUnit})</Text>
-                          <TextInput
-                            style={styles.inputField}
-                            keyboardType="decimal-pad"
-                            value={set.weight}
-                            onChangeText={text => handleSetChange(idx, 'weight', text.replace(/[^0-9.]/g, ''))}
-                            placeholder="0.0"
-                            placeholderTextColor="#64748b"
-                            returnKeyType="done"
-                            onSubmitEditing={Keyboard.dismiss}
-                          />
-                        </View>
+                            <View style={styles.inputGroup}>
+                              <Text style={styles.inputLabel}>Weight ({weightUnit})</Text>
+                              <TextInput
+                                style={styles.inputField}
+                                keyboardType="decimal-pad"
+                                value={set.weight}
+                                onChangeText={text => handleSetChange(idx, 'weight', text.replace(/[^0-9.]/g, ''))}
+                                placeholder="0.0"
+                                placeholderTextColor="#64748b"
+                                returnKeyType="done"
+                                onSubmitEditing={Keyboard.dismiss}
+                              />
+                            </View>
+                          </>
+                        )}
                       </View>
                     </View>
                   ))}

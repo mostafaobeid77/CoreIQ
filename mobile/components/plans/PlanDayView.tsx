@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, LayoutAnimation, Platform, UIManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/themeContext';
+import { usePreferences } from '../../context/PreferencesContext';
 import Colors from '../../constants/Colors';
 import { Swipeable } from 'react-native-gesture-handler';
 
@@ -50,8 +51,10 @@ const PlanDayView = React.memo(function PlanDayView({
     mealSections
 }: PlanDayViewProps) {
     const { theme } = useTheme();
+    const { units } = usePreferences();
     const colors = Colors[theme];
     const isLight = theme === 'light';
+    const weightUnit = units === 'imperial' ? 'lb' : 'kg';
     const [expandedSetIds, setExpandedSetIds] = useState<Set<number>>(new Set());
 
     const toggleExpand = (index: number) => {
@@ -198,6 +201,10 @@ const PlanDayView = React.memo(function PlanDayView({
                             // Determine if cardio or strength
                             const isCardio = (workout.sets?.length === 0 || !workout.sets) && (workout.minutes > 0);
 
+                            // Check if bodyweight exercise (no weight needed)
+                            const bodyweightExercises = ['burpees', 'mountain climbers', 'jump squats', 'high knees', 'crunches', 'push-ups', 'push ups', 'pull-ups', 'pull ups', 'sit-ups', 'sit ups', 'jumping jacks', 'lunges', 'bodyweight squats', 'glute bridges'];
+                            const isBodyweight = bodyweightExercises.some(ex => workout.name?.toLowerCase().includes(ex));
+
                             // Expand/Collapse logic
                             const allSets = workout.sets || [];
                             const isExpanded = expandedSetIds.has(index);
@@ -259,7 +266,7 @@ const PlanDayView = React.memo(function PlanDayView({
                                                             {idx + 1}
                                                         </Text>
                                                         <Text style={{ color: isLight ? '#334155' : '#e2e8f0', fontSize: 12, fontWeight: '700' }}>
-                                                            {s.reps}×{s.weight}kg
+                                                            {isBodyweight ? `${s.reps} reps` : `${s.reps}×${s.weight}${weightUnit}`}
                                                         </Text>
                                                     </View>
                                                 ))}
