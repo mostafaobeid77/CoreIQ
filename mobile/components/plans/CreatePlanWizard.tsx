@@ -98,9 +98,26 @@ export default function CreatePlanWizard({
             setCreating(true);
 
             const targetCals = userTargets?.calories || 2200;
-            const targetProtein = userTargets?.protein || Math.round(targetCals * 0.30 / 4);
-            const targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.40 / 4);
-            const targetFats = userTargets?.fats || Math.round(targetCals * 0.30 / 9);
+
+            // Adjust macros based on selected meal template type
+            let targetProtein, targetCarbs, targetFats;
+
+            if (selectedMealType.id.toLowerCase().includes('low-carb') || selectedMealType.id.toLowerCase().includes('low carb')) {
+                // LOW CARB: <100g carbs, high fat, moderate protein
+                targetProtein = userTargets?.protein || Math.round(targetCals * 0.25 / 4); // 25% protein
+                targetCarbs = 80; // Fixed low carbs (~80g/day)
+                targetFats = Math.round((targetCals - (targetProtein * 4) - (targetCarbs * 4)) / 9); // Fill rest with fats
+            } else if (selectedMealType.id.toLowerCase().includes('high-protein') || selectedMealType.id.toLowerCase().includes('high protein')) {
+                // HIGH PROTEIN: High protein, moderate carbs, lower fat
+                targetProtein = Math.round(targetCals * 0.35 / 4); // 35% protein
+                targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.35 / 4); // 35% carbs
+                targetFats = Math.round(targetCals * 0.30 / 9); // 30% fats
+            } else {
+                // BALANCED/DEFAULT: Use user targets or balanced macros
+                targetProtein = userTargets?.protein || Math.round(targetCals * 0.30 / 4); // 30% protein
+                targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.40 / 4); // 40% carbs
+                targetFats = userTargets?.fats || Math.round(targetCals * 0.30 / 9); // 30% fats
+            }
 
             const mealSections = getMealSections(userGoalWeight);
 
