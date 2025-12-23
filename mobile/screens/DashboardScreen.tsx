@@ -162,12 +162,13 @@ const DashboardScreen = () => {
   // Add function to determine meals per day based on goal
   const dailyTargets = calculateDailyTargets(stats);
 
-  // Sync live step count to stats.walking for the current date (only if not future)
+  // Sync live step count to stats.walking ONLY for TODAY (not past dates!)
+  const isToday = dateKey === format(new Date(), 'yyyy-MM-dd');
   React.useEffect(() => {
-    if (!isFutureDate && isPedometerAvailable && currentStepCount !== stats.walking) {
+    if (isToday && isPedometerAvailable && currentStepCount !== stats.walking) {
       void updateStatsForDate(dateKey, { walking: currentStepCount });
     }
-  }, [currentStepCount, dateKey, isFutureDate, isPedometerAvailable, stats.walking, updateStatsForDate]);
+  }, [currentStepCount, dateKey, isToday, isPedometerAvailable, stats.walking, updateStatsForDate]);
 
   // Display steps: 0 for future dates, current count for today, saved count for past dates
   const displaySteps = isFutureDate ? 0 : (dateKey === format(new Date(), 'yyyy-MM-dd') ? currentStepCount : stats.walking);
