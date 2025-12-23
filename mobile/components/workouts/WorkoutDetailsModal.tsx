@@ -3,7 +3,7 @@ import { Modal, View, Text, TextInput, TouchableOpacity, ScrollView, Platform, K
 import { createWorkoutStyles } from './workoutStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/themeContext';
-import { useUser } from '../../context/UserContext';
+import { usePreferences } from '../../context/PreferencesContext';
 
 interface WorkoutDetailsModalProps {
   visible: boolean;
@@ -21,7 +21,7 @@ interface WorkoutDetailsModalProps {
 
 const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onClose, workout, onSave }) => {
   const { theme } = useTheme();
-  const { user } = useUser();
+  const { preferences } = usePreferences();
   const styles = useMemo(() => createWorkoutStyles(theme === 'light'), [theme]);
 
   const [numSets, setNumSets] = useState(0);
@@ -35,7 +35,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
   const showDuration = isCardio || isHoldExercise;
 
   // Get user's weight unit preference (default to kg)
-  const weightUnit = user?.weightUnit || 'kg';
+  const weightUnit = preferences?.weightUnit || 'kg';
 
   // Initialize from workout prop
   React.useEffect(() => {
