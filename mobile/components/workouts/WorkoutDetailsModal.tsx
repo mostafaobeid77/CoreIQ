@@ -3,6 +3,7 @@ import { Modal, View, Text, TextInput, TouchableOpacity, ScrollView, Platform, K
 import { createWorkoutStyles } from './workoutStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/themeContext';
+import { useUser } from '../../context/UserContext';
 
 interface WorkoutDetailsModalProps {
   visible: boolean;
@@ -20,18 +21,26 @@ interface WorkoutDetailsModalProps {
 
 const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onClose, workout, onSave }) => {
   const { theme } = useTheme();
+  const { user } = useUser();
   const styles = useMemo(() => createWorkoutStyles(theme === 'light'), [theme]);
 
   const [numSets, setNumSets] = useState(0);
   const [sets, setSets] = useState<{ reps: string; weight: string }[]>([]);
   const [durationMinutes, setDurationMinutes] = useState<string>('');
 
+  // Check if this is a hold exercise (Plank, Wall Sit, etc.) or cardio
+  const holdExercises = ['plank', 'wall sit', 'dead hang', 'hollow hold', 'boat hold', 'static hold'];
+  const isHoldExercise = holdExercises.some(hold => workout?.name?.toLowerCase().includes(hold));
   const isCardio = (workout?.category?.toLowerCase() === 'cardio') || (workout?.muscle_group?.toLowerCase() === 'cardio');
+  const showDuration = isCardio || isHoldExercise;
+
+  // Get user's weight unit preference (default to kg)
+  const weightUnit = user?.weightUnit || 'kg';
 
   // Initialize from workout prop
   React.useEffect(() => {
     if (visible && workout) {
-      if (isCardio) {
+      if (showDuration) {
         setDurationMinutes(workout.minutes ? workout.minutes.toString() : '');
       } else if (workout.sets && Array.isArray(workout.sets) && workout.sets.length > 0) {
         const initialSets = workout.sets.map(s => ({
@@ -55,7 +64,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
 
   // Update sets array when numSets changes (user interaction)
   React.useEffect(() => {
-    if (isCardio) return;
+    if (showDuration) return;
     setSets((prev) => {
       const newSets = [...prev];
       if (numSets > prev.length) {
@@ -68,7 +77,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
       }
       return newSets;
     });
-  }, [numSets, isCardio]);
+  }, [numSets, showDuration]);
 
   const handleSetChange = (idx: number, field: 'reps' | 'weight', value: string) => {
     setSets((prev) => {
@@ -79,7 +88,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
   };
 
   const handleSave = () => {
-    if (isCardio) {
+    if (showDuration) {
       const minutes = Number(durationMinutes);
       if (!minutes || minutes <= 0) return;
       onSave && onSave({ type: 'duration', minutes });
@@ -111,7 +120,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
               <Text style={styles.targetBadgeText}>{workout.muscle_group || 'Target Area'}</Text>
             </View>
 
-            {isCardio ? (
+            {showDuration ? (
               <View style={styles.cardioContainer}>
                 <Text style={styles.inputLabel}>Session Duration</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -179,7 +188,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
                         <Text style={styles.inputDivider}>×</Text>
 
                         <View style={styles.inputGroup}>
-                          <Text style={styles.inputLabel}>Weight (kg)</Text>
+                          <Text style={styles.inputLabel}>Weight ({weightUnit})</Text>
                           <TextInput
                             style={styles.inputField}
                             keyboardType="decimal-pad"
