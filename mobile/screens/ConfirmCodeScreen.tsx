@@ -88,7 +88,7 @@ const ConfirmCodeScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={submitting}>
-            <LinearGradient colors={["#8b5cf6", "#7c3aed"]} style={styles.submitGradient}>
+            <LinearGradient colors={["#6366f1", "#4f46e5"]} style={styles.submitGradient}>
               <Text style={styles.submitText}>{submitting ? 'Verifying…' : 'Verify Code'}</Text>
             </LinearGradient>
           </TouchableOpacity>

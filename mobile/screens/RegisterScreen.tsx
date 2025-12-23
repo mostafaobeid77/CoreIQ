@@ -11,6 +11,7 @@ import {
   Image,
   Platform,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../context/themeContext";
@@ -340,16 +341,24 @@ const RegisterScreen = () => {
           </View>
 
           {/* Register Button */}
-          <TouchableOpacity style={styles.loginButton} onPress={handleRegister}>
-            <LinearGradient colors={["#8b5cf6", "#7c3aed"]} style={styles.loginGradient}>
-              <Text style={styles.loginText}>Register</Text>
+          <TouchableOpacity
+            style={[styles.loginButton, loading && { opacity: 0.7 }]}
+            onPress={handleRegister}
+            disabled={loading}
+          >
+            <LinearGradient colors={["#6366f1", "#4f46e5"]} style={styles.loginGradient}>
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.loginText}>Register</Text>
+              )}
             </LinearGradient>
           </TouchableOpacity>
 
           {/* Already a member? */}
           <View style={{ alignItems: "center", marginTop: 16 }}>
             <TouchableOpacity onPress={() => router.push("/login")}>
-              <Text style={{ color: "#8b5cf6", fontSize: 15, fontWeight: "600" }}>
+              <Text style={{ color: "#6366f1", fontSize: 15, fontWeight: "600" }}>
                 Already a member? Login
               </Text>
             </TouchableOpacity>

@@ -63,6 +63,15 @@ async function generateJson(systemPrompt, userPrompt) {
         const result = JSON.parse(completion.choices[0].message.content);
         return result;
     } catch (err) {
+        // Log ORIGINAL error FIRST for debugging
+        console.error('❌ Groq Original Error:', {
+            name: err.name,
+            message: err.message,
+            status: err.status,
+            code: err.code,
+            cause: err.cause,
+        });
+
         // Better error messages
         let errorMessage = 'AI service unavailable';
 

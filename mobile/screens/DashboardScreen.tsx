@@ -101,6 +101,15 @@ const DashboardScreen = () => {
 
   const dateKey = format(selectedDate, 'yyyy-MM-dd');
 
+  // Check if selected date is in the future
+  const isFutureDate = React.useMemo(() => {
+    const selected = new Date(selectedDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    selected.setHours(0, 0, 0, 0);
+    return selected > today;
+  }, [selectedDate]);
+
 
   const { statsByDate, loadStatsForDate, updateStatsForDate } = useStats();
   const { getTotalNutrientsForDate, mealsByDate, getCompletedMealsCountForDate, loadMealsForDate } = useMeals();
@@ -153,12 +162,15 @@ const DashboardScreen = () => {
   // Add function to determine meals per day based on goal
   const dailyTargets = calculateDailyTargets(stats);
 
-  // Sync live step count to stats.walking for the current date
+  // Sync live step count to stats.walking for the current date (only if not future)
   React.useEffect(() => {
-    if (isPedometerAvailable && currentStepCount !== stats.walking) {
+    if (!isFutureDate && isPedometerAvailable && currentStepCount !== stats.walking) {
       void updateStatsForDate(dateKey, { walking: currentStepCount });
     }
-  }, [currentStepCount, dateKey, isPedometerAvailable, stats.walking, updateStatsForDate]);
+  }, [currentStepCount, dateKey, isFutureDate, isPedometerAvailable, stats.walking, updateStatsForDate]);
+
+  // Display steps: 0 for future dates, current count for today, saved count for past dates
+  const displaySteps = isFutureDate ? 0 : (dateKey === format(new Date(), 'yyyy-MM-dd') ? currentStepCount : stats.walking);
 
   const {
     handleWaterAdd, handleWaterSubtract,
@@ -266,7 +278,7 @@ const DashboardScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionHeader}>Today's Overview</Text>
         <CategoryCards
-          stats={stats}
+          stats={{ ...stats, walking: displaySteps }}
           dailyTargets={dailyTargets}
           consumedNutrients={consumedNutrients}
           completedMealsCount={getCompletedMealsCountForDate(dateKey)}
@@ -275,6 +287,7 @@ const DashboardScreen = () => {
           setIsWaterModalVisible={setIsWaterModalVisible}
           mentalHealthOptions={mentalHealthOptions}
           styles={styles}
+          isFutureDate={isFutureDate}
         />
 
         {/* Physical Stats Section */}
