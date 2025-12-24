@@ -214,19 +214,26 @@ class MealTemplateService {
             );
             // Fallback to any high protein if lean not available
             if (proteinFoods.length < 20) {
-                proteinFoods = buffet.filter(f => f.p > 15 && !isPowderOrIsolate(f));
+                proteinFoods = buffet.filter(f => f.p > 15 && !isPowderOrIsolate(f) && f.category !== 'drinks');
             }
         } else {
             // Other templates: any high protein food (exclude powders/isolates)
-            proteinFoods = buffet.filter(f => f.p > 15 && !isPowderOrIsolate(f));
+            proteinFoods = buffet.filter(f => f.p > 15 && !isPowderOrIsolate(f) && f.category !== 'drinks');
         }
 
-        const carbFoods = buffet.filter(f => f.c > 20 && f.p < 10);
+        const carbFoods = buffet.filter(f =>
+            f.category !== 'drinks' &&
+            !isPowderOrIsolate(f) &&
+            (f.c > 40 ||
+                f.name.toLowerCase().includes('rice') ||
+                f.name.toLowerCase().includes('pasta') ||
+                f.name.toLowerCase().includes('bread') ||
+                f.name.toLowerCase().includes('potato') ||
+                f.name.toLowerCase().includes('oat'))
+        );
 
-        // Fatty foods for low-carb (nuts, avocado, cheese, fatty fish, oils)
         const fatFoods = buffet.filter(f =>
-            f.f > 10 &&
-            f.c < 15 &&
+            f.category !== 'drinks' &&
             !isPowderOrIsolate(f) &&
             (f.name.toLowerCase().includes('avocado') ||
                 f.name.toLowerCase().includes('nut') ||
@@ -239,25 +246,24 @@ class MealTemplateService {
                 f.f > 15) // High fat content
         );
 
-        // Meal-appropriate foods
+        // Meal-appropriate foods (EXCLUDE DRINKS)
         const breakfastFoods = buffet.filter(f =>
-            f.name.toLowerCase().includes('egg') ||
-            f.name.toLowerCase().includes('oat') ||
-            f.name.toLowerCase().includes('cereal') ||
-            f.name.toLowerCase().includes('toast') ||
-            f.name.toLowerCase().includes('yogurt') ||
-            f.name.toLowerCase().includes('pancake')
+            f.category !== 'drinks' &&
+            (f.name.toLowerCase().includes('egg') ||
+                f.name.toLowerCase().includes('oat') ||
+                f.name.toLowerCase().includes('cereal') ||
+                f.name.toLowerCase().includes('toast') ||
+                f.name.toLowerCase().includes('yogurt') ||
+                f.name.toLowerCase().includes('pancake'))
         );
 
         const snackFoods = buffet.filter(f =>
-            f.name.toLowerCase().includes('bar') ||
-            f.name.toLowerCase().includes('fruit') ||
-            f.name.toLowerCase().includes('apple') ||
-            f.name.toLowerCase().includes('banana') ||
-            f.name.toLowerCase().includes('nut') ||
-            f.name.toLowerCase().includes('shake') ||
-            f.name.toLowerCase().includes('smoothie') ||
-            (f.cal < 300 && f.cal > 100)
+            f.category !== 'drinks' &&
+            (f.name.toLowerCase().includes('banana') ||
+                f.name.toLowerCase().includes('nut') ||
+                f.name.toLowerCase().includes('shake') ||
+                f.name.toLowerCase().includes('smoothie') ||
+                (f.cal < 300 && f.cal > 100))
         );
 
         // Drinks - categorized by calorie content for low-carb compatibility
@@ -315,6 +321,9 @@ class MealTemplateService {
             // Fallback to any drink if pool is empty
             if (drinkPool.length === 0) drinkPool = allDrinks;
 
+            // CRITICAL: Deduplicate drinkPool (spread operators can create duplicates)
+            drinkPool = Array.from(new Set(drinkPool.map(d => d._id))).map(id => drinkPool.find(d => d._id === id));
+
             // Pick 2-3 foods based on meal type
             let primaryPool, secondaryPool;
 
@@ -356,9 +365,9 @@ class MealTemplateService {
                 }
             }
 
-            // Pick primary food
-            let availablePool = primaryPool.filter(f => !usedIds.has(f._id));
-            if (availablePool.length === 0) availablePool = [...primaryPool];
+            // Pick primary food (EXCLUDE DRINKS - they have dedicated selection)
+            let availablePool = primaryPool.filter(f => !usedIds.has(f._id) && f.category !== 'drinks');
+            if (availablePool.length === 0) availablePool = primaryPool.filter(f => f.category !== 'drinks');
 
             for (let i = availablePool.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -370,15 +379,15 @@ class MealTemplateService {
                 mealItems.push(primary._id);
             }
 
-            // Pick secondary food (different pool)
-            availablePool = secondaryPool.filter(f => !usedIds.has(f._id));
-            if (availablePool.length === 0) availablePool = [...secondaryPool];
+            // Pick secondary food (EXCLUDE DRINKS)
+            let secondaryAvailable = secondaryPool.filter(f => !usedIds.has(f._id) && f.category !== 'drinks');
+            if (secondaryAvailable.length === 0) secondaryAvailable = secondaryPool.filter(f => f.category !== 'drinks');
 
-            for (let i = availablePool.length - 1; i > 0; i--) {
+            for (let i = secondaryAvailable.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [availablePool[i], availablePool[j]] = [availablePool[j], availablePool[i]];
+                [secondaryAvailable[i], secondaryAvailable[j]] = [secondaryAvailable[j], secondaryAvailable[i]];
             }
-            const secondary = availablePool[0];
+            const secondary = secondaryAvailable[0];
             if (secondary) {
                 usedIds.add(secondary._id);
                 mealItems.push(secondary._id);
@@ -393,7 +402,14 @@ class MealTemplateService {
                 [drinkAvailablePool[i], drinkAvailablePool[j]] = [drinkAvailablePool[j], drinkAvailablePool[i]];
             }
             const drink = drinkAvailablePool[0];
-            if (drink) {
+
+            // CRITICAL: Only add drink if meal doesn't already have one
+            const hasDrink = mealItems.some(itemId => {
+                const item = buffet.find(f => f._id === itemId);
+                return item && item.category === 'drinks';
+            });
+
+            if (drink && !hasDrink) {
                 usedIds.add(drink._id);
                 mealItems.push(drink._id);
             }

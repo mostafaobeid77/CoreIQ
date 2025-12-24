@@ -352,6 +352,11 @@ Current Day Workouts: ${JSON.stringify(currentDay.workouts || [])}
 
 User Request: "${instruction}"
 
+CRITICAL RULES:
+1. Trust the provided context. If a food is labeled "Diet" or "Zero", it has 0 sugar/calories. Do NOT assume sodas are high sugar if they are diet versions.
+2. For portion sizes, use standard servings (e.g., 250g/ml for drinks, 100-200g for proteins) unless the user specifies a quantity.
+3. Be concise in your reasoning.
+
 Analyze the request and respond with JSON ONLY (no markdown):
 {
   "intent": "swap_food" | "add_meal" | "remove_meal" | "add_workout" | "remove_workout" | "update_workout" | "adjust_macros" | "general_edit",

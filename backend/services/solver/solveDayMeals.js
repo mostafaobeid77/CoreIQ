@@ -41,11 +41,14 @@ function solveDayMeals(dayMeals, smartBuffet, targets) {
         }
     });
 
-    // Add drinks to each meal
+    // Add drinks to each meal (ONLY if missing)
     processedMeals.forEach(meal => {
-        const drinkItem = selectDrinkForMeal(meal.mealType, smartBuffet, targets);
-        if (drinkItem) {
-            meal.items.push(drinkItem);
+        const hasDrink = meal.items.some(item => item.category === 'drinks');
+        if (!hasDrink) {
+            const drinkItem = selectDrinkForMeal(meal.mealType, smartBuffet, targets);
+            if (drinkItem) {
+                meal.items.push(drinkItem);
+            }
         }
     });
 
