@@ -20,6 +20,7 @@ const adminUserRoutes = require('./routes/adminUserRoutes');
 const submissionRoutes = require('./routes/submissionRoutes');
 const workoutTemplatesRoutes = require('./routes/workoutTemplates');
 const mealTemplateRoutes = require('./routes/mealTemplateRoutes');
+const adminRoutes = require('./routes/adminRoutes'); // TEMPORARY
 const app = express();
 
 // Configure CORS to allow mobile app connections
@@ -84,6 +85,7 @@ app.use('/api/admin/users', adminUserRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/workout-templates', workoutTemplatesRoutes);
 app.use('/api/meal-templates', mealTemplateRoutes);
+app.use('/api/admin', adminRoutes); // TEMPORARY - for food reimport
 
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
   maxPoolSize: 10,
