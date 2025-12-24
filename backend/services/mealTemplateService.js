@@ -188,6 +188,15 @@ class MealTemplateService {
         const meals = [];
         const usedIds = globalUsedIds;
 
+        // Helper to detect protein powders/isolates
+        const isPowderOrIsolate = (f) => {
+            const name = f.name.toLowerCase();
+            return name.includes('powder') ||
+                name.includes('isolate') ||
+                name.includes('protein shake') ||
+                (f.p > 70 && f.c < 10 && f.f < 10); // Very high protein, low everything else = powder
+        };
+
         // Template-specific protein selection
         let proteinFoods;
         if (templateType === 'high_protein') {
@@ -204,14 +213,30 @@ class MealTemplateService {
             );
             // Fallback to any high protein if lean not available
             if (proteinFoods.length < 20) {
-                proteinFoods = buffet.filter(f => f.p > 15 && !f.name.toLowerCase().includes('powder'));
+                proteinFoods = buffet.filter(f => f.p > 15 && !isPowderOrIsolate(f));
             }
         } else {
-            // Other templates: any high protein food
-            proteinFoods = buffet.filter(f => f.p > 15 && !f.name.toLowerCase().includes('powder'));
+            // Other templates: any high protein food (exclude powders/isolates)
+            proteinFoods = buffet.filter(f => f.p > 15 && !isPowderOrIsolate(f));
         }
 
         const carbFoods = buffet.filter(f => f.c > 20 && f.p < 10);
+
+        // Fatty foods for low-carb (nuts, avocado, cheese, fatty fish, oils)
+        const fatFoods = buffet.filter(f =>
+            f.f > 10 &&
+            f.c < 15 &&
+            !isPowderOrIsolate(f) &&
+            (f.name.toLowerCase().includes('avocado') ||
+                f.name.toLowerCase().includes('nut') ||
+                f.name.toLowerCase().includes('seed') ||
+                f.name.toLowerCase().includes('cheese') ||
+                f.name.toLowerCase().includes('salmon') ||
+                f.name.toLowerCase().includes('oil') ||
+                f.name.toLowerCase().includes('butter') ||
+                f.name.toLowerCase().includes('cream') ||
+                f.f > 15) // High fat content
+        );
 
         // Meal-appropriate foods
         const breakfastFoods = buffet.filter(f =>
@@ -252,26 +277,26 @@ class MealTemplateService {
             const filterForSection = strategy.filters ? strategy.filters[section] : null;
 
             if (isBreakfast) {
-                // Breakfast: eggs/oats + fruit/toast
+                // Breakfast: eggs/oats + fruit/toast (or fats for low-carb)
                 primaryPool = breakfastFoods.length > 10 ? breakfastFoods : proteinFoods;
-                secondaryPool = carbFoods;
+                secondaryPool = templateType === 'low_carb' ? fatFoods : carbFoods;
                 // Apply low-carb filter if exists
                 if (filterForSection) {
                     primaryPool = primaryPool.filter(filterForSection);
                     secondaryPool = secondaryPool.filter(filterForSection);
                 }
             } else if (isSnack) {
-                // Snack: bar/fruit + nuts/yogurt  
-                primaryPool = snackFoods.length > 10 ? snackFoods : carbFoods;
-                secondaryPool = snackFoods.length > 10 ? snackFoods : fatFoods;
+                // Snack: bar/fruit + nuts/yogurt (always use fats as fallback)
+                primaryPool = snackFoods.length > 10 ? snackFoods : fatFoods;
+                secondaryPool = fatFoods;
                 if (filterForSection) {
                     primaryPool = primaryPool.filter(filterForSection);
                     secondaryPool = secondaryPool.filter(filterForSection);
                 }
             } else if (isLunch || isDinner) {
-                // Main meals: protein + carb
+                // Main meals: protein + (carb OR fat for low-carb)
                 primaryPool = proteinFoods;
-                secondaryPool = carbFoods;
+                secondaryPool = templateType === 'low_carb' ? fatFoods : carbFoods;
                 if (filterForSection) {
                     primaryPool = primaryPool.filter(filterForSection);
                     secondaryPool = secondaryPool.filter(filterForSection);
