@@ -5,7 +5,8 @@ const fs = require('fs');
 const path = require('path');
 
 // TEMPORARY ADMIN ENDPOINT - Remove after import complete
-router.post('/reimport-foods', async (req, res) => {
+// Accepts both GET (browser) and POST (curl)
+router.all('/reimport-foods', async (req, res) => {
     try {
         console.log('🔄 Starting food reimport...');
 
