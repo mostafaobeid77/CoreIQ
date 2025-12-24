@@ -41,7 +41,11 @@ router.all('/reimport-foods', async (req, res) => {
                     c: item.nutrients_per_100g.carbs,
                     f: item.nutrients_per_100g.fat,
                     servings: item.servings || [],
-                    baseQuantity: item.baseQuantity || 100,
+                    baseQuantity: {
+                        amount: item.baseQuantity || 100,
+                        unit: 'g',
+                        basis: 'per100g'
+                    },
                     mealTypes: item.mealTypes || [] // NEW FIELD
                 };
 
