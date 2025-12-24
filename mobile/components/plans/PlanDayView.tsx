@@ -138,7 +138,7 @@ const PlanDayView = React.memo(function PlanDayView({
                                                 {calories} kcal
                                             </Text>
                                             <Text style={{ fontSize: 13, fontWeight: '500', color: isLight ? '#94a3b8' : '#64748b', marginRight: 12 }}>
-                                                {quantity}{unit === 'servings' ? ' srv' : 'g'}
+                                                {quantity}{((unit === 'grams' && meal.category === 'drinks') || unit === 'ml') ? ' ml' : (unit === 'grams' ? 'g' : (unit === 'servings' ? ' srv' : ` ${unit.replace(/^\d+\s+/, '')}`))}
                                             </Text>
 
                                             {/* Macros Row */}

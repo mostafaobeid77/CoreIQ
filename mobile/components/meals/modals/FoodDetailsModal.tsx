@@ -47,6 +47,7 @@ interface FoodDetailsModalProps {
     quantity?: number;
     servingIndex?: number;
     mealType?: string;
+    category?: string; // Added category
   } | null;
   onAddToMeal: (food: any, quantity: number, mealType: string, inputMode: 'grams' | 'servings', servingIndex?: number) => Promise<void> | void;
   mealSections: string[];
@@ -68,6 +69,8 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const isDrink = food?.category?.toLowerCase() === 'drinks';
+
   const resetModal = useCallback(() => {
     setQuantity('100');
     setSelectedMeal(defaultMealType || '');
@@ -82,13 +85,23 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
     } else if (food) {
       // Restore saved state if editing
       if (food.unit && food.quantity !== undefined) {
-        const isServings = food.unit === 'servings' || food.unit === 'serving';
+        const isGrams = food.unit === 'grams' || food.unit === 'ml' || food.unit === 'g';
+        const isServings = !isGrams; // Assume servings if not explicit grams/ml
+
         setInputMode(isServings ? 'servings' : 'grams');
         setQuantity(food.quantity.toString());
         setSelectedMeal(food.mealType || defaultMealType || '');
-        setSelectedServingIndex(food.servingIndex !== undefined ? food.servingIndex : 0);
+
+        // Try to match specific serving index
+        let initialIndex = food.servingIndex !== undefined ? food.servingIndex : 0;
+        if (isServings && food.servings) {
+          const matchIndex = food.servings.findIndex(s => s.size === food.unit);
+          if (matchIndex !== -1) initialIndex = matchIndex;
+        }
+        setSelectedServingIndex(initialIndex);
       } else {
         // New item defaults
+        // Allow servings for ALL items if available, but prioritize for drinks
         if (food.servings && food.servings.length > 0) {
           setInputMode('servings');
           setQuantity('1');
@@ -231,8 +244,10 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
                     style={[mealsStyles.modeTab, inputMode === 'grams' && mealsStyles.modeTabActive]}
                     onPress={() => { setInputMode('grams'); setQuantity('100'); }}
                   >
-                    <Ionicons name="scale-outline" size={14} color={inputMode === 'grams' ? '#fff' : '#888'} />
-                    <Text style={[mealsStyles.modeTabText, inputMode === 'grams' && mealsStyles.modeTabTextActive]}>Grams</Text>
+                    <Ionicons name={isDrink ? "water-outline" : "scale-outline"} size={14} color={inputMode === 'grams' ? '#fff' : '#888'} />
+                    <Text style={[mealsStyles.modeTabText, inputMode === 'grams' && mealsStyles.modeTabTextActive]}>
+                      {isDrink ? 'ML' : 'Grams'}
+                    </Text>
                   </TouchableOpacity>
 
                   {food.servings && food.servings.length > 0 && food.servings.map((serving, index) => (
@@ -266,7 +281,9 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
                       onChangeText={setQuantity}
                       selectTextOnFocus
                     />
-                    <Text style={mealsStyles.unitSubtext}>{inputMode === 'grams' ? 'grams' : 'units'}</Text>
+                    <Text style={mealsStyles.unitSubtext}>
+                      {inputMode === 'grams' ? (isDrink ? 'ml' : 'grams') : 'units'}
+                    </Text>
                   </View>
 
                   <TouchableOpacity

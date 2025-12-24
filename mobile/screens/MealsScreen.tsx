@@ -148,16 +148,22 @@ const MealsScreen = () => {
     );
   };
 
-  const handleAddFoodToMeal = async (food: any, quantity: number, mealType: string, inputMode: 'grams' | 'servings') => {
+  const handleAddFoodToMeal = async (food: any, quantity: number, mealType: string, inputMode: 'grams' | 'servings', servingIndex?: number) => {
     try {
+      // Resolve proper unit string if mode is 'servings'
+      let unitToSave = inputMode;
+      if (inputMode === 'servings' && food.servings && typeof servingIndex === 'number' && food.servings[servingIndex]) {
+        unitToSave = food.servings[servingIndex].size || 'serving';
+      }
+
       if (editingItem) {
         await updateMealItem(dateKey, editingItem.mealType, editingItem.id, {
           quantity,
-          unit: inputMode,
+          unit: unitToSave,
           mealType: mealType !== editingItem.mealType ? mealType : undefined
         });
       } else {
-        await addMealItem(dateKey, mealType, food, quantity, inputMode);
+        await addMealItem(dateKey, mealType, food, quantity, unitToSave);
       }
       clearSearchAfterAdd();
       closeFoodDetailsModal();
@@ -166,9 +172,25 @@ const MealsScreen = () => {
     }
   };
 
-  const handleEditMealPress = (mealType: string, item: any) => {
+  const handleEditMealPress = async (mealType: string, item: any) => {
+    let fullFoodData = { ...item };
+    try {
+      // Fetch fresh food data to ensure we have servings (which aren't stored in meal item)
+      const results = await searchMeals(item.name);
+      const exactMatch = results.find(r => r.name.toLowerCase() === item.name.toLowerCase() || r.id === item.foodId);
+      if (exactMatch) {
+        fullFoodData = {
+          ...exactMatch,
+          ...item, // Keep saved quantity and unit
+          servings: exactMatch.servings || [],
+        };
+      }
+    } catch (e) {
+      // Silent fail, proceed with item data
+    }
+
     const foodToEdit = {
-      ...item,
+      ...fullFoodData,
       unit: item.unit || (item.grams ? 'grams' : 'servings'),
       quantity: item.quantity || item.grams,
       mealType: mealType
@@ -522,7 +544,7 @@ const MealsScreen = () => {
                               {item.calories} kcal
                             </Text>
                             <Text style={{ fontSize: 13, fontWeight: '500', color: theme === 'light' ? '#94a3b8' : '#64748b', marginRight: 12 }}>
-                              {item.quantity}{item.unit === 'servings' ? ' srv' : 'g'}
+                              {item.quantity}{((item.unit === 'grams' && item.category === 'drinks') || item.unit === 'ml') ? ' ml' : (item.unit === 'grams' ? 'g' : (item.unit === 'servings' ? ' srv' : ` ${(item.unit as string).replace(/^\d+\s+/, '')}`))}
                             </Text>
 
                             {/* Macros without separators, just spaced */}

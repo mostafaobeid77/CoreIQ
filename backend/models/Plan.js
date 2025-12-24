@@ -23,8 +23,12 @@ const MealPlanItemSchema = new mongoose.Schema({
   },
   unit: {
     type: String,
-    required: true,
-    enum: ['grams', 'servings']
+    required: true
+    // enum removed to allow 'ml', 'cups', etc.
+  },
+  category: {
+    type: String,
+    default: 'food'
   },
   calories: {
     type: Number,

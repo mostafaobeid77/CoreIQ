@@ -5,7 +5,7 @@ export interface MealItem {
   name: string;
   brand: string;
   quantity: number;
-  unit: 'grams' | 'servings';
+  unit: 'grams' | 'servings' | 'ml';
   calories: number;
   protein: number;
   carbs: number;
@@ -28,7 +28,7 @@ class MealsService {
     mealType: string;
     foodId: string;
     quantity: number;
-    unit: 'grams' | 'servings';
+    unit: 'grams' | 'servings' | 'ml';
   }): Promise<{ meal: MealItem; message: string }> {
     return api.post('/meals', data);
   }

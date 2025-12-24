@@ -153,11 +153,11 @@ class MealTemplateService {
             case 'low_carb':
                 return {
                     filters: {
-                        // Allow vegetables and salads with low carbs
-                        Breakfast: (f) => f.c < 20 || (f.category === 'vegetables' && f.c < 15) || (f.category === 'salads' && f.c < 10),
-                        Lunch: (f) => (f.c < 25 && f.p > 15) || (f.category === 'vegetables') || (f.category === 'salads'),
-                        Dinner: (f) => (f.c < 25 && f.p > 15) || (f.category === 'vegetables') || (f.category === 'salads'),
-                        Snack: (f) => f.c < 15 || (f.category === 'vegetables' && f.c < 10)
+                        // Allow vegetables and salads with low carbs. EXCLUDE classic high-carb items explicitly.
+                        Breakfast: (f) => (f.c < 20 && !['cereal', 'oat', 'pancake', 'waffle', 'toast', 'bread', 'bagel', 'croissant'].some(k => f.name.toLowerCase().includes(k))) || (f.category === 'vegetables' && f.c < 15) || (f.category === 'salads' && f.c < 10),
+                        Lunch: (f) => ((f.c < 25 && f.p > 15) || (f.category === 'vegetables') || (f.category === 'salads')) && !['rice', 'pasta', 'potato', 'bread', 'bun', 'pizza', 'burger'].some(k => f.name.toLowerCase().includes(k)),
+                        Dinner: (f) => ((f.c < 25 && f.p > 15) || (f.category === 'vegetables') || (f.category === 'salads')) && !['rice', 'pasta', 'potato', 'bread', 'bun', 'pizza', 'burger'].some(k => f.name.toLowerCase().includes(k)),
+                        Snack: (f) => (f.c < 15 || (f.category === 'vegetables' && f.c < 10)) && !['cookie', 'chip', 'chocolate', 'candy', 'cake'].some(k => f.name.toLowerCase().includes(k))
                     },
                     sections: ['Breakfast', 'Lunch', 'Dinner', 'Snack']
                 };

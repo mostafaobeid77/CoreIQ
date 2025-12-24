@@ -519,7 +519,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                     for (const toAdd of aiPlan.foodsToAdd) {
                         const foodMatch = smartBuffet.find(f =>
                             f.name.toLowerCase().includes(toAdd.name.toLowerCase())
-                        );
+                        ) || findBestFoodMatch(toAdd.name, cachedFoods, userTargets);
 
                         if (foodMatch) {
                             const mealKey = findMealKey(toAdd.mealType);
@@ -527,18 +527,38 @@ Analyze the request and respond with JSON ONLY (no markdown):
                                 modifiedDay.meals[mealKey] = [];
                             }
 
-                            const qty = toAdd.quantity || 100;
-                            const ratio = qty / 100;
+                            // Determine quantity and unit based on servings if available
+                            let qty = toAdd.quantity || 100;
+                            let unit = foodMatch.category === 'drinks' ? 'ml' : 'grams';
+                            let finalNutrition = {
+                                calories: Math.round(foodMatch.cal * (qty / 100)),
+                                protein: Math.round(foodMatch.p * (qty / 100)),
+                                carbs: Math.round(foodMatch.c * (qty / 100)),
+                                fats: Math.round(foodMatch.f * (qty / 100))
+                            };
+
+                            if (foodMatch.category === 'drinks' && foodMatch.servings && foodMatch.servings.length > 0) {
+                                const serving = foodMatch.servings[0];
+                                qty = 1;
+                                unit = serving.size || 'serving';
+                                finalNutrition = {
+                                    calories: Math.round(serving.calories),
+                                    protein: Math.round(serving.protein),
+                                    carbs: Math.round(serving.carbs),
+                                    fats: Math.round(serving.fat || serving.fats || 0)
+                                };
+                            }
 
                             modifiedDay.meals[mealKey].push({
                                 foodId: foodMatch._id,
                                 name: foodMatch.name,
+                                category: foodMatch.category,
                                 quantity: qty,
-                                unit: 'grams',
-                                calories: Math.round(foodMatch.cal * ratio),
-                                protein: Math.round(foodMatch.p * ratio),
-                                carbs: Math.round(foodMatch.c * ratio),
-                                fats: Math.round(foodMatch.f * ratio),
+                                unit: unit,
+                                calories: finalNutrition.calories,
+                                protein: finalNutrition.protein,
+                                carbs: finalNutrition.carbs,
+                                fats: finalNutrition.fats,
                                 caloriesPer100g: foodMatch.cal,
                                 proteinPer100g: foodMatch.p,
                                 carbsPer100g: foodMatch.c,
@@ -556,26 +576,53 @@ Analyze the request and respond with JSON ONLY (no markdown):
                     for (const toAdd of aiPlan.foodsToAdd) {
                         const foodMatch = smartBuffet.find(f =>
                             f.name.toLowerCase().includes(toAdd.name.toLowerCase())
-                        ) || findBestFoodMatch(toAdd.name, smartBuffet, userTargets);
+                        ) || findBestFoodMatch(toAdd.name, cachedFoods, userTargets);
 
                         if (foodMatch) {
+                            console.log(`[DEBUG] AI Edit found match for ${toAdd.name}:`, {
+                                name: foodMatch.name,
+                                category: foodMatch.category,
+                                hasServings: !!(foodMatch.servings && foodMatch.servings.length),
+                                firstServing: foodMatch.servings?.[0]
+                            });
+
                             const mealKey = findMealKey(toAdd.mealType);
                             if (!modifiedDay.meals[mealKey]) {
                                 modifiedDay.meals[mealKey] = [];
                             }
 
-                            const qty = toAdd.quantity || 100;
-                            const ratio = qty / 100;
+                            // Determine quantity and unit based on servings if available
+                            let qty = toAdd.quantity || 100;
+                            let unit = foodMatch.category === 'drinks' ? 'ml' : 'grams';
+                            let finalNutrition = {
+                                calories: Math.round(foodMatch.cal * (qty / 100)),
+                                protein: Math.round(foodMatch.p * (qty / 100)),
+                                carbs: Math.round(foodMatch.c * (qty / 100)),
+                                fats: Math.round(foodMatch.f * (qty / 100))
+                            };
+
+                            if (foodMatch.category === 'drinks' && foodMatch.servings && foodMatch.servings.length > 0) {
+                                const serving = foodMatch.servings[0];
+                                qty = 1;
+                                unit = serving.size || 'serving';
+                                finalNutrition = {
+                                    calories: Math.round(serving.calories),
+                                    protein: Math.round(serving.protein),
+                                    carbs: Math.round(serving.carbs),
+                                    fats: Math.round(serving.fat || serving.fats || 0)
+                                };
+                            }
 
                             modifiedDay.meals[mealKey].push({
                                 foodId: foodMatch._id,
                                 name: foodMatch.name,
+                                category: foodMatch.category,
                                 quantity: qty,
-                                unit: 'grams',
-                                calories: Math.round(foodMatch.cal * ratio),
-                                protein: Math.round(foodMatch.p * ratio),
-                                carbs: Math.round(foodMatch.c * ratio),
-                                fats: Math.round(foodMatch.f * ratio),
+                                unit: unit,
+                                calories: finalNutrition.calories,
+                                protein: finalNutrition.protein,
+                                carbs: finalNutrition.carbs,
+                                fats: finalNutrition.fats,
                                 caloriesPer100g: foodMatch.cal,
                                 proteinPer100g: foodMatch.p,
                                 carbsPer100g: foodMatch.c,
@@ -792,21 +839,40 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             } else if (!isCardio) {
                                 // Strength workout - preserve existing values if not specified
                                 const currentSets = workoutToUpdate.sets || [];
-                                const numSets = updateDef.sets || currentSets.length || 3;
-                                const repVal = updateDef.reps || currentSets[0]?.reps || 10;
-                                const weightVal = updateDef.weight !== undefined ? updateDef.weight : (currentSets[0]?.weight || 0);
 
-                                console.log('[AI EDIT] Updating strength workout:', {
-                                    name: workoutToUpdate.name,
-                                    sets: numSets,
-                                    reps: repVal,
-                                    weight: weightVal
-                                });
+                                // Determine how many sets we want
+                                let targetSetCount = currentSets.length || 3;
+                                if (Array.isArray(updateDef.sets)) {
+                                    targetSetCount = updateDef.sets.length;
+                                } else if (typeof updateDef.sets === 'number') {
+                                    targetSetCount = updateDef.sets;
+                                }
 
-                                workoutToUpdate.sets = Array(numSets).fill(null).map(() => ({
-                                    reps: repVal,
-                                    weight: weightVal
-                                }));
+                                // Smart update: iterate and merge
+                                const newSets = [];
+                                for (let i = 0; i < targetSetCount; i++) {
+                                    // Use existing set, or clone the last one, or default
+                                    const existing = currentSets[i] || currentSets[currentSets.length - 1] || { reps: 10, weight: 0 };
+
+                                    // Check if we have specific data for THIS set (from AI array)
+                                    // Handle cases where AI returns a single array for all sets (e.g. weight: [10, 20, 30])
+                                    // OR an array of objects (if structure matches)
+
+                                    const explicitSetData = Array.isArray(updateDef.sets) ? updateDef.sets[i] : null;
+
+                                    // Extract explicit value from parallel arrays if they exist
+                                    const explicitWeight = Array.isArray(updateDef.weight) ? updateDef.weight[i] : updateDef.weight;
+                                    const explicitReps = Array.isArray(updateDef.reps) ? updateDef.reps[i] : updateDef.reps;
+
+                                    newSets.push({
+                                        // Priority: Explicit object data > Explicit index in array > Global value > Existing
+                                        reps: explicitSetData?.reps ?? explicitReps ?? updateDef.reps ?? existing.reps,
+                                        weight: explicitSetData?.weight ?? explicitWeight ?? updateDef.weight ?? existing.weight,
+                                        // Preserve metadata
+                                        completed: existing.completed || false
+                                    });
+                                }
+                                workoutToUpdate.sets = newSets;
 
                                 let updateMsg = `Updated ${workoutToUpdate.name}`;
                                 if (updateDef.sets) updateMsg += ` to ${updateDef.sets} sets`;
@@ -940,13 +1006,23 @@ function findBestFoodMatch(query, buffet, targets) {
 
     for (const [keyword, searchTerm] of Object.entries(drinkKeywords)) {
         if (lowerQuery.includes(keyword)) {
-            match = buffet.find(f =>
+            // Priority 1: Strict match (must be in drinks category)
+            let drinkMatch = buffet.find(f =>
                 f.category === 'drinks' &&
                 f.name.toLowerCase().includes(searchTerm)
             );
-            if (match) {
-                console.log(`[FOOD MATCH] Drink keyword match found: ${match.name}`);
-                return match;
+
+            // Priority 2: Lenient match (any category, maybe misclassified)
+            if (!drinkMatch) {
+                drinkMatch = buffet.find(f =>
+                    f.name.toLowerCase().includes(searchTerm) &&
+                    (f.category === 'drinks' || f.cal < 50) // Sanity check: drinks are usually low cal
+                );
+            }
+
+            if (drinkMatch) {
+                console.log(`[FOOD MATCH] Drink keyword match found: ${drinkMatch.name}`);
+                return drinkMatch;
             }
         }
     }

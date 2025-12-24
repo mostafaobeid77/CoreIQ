@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URLS } from '../constants/api';
 
 const TOKEN_KEY = '@coreiq_token';
-export const BASE_URL = 'https://coreiq-backend.onrender.com/api';
+export const BASE_URL = 'http://192.168.1.103:5000/api';
 
 /**
  * Ensures profile photo URLs point to the current active host.

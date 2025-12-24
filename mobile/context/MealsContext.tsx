@@ -13,9 +13,10 @@ import { useAuth } from "./AuthContext";
 export interface MealItem {
   id: string;
   name: string;
+  category?: string;
   brand: string;
   quantity: number;
-  unit: 'grams' | 'servings';
+  unit: 'grams' | 'servings' | 'ml';
   calories: number;
   protein: number;
   carbs: number;
@@ -38,12 +39,12 @@ interface MealsContextType {
     mealType: string,
     food: any,
     quantity: number,
-    unit: "grams" | "servings"
+    unit: "grams" | "servings" | "ml"
   ) => Promise<void>;
   toggleMealCompletion: (date: string, mealType: string, itemId: string) => Promise<void>;
   removeMealItem: (date: string, mealType: string, itemId: string) => Promise<void>;
   removeAllMealsForDate: (date: string) => Promise<void>;
-  updateMealItem: (date: string, mealType: string, itemId: string, data: { quantity: number; unit: 'grams' | 'servings'; mealType?: string }) => Promise<void>;
+  updateMealItem: (date: string, mealType: string, itemId: string, data: { quantity: number; unit: 'grams' | 'servings' | 'ml'; mealType?: string }) => Promise<void>;
   getMealsForDate: (date: string) => { [mealType: string]: MealItem[] };
   getTotalNutrientsForDate: (date: string) => {
     totalCalories: number;
@@ -80,6 +81,7 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     (meal: any): MealItem => ({
       id: meal._id || meal.id,
       name: meal.name,
+      category: meal.category,
       brand: meal.brand || "Generic",
       quantity: meal.quantity,
       unit: meal.unit,
@@ -130,7 +132,7 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 
   const addMealItem = useCallback(
-    async (date: string, mealType: string, food: any, quantity: number, unit: "grams" | "servings") => {
+    async (date: string, mealType: string, food: any, quantity: number, unit: "grams" | "servings" | "ml") => {
       if (!user) {
         throw new Error("Please login to save meals.");
       }
@@ -221,7 +223,7 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 
   const updateMealItem = useCallback(
-    async (date: string, mealType: string, itemId: string, data: { quantity: number; unit: 'grams' | 'servings'; mealType?: string }) => {
+    async (date: string, mealType: string, itemId: string, data: { quantity: number; unit: 'grams' | 'servings' | 'ml'; mealType?: string }) => {
       if (!user) return;
       const response = await mealsService.updateMeal(itemId, data);
       const updated = normalizeMeal(response.meal);

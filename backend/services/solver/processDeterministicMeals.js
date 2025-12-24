@@ -43,7 +43,9 @@ function processDeterministicMeals(aiMealPlan, smartBuffet, targets) {
                     caloriesPer100g: item.caloriesPer100g,
                     proteinPer100g: item.proteinPer100g,
                     carbsPer100g: item.carbsPer100g,
-                    fatsPer100g: item.fatsPer100g
+                    carbsPer100g: item.carbsPer100g,
+                    fatsPer100g: item.fatsPer100g,
+                    category: item.category // Passed through from solver items
                 });
             });
         });

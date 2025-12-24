@@ -2013,5 +2013,80 @@
       "lunch",
       "snack"
     ]
+  },
+  {
+    "name": "Coffee (Black, Brewed)",
+    "description": "Standard brewed black coffee, no sugar or milk.",
+    "category": "drinks",
+    "nutrients_per_100g": {
+      "calories": 1,
+      "protein": 0.1,
+      "fat": 0.0,
+      "carbs": 0.0
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 2,
+        "protein": 0.3,
+        "fat": 0.0,
+        "carbs": 0.0
+      }
+    ],
+    "mealTypes": [
+      "breakfast",
+      "snack"
+    ]
+  },
+  {
+    "name": "Arabic Coffee (Qahwa)",
+    "description": "Traditional Arabic coffee with cardamom.",
+    "category": "drinks",
+    "nutrients_per_100g": {
+      "calories": 1,
+      "protein": 0.1,
+      "fat": 0.0,
+      "carbs": 0.3
+    },
+    "servings": [
+      {
+        "size": "1 cup (60ml)",
+        "calories": 1,
+        "protein": 0.1,
+        "fat": 0.0,
+        "carbs": 0.2
+      }
+    ],
+    "mealTypes": [
+      "breakfast",
+      "snack",
+      "dinner"
+    ]
+  },
+  {
+    "name": "Tea (Black/Green, Unsweetened)",
+    "description": "Brewed tea without sugar.",
+    "category": "drinks",
+    "nutrients_per_100g": {
+      "calories": 1,
+      "protein": 0.0,
+      "fat": 0.0,
+      "carbs": 0.2
+    },
+    "servings": [
+      {
+        "size": "1 cup (240ml)",
+        "calories": 2,
+        "protein": 0.0,
+        "fat": 0.0,
+        "carbs": 0.4
+      }
+    ],
+    "mealTypes": [
+      "breakfast",
+      "lunch",
+      "dinner",
+      "snack"
+    ]
   }
 ]

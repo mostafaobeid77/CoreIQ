@@ -72,6 +72,7 @@ function createSmartBuffet(foods, count = 60) {
         _id: food._id.toString(),
         name: food.name,
         category: food.category, // NEW: Include category for drink filtering
+        servings: food.servings || [], // NEW: Include servings for accurate units
         cal: Math.round(food.nutrients?.calories || 0),
         p: Math.round(food.nutrients?.protein || 0),
         c: Math.round(food.nutrients?.carbs || 0),

@@ -403,9 +403,8 @@ export const usePlanState = (goalWeight: string) => {
                     });
 
                     // Validate that we have base macros
-                    if (baseCal === 0 && basePro === 0) {
-                        console.error('[PLAN] ERROR: No base macros found for:', item.name);
-                        console.error('[PLAN] Full item object:', JSON.stringify(item, null, 2));
+                    if (baseCal === 0 && basePro === 0 && !item.name.toLowerCase().includes('zero') && !item.name.toLowerCase().includes('diet') && !item.name.toLowerCase().includes('water')) {
+                        console.warn('[PLAN] Warning: No base macros found for:', item.name);
                     }
 
                     // Calculate ratio based on unit type
@@ -460,6 +459,7 @@ export const usePlanState = (goalWeight: string) => {
                         foodId: item._id || item.foodId,
                         id: item._id || item.foodId, // For FoodDetailsModal compatibility
                         brand: item.brand || '', // For FoodDetailsModal
+                        category: item.category, // Added category for display logic
                         mealType: targetSection,
                         quantity,
                         unit,

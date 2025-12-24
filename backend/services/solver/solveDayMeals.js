@@ -144,6 +144,84 @@ function solveDayMeals(dayMeals, smartBuffet, targets) {
         });
     }
 
+    // PHASE 3: Cap Carbs (Specifically for Low Carb plans)
+    // If carbs are significantly over target, aggressively reduce high-carb items
+    // and slightly boost high-fat items to compensate calories
+    for (let iter = 0; iter < 10; iter++) {
+        const totals = calculateDayTotals(processedMeals);
+        if (totals.carbs <= targets.carbs * 1.15) break; // Accept 15% buffer
+
+        const carbDiffRatio = totals.carbs / targets.carbs; // e.g., 1.5 (50% over)
+
+        // Find high carb items (>10g carbs per 100g)
+        const allItems = processedMeals.flatMap(m => m.items);
+        const highCarbItems = allItems.filter(i => i.c > 10);
+        const fatSources = allItems.filter(i => i.f > 10 && i.c < 5); // Compensate with fat
+
+        if (highCarbItems.length === 0) break;
+
+        // Reduce high carb items
+        highCarbItems.forEach(item => {
+            // Reduce proportional to diff, but max 20% per iteration
+            const reductionFactor = Math.max(0.80, 1 / (carbDiffRatio * 0.9));
+            item.grams *= reductionFactor;
+            item.grams = Math.max(10, item.grams); // Allow cleaner reduction to 10g
+        });
+
+        // Compensate calories with fat sources (if available)
+        // Calculate missing calories after carb reduction
+        const currentTotals = calculateDayTotals(processedMeals);
+        const caloriesMissing = targets.calories - currentTotals.calories;
+
+        if (fatSources.length > 0 && caloriesMissing > 50) {
+            const extraCalsPerItem = caloriesMissing / fatSources.length;
+
+            fatSources.forEach(item => {
+                const addGrams = (extraCalsPerItem / item.cal) * 100;
+                item.grams += addGrams;
+                item.grams = Math.min(item.grams, 500); // Respect limit
+            });
+        }
+    }
+
+    // PHASE 4: Re-fix calories (Final Polish)
+    // Run this AFTER carb reduction to ensure we hit calorie target
+    for (let iter = 0; iter < 5; iter++) {
+        const totals = calculateDayTotals(processedMeals);
+        const calRatio = targets.calories / Math.max(1, totals.calories);
+
+        if (Math.abs(calRatio - 1) < CAL_TOLERANCE) {
+            break;
+        }
+
+        processedMeals.forEach(meal => {
+            meal.items.forEach(item => {
+                item.grams *= calRatio;
+                item.grams = Math.max(20, Math.min(item.grams, 500));
+            });
+        });
+    }
+
+    // PHASE 5: Final Protein Safeguard
+    // If protein is STILL blown up (likely due to Phase 4 scaling), cap it again.
+    // This prioritizes Protein Target over Calorie Target slightly, to avoid massive protein overages.
+    for (let iter = 0; iter < 5; iter++) {
+        const totals = calculateDayTotals(processedMeals);
+        if (totals.protein <= targets.protein * 1.15) break;
+
+        console.log(`⚠️ Final Protein Safeguard: ${totals.protein}g > ${targets.protein}g. Reducing high-protein items.`);
+
+        const allItems = processedMeals.flatMap(m => m.items);
+        const highProItems = allItems.filter(i => i.p > 20).sort((a, b) => b.p - a.p).slice(0, 3);
+
+        if (highProItems.length === 0) break;
+
+        highProItems.forEach(item => {
+            item.grams *= 0.90; // 10% reduction
+            item.grams = Math.max(30, item.grams);
+        });
+    }
+
     const finalTotals = calculateDayTotals(processedMeals);
     console.log(`📊 FINAL: ${finalTotals.calories}kcal | ${finalTotals.protein}g P | ${finalTotals.carbs}g C | ${finalTotals.fats}g F\n`);
 
@@ -157,7 +235,7 @@ function solveDayMeals(dayMeals, smartBuffet, targets) {
                     foodId: item._id,
                     name: item.name,
                     quantity: Math.round(item.grams),
-                    unit: 'grams',
+                    unit: item.category === 'drinks' ? 'ml' : 'grams',
                     calories: Math.round(item.cal * portionRatio),
                     protein: Math.round(item.p * portionRatio),
                     carbs: Math.round(item.c * portionRatio),
@@ -165,7 +243,8 @@ function solveDayMeals(dayMeals, smartBuffet, targets) {
                     caloriesPer100g: item.cal,
                     proteinPer100g: item.p,
                     carbsPer100g: item.c,
-                    fatsPer100g: item.f
+                    fatsPer100g: item.f,
+                    category: item.category // Persist category
                 };
                 return itemData;
             })

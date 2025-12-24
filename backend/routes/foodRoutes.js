@@ -21,13 +21,15 @@ router.get('/', async (req, res) => {
 
     if (name) {
       // Use regex for better matching
+      // Escape regex special characters to handle parentheses etc.
+      const escapedName = name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
       query = {
         $or: [
-          { name: { $regex: name, $options: 'i' } },
-          { description: { $regex: name, $options: 'i' } }
+          { name: { $regex: escapedName, $options: 'i' } },
+          { description: { $regex: escapedName, $options: 'i' } }
         ]
       };
-      
+
       // Simple sort by name
       sort = { name: 1 };
     }
@@ -42,21 +44,21 @@ router.get('/', async (req, res) => {
       .limit(parseInt(limit))
       .maxTimeMS(2000)
       .lean();
-    
+
     // If searching by name, reorder results to prioritize exact matches
     if (name) {
       foods.sort((a, b) => {
         const aExact = a.name.toLowerCase() === name.toLowerCase();
         const bExact = b.name.toLowerCase() === name.toLowerCase();
-        
+
         if (aExact && !bExact) return -1;
         if (!aExact && bExact) return 1;
-        
+
         // If both are exact or both are not exact, sort alphabetically
         return a.name.localeCompare(b.name);
       });
     }
-    
+
     res.json(foods);
   } catch (err) {
     console.error('❌ Error fetching foods:', err.message);
