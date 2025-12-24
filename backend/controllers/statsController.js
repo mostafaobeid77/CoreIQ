@@ -1,6 +1,9 @@
 const DailyStats = require('../models/DailyStats');
 const { calculateCaloriesFromSteps } = require('../utils/calorieCalculator');
 
+// Simple in-memory cache for user creation dates (they never change)
+const userCreationCache = new Map();
+
 // Get stats for a specific date
 exports.getStats = async (req, res) => {
   try {
