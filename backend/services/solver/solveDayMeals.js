@@ -41,6 +41,14 @@ function solveDayMeals(dayMeals, smartBuffet, targets) {
         }
     });
 
+    // Add drinks to each meal
+    processedMeals.forEach(meal => {
+        const drinkItem = selectDrinkForMeal(meal.mealType, smartBuffet, targets);
+        if (drinkItem) {
+            meal.items.push(drinkItem);
+        }
+    });
+
     console.log(`\n🔍 [SOLVER] Day Input: ${processedMeals.map(m => m.items.map(i => i.name).join('+')).join(', ')}`);
 
     // Step 2: Initial portions
@@ -215,6 +223,50 @@ function calculateDayTotals(meals) {
         carbs: Math.round(t.carbs),
         fats: Math.round(t.fats)
     };
+}
+
+// Helper function to select a drink for a meal
+function selectDrinkForMeal(mealType, buffet, targets) {
+    const isBreakfast = mealType.toLowerCase().includes('breakfast');
+    const isLowCarb = targets.dietType === 'low_carb';
+
+    // Filter drinks from buffet
+    const drinks = buffet.filter(f => f.category === 'drinks');
+
+    if (drinks.length === 0) return null;
+
+    let suitableDrinks = [];
+
+    if (isLowCarb) {
+        // Low-carb: only zero-calorie drinks
+        suitableDrinks = drinks.filter(d => d.cal === 0);
+    } else if (isBreakfast) {
+        // Breakfast: coffee, tea, juice
+        suitableDrinks = drinks.filter(d =>
+            d.name.toLowerCase().includes('coffee') ||
+            d.name.toLowerCase().includes('tea') ||
+            d.name.toLowerCase().includes('juice') ||
+            d.name.toLowerCase().includes('milk') ||
+            (d.cal <= 50 && d.c < 15)
+        );
+    } else {
+        // Other meals: low-calorie drinks
+        suitableDrinks = drinks.filter(d => d.cal <= 50);
+    }
+
+    // Fallback to any drink if no suitable ones found
+    if (suitableDrinks.length === 0) {
+        suitableDrinks = drinks.filter(d => d.cal === 0);
+    }
+    if (suitableDrinks.length === 0) {
+        suitableDrinks = drinks; // Last resort
+    }
+
+    // Select a random drink from suitable options
+    const selectedDrink = suitableDrinks[Math.floor(Math.random() * suitableDrinks.length)];
+
+    // Return with minimal grams (drinks don't need much quantity)
+    return { ...selectedDrink, grams: 100 }; // 100ml standard serving
 }
 
 module.exports = solveDayMeals;

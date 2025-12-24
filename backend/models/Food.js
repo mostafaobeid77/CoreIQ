@@ -29,6 +29,7 @@ const FoodSchema = new mongoose.Schema({
   nutrients: { type: NutrientsSchema, required: true },
   servings: { type: [ServingSchema], default: [] },
   baseQuantity: { type: BaseQuantitySchema, default: () => ({}) },
+  mealTypes: { type: [String], default: [], index: true }, // breakfast, lunch, dinner, snack, drink, dessert, any
 }, { timestamps: true });
 
 FoodSchema.index({ name: 'text', description: 'text', category: 'text' });

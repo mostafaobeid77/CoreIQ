@@ -153,10 +153,11 @@ class MealTemplateService {
             case 'low_carb':
                 return {
                     filters: {
-                        Breakfast: (f) => f.c < 15,
-                        Lunch: (f) => f.c < 20 && f.p > 20,
-                        Dinner: (f) => f.c < 15 && f.p > 20,
-                        Snack: (f) => f.c < 10
+                        // Allow vegetables and salads with low carbs
+                        Breakfast: (f) => f.c < 20 || (f.category === 'vegetables' && f.c < 15) || (f.category === 'salads' && f.c < 10),
+                        Lunch: (f) => (f.c < 25 && f.p > 15) || (f.category === 'vegetables') || (f.category === 'salads'),
+                        Dinner: (f) => (f.c < 25 && f.p > 15) || (f.category === 'vegetables') || (f.category === 'salads'),
+                        Snack: (f) => f.c < 15 || (f.category === 'vegetables' && f.c < 10)
                     },
                     sections: ['Breakfast', 'Lunch', 'Dinner', 'Snack']
                 };
@@ -259,6 +260,29 @@ class MealTemplateService {
             (f.cal < 300 && f.cal > 100)
         );
 
+        // Drinks - categorized by calorie content for low-carb compatibility
+        const zeroCaloricDrinks = buffet.filter(f =>
+            f.category === 'drinks' &&
+            f.cal === 0
+        );
+
+        const lowCalorieDrinks = buffet.filter(f =>
+            f.category === 'drinks' &&
+            f.cal > 0 &&
+            f.cal <= 50 &&
+            f.c < 10
+        );
+
+        const breakfastDrinks = buffet.filter(f =>
+            f.category === 'drinks' &&
+            (f.name.toLowerCase().includes('coffee') ||
+                f.name.toLowerCase().includes('tea') ||
+                f.name.toLowerCase().includes('juice') ||
+                f.name.toLowerCase().includes('milk'))
+        );
+
+        const allDrinks = buffet.filter(f => f.category === 'drinks');
+
         console.log(`🍽️ [FOOD SELECTION] ${strategy.sections.length} meals (${templateType} template)`);
 
         strategy.sections.forEach((section, idx) => {
@@ -269,6 +293,27 @@ class MealTemplateService {
             const isSnack = section.toLowerCase().includes('snack');
             const isLunch = section.toLowerCase().includes('lunch');
             const isDinner = section.toLowerCase().includes('dinner');
+
+            // Select appropriate drink pool based on template and meal type
+            let drinkPool;
+            if (templateType === 'low_carb') {
+                // Low-carb: only zero-calorie drinks
+                drinkPool = zeroCaloricDrinks;
+            } else if (isBreakfast) {
+                // Breakfast: coffee, tea, juice, milk
+                drinkPool = [...breakfastDrinks, ...lowCalorieDrinks];
+            } else {
+                // Other meals: any drink, prioritize low-calorie
+                drinkPool = [...lowCalorieDrinks, ...zeroCaloricDrinks];
+                // Add regular drinks for non-low-carb plans
+                if (templateType !== 'low_carb') {
+                    const regularDrinks = allDrinks.filter(d => d.cal > 50 && d.c < 30);
+                    drinkPool = [...drinkPool, ...regularDrinks];
+                }
+            }
+
+            // Fallback to any drink if pool is empty
+            if (drinkPool.length === 0) drinkPool = allDrinks;
 
             // Pick 2-3 foods based on meal type
             let primaryPool, secondaryPool;
@@ -339,11 +384,26 @@ class MealTemplateService {
                 mealItems.push(secondary._id);
             }
 
+            // Pick a drink for this meal
+            let drinkAvailablePool = drinkPool.filter(f => !usedIds.has(f._id));
+            if (drinkAvailablePool.length === 0) drinkAvailablePool = [...drinkPool];
+
+            for (let i = drinkAvailablePool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [drinkAvailablePool[i], drinkAvailablePool[j]] = [drinkAvailablePool[j], drinkAvailablePool[i]];
+            }
+            const drink = drinkAvailablePool[0];
+            if (drink) {
+                usedIds.add(drink._id);
+                mealItems.push(drink._id);
+            }
+
             meals.push({
                 mealType: section,
                 items: mealItems
             });
-            console.log(`  → ${section}: ${mealItems.length} items`);
+            console.log(`  → ${section}: ${mealItems.length} items (${drink ? 'with drink' : 'no drink'})`);
+
         });
 
         return { meals };

@@ -389,12 +389,26 @@ Analyze the request and respond with JSON ONLY (no markdown):
         // Fallback to basic intent detection
         if (!aiPlan || !aiPlan.intent) {
             const lowerInstruction = instruction.toLowerCase();
+
+            // Detect workout update keywords
+            const isWorkoutUpdate = (lowerInstruction.includes('weight') ||
+                lowerInstruction.includes('sets') ||
+                lowerInstruction.includes('reps') ||
+                lowerInstruction.includes('increase') ||
+                lowerInstruction.includes('decrease') ||
+                lowerInstruction.includes('change') ||
+                lowerInstruction.includes('make it') ||
+                lowerInstruction.includes('update')) &&
+                (lowerInstruction.includes('workout') ||
+                    currentDay.workouts?.length > 0);
+
             const intent = lowerInstruction.includes('swap') || lowerInstruction.includes('replace') ? 'swap_food' :
-                lowerInstruction.includes('add') && lowerInstruction.includes('workout') ? 'add_workout' :
-                    lowerInstruction.includes('add') ? 'add_meal' :
-                        lowerInstruction.includes('remove') || lowerInstruction.includes('delete') ? 'remove_meal' :
-                            lowerInstruction.includes('protein') || lowerInstruction.includes('macro') ? 'adjust_macros' :
-                                'general_edit';
+                isWorkoutUpdate ? 'update_workout' :
+                    lowerInstruction.includes('add') && lowerInstruction.includes('workout') ? 'add_workout' :
+                        lowerInstruction.includes('add') ? 'add_meal' :
+                            lowerInstruction.includes('remove') || lowerInstruction.includes('delete') ? 'remove_meal' :
+                                lowerInstruction.includes('protein') || lowerInstruction.includes('macro') ? 'adjust_macros' :
+                                    'general_edit';
 
             aiPlan = {
                 intent,
@@ -415,16 +429,69 @@ Analyze the request and respond with JSON ONLY (no markdown):
                     aiPlan.workoutsToAdd = lowerInstruction.includes('strength') ? ['strength'] : ['cardio'];
                 }
                 console.log('[AI EDIT] Fallback extracted workouts:', aiPlan.workoutsToAdd);
+            } else if (intent === 'update_workout') {
+                // Extract workout update parameters
+                console.log('[AI EDIT] Detected workout update intent');
+
+                // Try to find which workout they're referring to
+                const workoutKeywords = ['bench press', 'squat', 'deadlift', 'pull up', 'push up', 'plank',
+                    'bicep curl', 'tricep', 'shoulder press', 'lat pulldown', 'leg press'];
+                const mentionedWorkout = workoutKeywords.find(kw => lowerInstruction.includes(kw));
+
+                // Extract numeric values
+                const weightMatch = lowerInstruction.match(/(\d+)\s*(kg|lb|pound)/i);
+                const setsMatch = lowerInstruction.match(/(\d+)\s*set/i);
+                const repsMatch = lowerInstruction.match(/(\d+)\s*rep/i);
+
+                // If no specific workout mentioned, try to use the first/last workout in current day
+                const targetWorkoutName = mentionedWorkout ||
+                    currentDay.workouts?.[currentDay.workouts.length - 1]?.name ||
+                    'workout';
+
+                aiPlan.workoutsToUpdate = [{
+                    name: targetWorkoutName,
+                    ...(weightMatch && { weight: parseInt(weightMatch[1]) }),
+                    ...(setsMatch && { sets: parseInt(setsMatch[1]) }),
+                    ...(repsMatch && { reps: parseInt(repsMatch[1]) })
+                }];
+
+                console.log('[AI EDIT] Extracted update params:', aiPlan.workoutsToUpdate[0]);
+
             } else if (intent === 'add_meal') {
                 // Try to extract meal type
                 const mealTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
                 const targetMeal = mealTypes.find(m => lowerInstruction.includes(m)) || 'snacks';
                 aiPlan.target = targetMeal;
-                aiPlan.foodsToAdd = [{ name: 'protein', quantity: 100, mealType: targetMeal }];
+
+                // Try to extract food name from instruction
+                // Remove common words to isolate the food name
+                let foodName = lowerInstruction
+                    .replace(/add|to|in|for|my|a|an|the|please|can you/gi, '')
+                    .replace(new RegExp(targetMeal, 'gi'), '')
+                    .trim();
+
+                // If we found a specific food name, use it
+                if (foodName && foodName.length > 2) {
+                    aiPlan.foodsToAdd = [{ name: foodName, quantity: 100, mealType: targetMeal }];
+                    console.log(`[AI EDIT] Fallback extracted food: "${foodName}" for ${targetMeal}`);
+                } else {
+                    // Generic fallback
+                    aiPlan.foodsToAdd = [{ name: 'protein', quantity: 100, mealType: targetMeal }];
+                }
             }
         }
 
         console.log(`📋 Intent detected: ${aiPlan.intent}`);
+
+        // Helper function to find the correct meal key (case-insensitive)
+        const findMealKey = (mealType) => {
+            if (!modifiedDay.meals) return mealType;
+            const lowerMealType = mealType.toLowerCase();
+            const existingKey = Object.keys(modifiedDay.meals).find(
+                key => key.toLowerCase() === lowerMealType
+            );
+            return existingKey || mealType; // Return existing key or original if not found
+        };
 
         // Clone current day to modify
         const modifiedDay = JSON.parse(JSON.stringify(currentDay));
@@ -436,7 +503,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                 // Swap food items
                 if (aiPlan.foodsToRemove && aiPlan.foodsToAdd) {
                     for (const toRemove of aiPlan.foodsToRemove) {
-                        const mealType = toRemove.mealType;
+                        const mealType = findMealKey(toRemove.mealType);
                         if (modifiedDay.meals[mealType]) {
                             modifiedDay.meals[mealType] = modifiedDay.meals[mealType].filter(
                                 item => !item.name.toLowerCase().includes(toRemove.foodName.toLowerCase())
@@ -450,14 +517,15 @@ Analyze the request and respond with JSON ONLY (no markdown):
                         );
 
                         if (foodMatch) {
-                            if (!modifiedDay.meals[toAdd.mealType]) {
-                                modifiedDay.meals[toAdd.mealType] = [];
+                            const mealKey = findMealKey(toAdd.mealType);
+                            if (!modifiedDay.meals[mealKey]) {
+                                modifiedDay.meals[mealKey] = [];
                             }
 
                             const qty = toAdd.quantity || 100;
                             const ratio = qty / 100;
 
-                            modifiedDay.meals[toAdd.mealType].push({
+                            modifiedDay.meals[mealKey].push({
                                 foodId: foodMatch._id,
                                 name: foodMatch.name,
                                 quantity: qty,
@@ -471,7 +539,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                                 carbsPer100g: foodMatch.c,
                                 fatsPer100g: foodMatch.f
                             });
-                            changesMade.push(`Added ${foodMatch.name} to ${toAdd.mealType}`);
+                            changesMade.push(`Added ${foodMatch.name} to ${mealKey}`);
                         }
                     }
                 }
@@ -486,14 +554,15 @@ Analyze the request and respond with JSON ONLY (no markdown):
                         ) || findBestFoodMatch(toAdd.name, smartBuffet, userTargets);
 
                         if (foodMatch) {
-                            if (!modifiedDay.meals[toAdd.mealType]) {
-                                modifiedDay.meals[toAdd.mealType] = [];
+                            const mealKey = findMealKey(toAdd.mealType);
+                            if (!modifiedDay.meals[mealKey]) {
+                                modifiedDay.meals[mealKey] = [];
                             }
 
                             const qty = toAdd.quantity || 100;
                             const ratio = qty / 100;
 
-                            modifiedDay.meals[toAdd.mealType].push({
+                            modifiedDay.meals[mealKey].push({
                                 foodId: foodMatch._id,
                                 name: foodMatch.name,
                                 quantity: qty,
@@ -507,7 +576,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                                 carbsPer100g: foodMatch.c,
                                 fatsPer100g: foodMatch.f
                             });
-                            changesMade.push(`Added ${foodMatch.name} (${qty}g) to ${toAdd.mealType}`);
+                            changesMade.push(`Added ${foodMatch.name} (${qty}g) to ${mealKey}`);
                         }
                     }
                 }
@@ -517,7 +586,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                 // Remove meal items
                 if (aiPlan.foodsToRemove) {
                     for (const toRemove of aiPlan.foodsToRemove) {
-                        const mealType = toRemove.mealType || aiPlan.target;
+                        const mealType = findMealKey(toRemove.mealType || aiPlan.target);
                         if (modifiedDay.meals[mealType]) {
                             const beforeCount = modifiedDay.meals[mealType].length;
                             modifiedDay.meals[mealType] = modifiedDay.meals[mealType].filter(
@@ -531,9 +600,10 @@ Analyze the request and respond with JSON ONLY (no markdown):
                     }
                 } else if (aiPlan.target) {
                     // Remove entire meal section
-                    if (modifiedDay.meals[aiPlan.target]) {
-                        modifiedDay.meals[aiPlan.target] = [];
-                        changesMade.push(`Cleared all ${aiPlan.target} items`);
+                    const mealKey = findMealKey(aiPlan.target);
+                    if (modifiedDay.meals[mealKey]) {
+                        modifiedDay.meals[mealKey] = [];
+                        changesMade.push(`Cleared all ${mealKey} items`);
                     }
                 }
                 break;
@@ -691,12 +761,22 @@ Analyze the request and respond with JSON ONLY (no markdown):
 
             case 'update_workout':
                 // Update specific workout details
-                if (aiPlan.workoutsToUpdate && modifiedDay.workouts) {
+                console.log('[AI EDIT] Processing update_workout');
+                if (aiPlan.workoutsToUpdate && modifiedDay.workouts && modifiedDay.workouts.length > 0) {
                     for (const updateDef of aiPlan.workoutsToUpdate) {
-                        const workoutToUpdate = modifiedDay.workouts.find(w =>
+                        console.log('[AI EDIT] Looking for workout to update:', updateDef.name);
+                        console.log('[AI EDIT] Available workouts:', modifiedDay.workouts.map(w => w.name));
+
+                        let workoutToUpdate = modifiedDay.workouts.find(w =>
                             w.name.toLowerCase().includes(updateDef.name.toLowerCase()) ||
                             updateDef.name.toLowerCase().includes(w.name.toLowerCase())
                         );
+
+                        // If no match found and the name is generic, use the last workout
+                        if (!workoutToUpdate && (updateDef.name === 'workout' || updateDef.name.length < 5)) {
+                            workoutToUpdate = modifiedDay.workouts[modifiedDay.workouts.length - 1];
+                            console.log('[AI EDIT] Using last workout as fallback:', workoutToUpdate.name);
+                        }
 
                         if (workoutToUpdate) {
                             const isCardio = workoutToUpdate.workoutType === 'cardio' || !!workoutToUpdate.minutes;
@@ -704,11 +784,19 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             if (isCardio && updateDef.duration) {
                                 workoutToUpdate.minutes = updateDef.duration;
                                 changesMade.push(`Updated ${workoutToUpdate.name} duration to ${updateDef.duration} min`);
-                            } else {
-                                // Strength workout
-                                const numSets = updateDef.sets || workoutToUpdate.sets?.length || 3;
-                                const repVal = updateDef.reps || (workoutToUpdate.sets?.[0]?.reps) || 10;
-                                const weightVal = updateDef.weight !== undefined ? updateDef.weight : (workoutToUpdate.sets?.[0]?.weight) || 0;
+                            } else if (!isCardio) {
+                                // Strength workout - preserve existing values if not specified
+                                const currentSets = workoutToUpdate.sets || [];
+                                const numSets = updateDef.sets || currentSets.length || 3;
+                                const repVal = updateDef.reps || currentSets[0]?.reps || 10;
+                                const weightVal = updateDef.weight !== undefined ? updateDef.weight : (currentSets[0]?.weight || 0);
+
+                                console.log('[AI EDIT] Updating strength workout:', {
+                                    name: workoutToUpdate.name,
+                                    sets: numSets,
+                                    reps: repVal,
+                                    weight: weightVal
+                                });
 
                                 workoutToUpdate.sets = Array(numSets).fill(null).map(() => ({
                                     reps: repVal,
@@ -722,6 +810,9 @@ Analyze the request and respond with JSON ONLY (no markdown):
 
                                 changesMade.push(updateMsg);
                             }
+                        } else {
+                            console.warn('[AI EDIT] No workout found to update');
+                            changesMade.push(`⚠️ Could not find workout to update: ${updateDef.name}`);
                         }
                     }
                 }
@@ -793,23 +884,81 @@ exports.suggestPlanImprovements = async (req, res) => res.status(501).json({ mes
 
 // Helper function to find best food match
 function findBestFoodMatch(query, buffet, targets) {
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = query.toLowerCase().trim();
+
+    console.log(`[FOOD MATCH] Searching for: "${lowerQuery}"`);
 
     // Exact match
     let match = buffet.find(f => f.name.toLowerCase() === lowerQuery);
-    if (match) return match;
+    if (match) {
+        console.log(`[FOOD MATCH] Exact match found: ${match.name}`);
+        return match;
+    }
 
-    // Partial match
+    // Partial match - check if query is contained in food name
     match = buffet.find(f => f.name.toLowerCase().includes(lowerQuery));
-    if (match) return match;
+    if (match) {
+        console.log(`[FOOD MATCH] Partial match found: ${match.name}`);
+        return match;
+    }
+
+    // Reverse - check if food name is contained in query (for longer queries)
+    match = buffet.find(f => lowerQuery.includes(f.name.toLowerCase()));
+    if (match) {
+        console.log(`[FOOD MATCH] Reverse match found: ${match.name}`);
+        return match;
+    }
+
+    // Word-by-word match (handles "diet coke" matching "Diet Cola")
+    const queryWords = lowerQuery.split(/\s+/);
+    match = buffet.find(f => {
+        const foodWords = f.name.toLowerCase().split(/\s+/);
+        // Check if all query words appear in the food name
+        return queryWords.every(qw => foodWords.some(fw => fw.includes(qw) || qw.includes(fw)));
+    });
+    if (match) {
+        console.log(`[FOOD MATCH] Word-by-word match found: ${match.name}`);
+        return match;
+    }
+
+    // Special handling for common drink keywords
+    const drinkKeywords = {
+        'coke': 'cola',
+        'pepsi': 'pepsi',
+        'diet': 'diet',
+        'water': 'water',
+        'tea': 'tea',
+        'coffee': 'coffee',
+        'juice': 'juice',
+        'milk': 'milk'
+    };
+
+    for (const [keyword, searchTerm] of Object.entries(drinkKeywords)) {
+        if (lowerQuery.includes(keyword)) {
+            match = buffet.find(f =>
+                f.category === 'drinks' &&
+                f.name.toLowerCase().includes(searchTerm)
+            );
+            if (match) {
+                console.log(`[FOOD MATCH] Drink keyword match found: ${match.name}`);
+                return match;
+            }
+        }
+    }
 
     // If query mentions protein, return high-protein food
     if (lowerQuery.includes('protein')) {
-        return buffet.find(f => f.p > 20);
+        match = buffet.find(f => f.p > 20);
+        if (match) {
+            console.log(`[FOOD MATCH] High-protein fallback: ${match.name}`);
+            return match;
+        }
     }
 
-    // Return a balanced food
-    return buffet.find(f => f.p > 15 && f.cal < 200);
+    // Return a balanced food as last resort
+    match = buffet.find(f => f.p > 15 && f.cal < 200);
+    console.log(`[FOOD MATCH] Last resort fallback: ${match?.name || 'none'}`);
+    return match;
 }
 
 // Helper to calculate day macros

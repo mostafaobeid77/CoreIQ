@@ -61,7 +61,7 @@ async function importData() {
       }
 
       const formattedFoods = [];
-      
+
       for (let i = 0; i < foodsData.length; i++) {
         const food = foodsData[i];
         try {
@@ -69,7 +69,7 @@ async function importData() {
             console.error(`❌ Missing nutrients_per_100g in ${fileName} at index ${i}:`, food.name);
             continue;
           }
-          
+
           formattedFoods.push({
             name: food.name,
             description: food.description,
@@ -81,6 +81,7 @@ async function importData() {
               carbs: food.nutrients_per_100g.carbs,
             },
             servings: food.servings || [],
+            mealTypes: food.mealTypes || [], // Add mealTypes field
           });
         } catch (err) {
           console.error(`❌ Error processing food at index ${i} in ${fileName}:`, food.name, err.message);
