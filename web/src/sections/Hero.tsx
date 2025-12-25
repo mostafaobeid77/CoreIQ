@@ -35,28 +35,28 @@ export function Hero() {
 						animate={{ opacity: 1, z: 0 }}
 						transition={{ duration: 1 }}
 					>
-						<Badge icon={Sparkles}>Reimagining Fitness Tracking</Badge>
+						<Badge icon={Sparkles}>THE GENESIS OF THE META-HUMAN</Badge>
 					</motion.div>
 
 					<motion.h1
-						className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-balance"
+						className="text-5xl sm:text-6xl lg:text-8xl font-black tracking-tighter text-balance"
 						initial={{ opacity: 0, rotateX: 45, z: -100 }}
 						animate={{ opacity: 1, rotateX: 0, z: 0 }}
 						transition={{ duration: 1, ease: "easeOut" }}
 					>
-						Master your body <br />
-						<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
-							with intelligence.
+						Master the machine <br />
+						<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400">
+							that is your body.
 						</span>
 					</motion.h1>
 
 					<motion.p
-						className="text-lg text-slate-400 max-w-xl leading-relaxed text-balance"
+						className="text-xl text-slate-400 max-w-xl leading-relaxed text-balance font-medium"
 						initial={{ opacity: 0, scale: 0.9 }}
 						animate={{ opacity: 1, scale: 1 }}
 						transition={{ duration: 1, delay: 0.1 }}
 					>
-						CoreIQ combines advanced analytics with intuitive design to help you build muscle, lose fat, and stay consistent. Zero guesswork.
+						CoreIQ is the neural bridge between your ambition and your biological reality. Stop tracking. Start evolving with predictive intelligence.
 					</motion.p>
 
 					<motion.div

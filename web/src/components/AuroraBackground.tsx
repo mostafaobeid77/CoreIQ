@@ -10,12 +10,12 @@ export const AuroraBackground = ({
     className,
     children,
     showRadialGradient = true,
-    ...props
 }: AuroraBackgroundProps) => {
     const { scrollYProgress } = useScroll()
-    const rotateX = useTransform(scrollYProgress, [0, 1], [0, 10])
-    const z = useTransform(scrollYProgress, [0, 1], [0, -100])
-    const opacity = useTransform(scrollYProgress, [0, 1], [0.7, 0.4])
+    const rotateX = useTransform(scrollYProgress, [0, 1], [0, 15])
+    const z = useTransform(scrollYProgress, [0, 1], [0, -150])
+    const opacity = useTransform(scrollYProgress, [0, 1], [0.8, 0.4])
+    const pulse = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1])
 
     return (
         <motion.div
@@ -24,6 +24,7 @@ export const AuroraBackground = ({
                 rotateX,
                 z,
                 opacity,
+                scale: pulse,
                 perspective: "1200px",
                 transformStyle: "preserve-3d"
             }}

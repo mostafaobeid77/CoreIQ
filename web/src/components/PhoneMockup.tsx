@@ -1,105 +1,145 @@
-
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useRef } from 'react'
+import { Activity, Apple, Brain, Flame, Target, Trophy } from 'lucide-react'
 
 export function PhoneMockup() {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "end start"]
+    })
+
+    // Smooth values
+    const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
+
+    // Parallax values for layers
+    const phoneRotateY = useTransform(smoothProgress, [0, 1], [-25, 25])
+    const phoneRotateX = useTransform(smoothProgress, [0, 1], [15, -15])
+
+    // UI elements fly further
+    const uiTranslateZ = useTransform(smoothProgress, [0, 1], [40, 100])
+    const uiRotateY = useTransform(smoothProgress, [0, 1], [-10, 10])
+
     return (
-        <div className="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
-            <div className="h-[32px] w-[3px] bg-gray-800 absolute -start-[17px] top-[72px] rounded-s-lg"></div>
-            <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[124px] rounded-s-lg"></div>
-            <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[178px] rounded-s-lg"></div>
-            <div className="h-[64px] w-[3px] bg-gray-800 absolute -end-[17px] top-[142px] rounded-e-lg"></div>
-            <div className="rounded-[2rem] overflow-hidden w-[272px] h-[572px] bg-white dark:bg-gray-800 relative">
-                {/* Screen Content */}
-                <div className="absolute inset-0 bg-slate-950 flex flex-col">
-                    {/* Status Bar */}
-                    <div className="h-12 w-full bg-slate-950 flex justify-between items-center px-6 text-white text-xs font-medium z-20">
-                        <span>9:41</span>
-                        <div className="flex items-center gap-1.5">
-                            <div className="w-4 h-2.5 bg-white rounded-sm" />
-                            <div className="w-0.5 h-1 bg-white/50" />
-                        </div>
-                    </div>
+        <div ref={containerRef} className="relative w-full h-full flex items-center justify-center perspective-[1500px]">
+            {/* 3D Container */}
+            <motion.div
+                style={{
+                    rotateY: phoneRotateY,
+                    rotateX: phoneRotateX,
+                    transformStyle: "preserve-3d"
+                }}
+                className="relative w-[280px] h-[580px]"
+            >
+                {/* 1. The Phone Chassis (Back) */}
+                <div className="absolute inset-0 bg-slate-900 border-[8px] border-slate-800 rounded-[3rem] shadow-2xl overflow-hidden">
+                    <div className="absolute inset-x-0 top-[10%] bottom-[10%] bg-violet-600/5 blur-3xl rounded-full" />
+                </div>
 
-                    {/* Dynamic Island Area */}
-                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[100px] h-[28px] bg-black rounded-full z-20" />
-
-                    {/* App UI Placeholder */}
-                    <div className="flex-1 p-4 overflow-hidden relative">
-                        {/* Header */}
-                        <div className="flex justify-between items-center mb-6 mt-2">
-                            <div>
-                                <div className="text-slate-400 text-xs uppercase tracking-wider mb-1">Thursday, 25</div>
-                                <div className="text-white text-xl font-bold">Today's Plan</div>
+                {/* 2. The Screen Glass (Middle) */}
+                <div
+                    style={{ transform: "translateZ(20px)" }}
+                    className="absolute inset-[4px] bg-slate-950 rounded-[2.5rem] border border-white/5 overflow-hidden shadow-inner"
+                >
+                    {/* Screen Content Layers */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-black p-6 flex flex-col">
+                        <div className="flex justify-between items-center mb-8">
+                            <div className="w-10 h-10 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
+                                <Activity className="w-5 h-5 text-violet-400" />
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center text-violet-400">
-                                AI
+                            <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] text-slate-400 font-mono">
+                                CORE-OS v2.4
                             </div>
                         </div>
 
-                        {/* Cards */}
-                        <div className="space-y-3">
-                            {/* Workout Card */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.5 }}
-                                className="bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl p-4 text-white relative overflow-hidden"
-                            >
-                                <div className="relative z-10">
-                                    <div className="text-xs font-medium text-white/70 mb-1">Workout • 45m</div>
-                                    <h3 className="text-lg font-bold mb-3">Push Pull Legs A</h3>
-                                    <div className="flex gap-2">
-                                        <div className="px-2 py-1 rounded-md bg-white/20 text-xs backdrop-blur-sm">4 Exercises</div>
-                                        <div className="px-2 py-1 rounded-md bg-white/20 text-xs backdrop-blur-sm">High Volume</div>
-                                    </div>
-                                </div>
-                                <div className="absolute right-0 bottom-0 w-24 h-24 bg-white/10 rounded-full blur-xl transform translate-x-8 translate-y-8" />
-                            </motion.div>
-
-                            {/* Nutrition Card */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.6 }}
-                                className="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-white"
-                            >
-                                <div className="flex justify-between items-center mb-3">
-                                    <span className="font-semibold">Nutrition</span>
-                                    <span className="text-xs text-slate-400">1,240 / 2,400 kcal</span>
-                                </div>
-                                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                    <div className="h-full w-[52%] bg-emerald-500 rounded-full" />
-                                </div>
-                                <div className="mt-3 flex justify-between text-xs text-slate-400">
-                                    <div className="flex flex-col items-center">
-                                        <span className="text-emerald-400 font-medium">110g</span>
-                                        <span>Protein</span>
-                                    </div>
-                                    <div className="flex flex-col items-center">
-                                        <span className="text-blue-400 font-medium">145g</span>
-                                        <span>Carbs</span>
-                                    </div>
-                                    <div className="flex flex-col items-center">
-                                        <span className="text-amber-400 font-medium">42g</span>
-                                        <span>Fats</span>
-                                    </div>
-                                </div>
-                            </motion.div>
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <div className="h-2 w-16 bg-slate-800 rounded-full" />
+                                <div className="h-8 w-48 bg-white/5 rounded-lg border border-white/5" />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="h-24 bg-white/5 rounded-2xl border border-white/5" />
+                                <div className="h-24 bg-white/5 rounded-2xl border border-white/5" />
+                            </div>
                         </div>
-
-                        {/* Bottom Fade */}
-                        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-950 to-transparent pointer-events-none" />
-                    </div>
-
-                    {/* Bottom Nav Placeholder */}
-                    <div className="h-16 px-6 flex justify-between items-center text-slate-600">
-                        <div className="w-6 h-6 rounded-full bg-violet-500 shadow-[0_0_12px_rgba(139,92,246,0.6)]" />
-                        <div className="w-6 h-6 rounded-md bg-slate-800" />
-                        <div className="w-6 h-6 rounded-md bg-slate-800" />
-                        <div className="w-6 h-6 rounded-md bg-slate-800" />
                     </div>
                 </div>
-            </div>
+
+                {/* 3. Floating 3D Elements (Front - Parallax) */}
+
+                {/* Macro Widget */}
+                <motion.div
+                    style={{
+                        translateZ: uiTranslateZ,
+                        rotateY: uiRotateY,
+                        transformStyle: "preserve-3d"
+                    }}
+                    className="absolute -right-16 top-32 w-48 h-24 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4 flex flex-col justify-between"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-500">
+                            <Flame className="w-4 h-4" />
+                        </div>
+                        <div className="text-xs font-bold text-white uppercase tracking-tighter">Metabolism</div>
+                    </div>
+                    <div className="flex items-end justify-between">
+                        <div className="text-2xl font-black text-white">+14%</div>
+                        <div className="text-[10px] text-slate-400 uppercase">Efficiency</div>
+                    </div>
+                    {/* Depth highlight */}
+                    <div className="absolute inset-0 rounded-2xl border border-white/20 pointer-events-none" style={{ transform: "translateZ(10px)" }} />
+                </motion.div>
+
+                {/* Goal Widget */}
+                <motion.div
+                    style={{
+                        translateZ: useTransform(smoothProgress, [0, 1], [60, 140]),
+                        rotateY: useTransform(smoothProgress, [0, 1], [-5, 5]),
+                        transformStyle: "preserve-3d"
+                    }}
+                    className="absolute -left-12 bottom-20 w-44 h-28 bg-violet-600/90 backdrop-blur-xl border border-white/20 rounded-2xl shadow-[0_20px_50px_rgba(139,92,246,0.3)] p-4"
+                >
+                    <div className="flex items-center gap-2 mb-2">
+                        <Brain className="w-4 h-4 text-white" />
+                        <div className="text-[10px] font-bold text-white uppercase tracking-widest">Prediction</div>
+                    </div>
+                    <div className="space-y-2">
+                        <div className="text-lg font-bold text-white leading-tight">Goal reached in 12 days</div>
+                        <div className="h-1.5 w-full bg-black/20 rounded-full overflow-hidden">
+                            <motion.div
+                                className="h-full bg-white"
+                                initial={{ width: 0 }}
+                                animate={{ width: "85%" }}
+                                transition={{ delay: 1, duration: 1.5 }}
+                            />
+                        </div>
+                    </div>
+                    {/* Depth highlight */}
+                    <div className="absolute inset-0 rounded-2xl border border-white/40 pointer-events-none" style={{ transform: "translateZ(15px)" }} />
+                </motion.div>
+
+                {/* Floating Metric Particles */}
+                <FloatingMetric icon={Apple} color="text-red-400" top="10%" left="-20%" delay={0} progress={smoothProgress} />
+                <FloatingMetric icon={Trophy} color="text-yellow-400" bottom="30%" right="-30%" delay={0.2} progress={smoothProgress} />
+                <FloatingMetric icon={Target} color="text-blue-400" top="40%" right="-15%" delay={0.4} progress={smoothProgress} />
+
+                {/* Reflection/Glare */}
+                <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none z-30" />
+            </motion.div>
         </div>
+    )
+}
+
+function FloatingMetric({ icon: Icon, color, top, left, right, bottom, delay, progress }: any) {
+    const y = useTransform(progress, [0, 1], [0, -100 * (delay + 1)])
+    const rotate = useTransform(progress, [0, 1], [0, 45 * (delay + 1)])
+
+    return (
+        <motion.div
+            style={{ top, left, right, bottom, y, rotate, transformStyle: "preserve-3d", translateZ: 150 }}
+            className={`absolute w-10 h-10 rounded-full bg-slate-900 border border-white/10 flex items-center justify-center ${color} shadow-2xl`}
+        >
+            <Icon className="w-5 h-5" />
+        </motion.div>
     )
 }

@@ -37,15 +37,15 @@ export function Features() {
 	return (
 		<SceneSection id="features">
 			<div className="flex flex-col items-center text-center mb-16 space-y-4">
-				<Badge icon={Brain}>Intelligence Layer</Badge>
-				<h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
+				<Badge icon={Brain}>THE NEURAL ENGINE</Badge>
+				<h2 className="text-4xl md:text-7xl font-black tracking-tighter text-white mb-4 leading-none">
 					Not just tracking. <br />
-					<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
-						Coaching.
+					<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-emerald-400 to-fuchsia-400">
+						blueprint your future.
 					</span>
 				</h2>
-				<p className="text-slate-400 text-lg max-w-2xl text-balance">
-					Most apps are glorified spreadsheets. CoreIQ analyzes your data to tell you what to do next.
+				<p className="text-slate-400 text-xl font-medium max-w-2xl text-balance">
+					Most apps are glorified spreadsheets. CoreIQ is a prediction engine that blueprints your evolution.
 				</p>
 			</div>
 

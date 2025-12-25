@@ -7,22 +7,22 @@ import { GlassCard } from './ui/GlassCard'
 const steps = [
     {
         id: 'plan',
-        title: 'Intelligent Planning',
-        desc: 'Our AI analyzes your goal, body type, and schedule to build a dynamic curriculum.',
+        title: 'I. The Genesis',
+        desc: 'CoreIQ deconstructs your biological baseline. Our AI blueprint transforms raw statistics into a dynamic mandate for evolution.',
         icon: BookOpen,
         Visual: PlanVisual
     },
     {
         id: 'track',
-        title: 'Seamless Tracking',
-        desc: 'Log sets and meals in seconds. CoreIQ learns your habits and auto-fills recurring data.',
+        title: 'II. The Feedback Loop',
+        desc: 'As you move, the engine learns. Every set, every gram, every heartbeat is ingested to calibrate your trajectory in real-time.',
         icon: Activity,
         Visual: TrackVisual
     },
     {
         id: 'results',
-        title: 'Quantified Results',
-        desc: 'See your evolution with predictive analytics. Know exactly when you will hit your goal.',
+        title: 'III. The Singularity',
+        desc: 'Ambition becomes destination. predictive analytics reveal the exact moment your vision becomes your reality. Zero guesswork.',
         icon: Layout,
         Visual: AnalyzeVisual
     }
