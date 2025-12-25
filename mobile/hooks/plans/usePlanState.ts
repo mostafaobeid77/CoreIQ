@@ -4,7 +4,7 @@ import { planService } from '../../services/planService';
 import { aiService } from '../../services/aiService';
 import { api } from '../../services/api';
 import { usePlanPersistence } from './usePlanPersistence';
-import { getMealSections } from '../../screens/MealsScreen';
+import { getMealSections } from '../../utils/mealUtils';
 
 // Helper to generate day numbers array
 const generateDays = (count: number) => Array.from({ length: count }, (_, i) => i + 1);

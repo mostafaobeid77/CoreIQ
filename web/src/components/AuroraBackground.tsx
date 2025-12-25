@@ -1,43 +1,45 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
 
-export function AuroraBackground() {
-    const { scrollYProgress } = useScroll()
 
-    // Parallax layers
-    const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
-    const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"])
-    const rotate = useTransform(scrollYProgress, [0, 1], [0, 45])
+import type { ReactNode } from 'react'
 
+interface AuroraBackgroundProps {
+    children?: ReactNode
+    className?: string
+    showRadialGradient?: boolean
+}
+
+export const AuroraBackground = ({
+    className,
+    children,
+    showRadialGradient = true,
+}: AuroraBackgroundProps) => {
     return (
-        <div className="fixed inset-0 z-[-15] overflow-hidden pointer-events-none">
-            {/* Deep Base */}
-            <div className="absolute inset-0 bg-[#050505]" />
-
-            {/* Blob 1: Top Left Violet */}
-            <motion.div
-                style={{ y: y1, rotate }}
-                className="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] bg-violet-600/20 blur-[120px] rounded-full mix-blend-screen opacity-60"
-            />
-
-            {/* Blob 2: Bottom Right Indigo */}
-            <motion.div
-                style={{ y: y2 }}
-                className="absolute -bottom-[20%] -right-[10%] w-[60vw] h-[60vw] bg-indigo-600/15 blur-[100px] rounded-full mix-blend-screen opacity-50"
-            />
-
-            {/* Blob 3: Center Pulse */}
-            <motion.div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] bg-fuchsia-500/10 blur-[150px] rounded-full"
-                animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 0.6, 0.3]
-                }}
-                transition={{
-                    duration: 10,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-            />
+        <div
+            className={`relative flex flex-col  h-[100vh] items-center justify-center bg-zinc-50 dark:bg-zinc-900  text-slate-950 transition-bg ${className}`}
+        >
+            <div className="absolute inset-0 overflow-hidden">
+                <div
+                    className={`
+            [--white-gradient:repeating-linear-gradient(100deg,var(--white)_0%,var(--white)_7%,var(--transparent)_10%,var(--transparent)_12%,var(--white)_16%)]
+            [--dark-gradient:repeating-linear-gradient(100deg,var(--black)_0%,var(--black)_7%,var(--transparent)_10%,var(--transparent)_12%,var(--black)_16%)]
+            [--aurora:repeating-linear-gradient(100deg,#3b82f6_10%,#a855f7_15%,#9333ea_20%,#v_25%,#60a5fa_30%)]
+            [background-image:var(--white-gradient),var(--aurora)]
+            dark:[background-image:var(--dark-gradient),var(--aurora)]
+            [background-size:300%,_200%]
+            [background-position:50%_50%,50%_50%]
+            filter blur-[10px] invert dark:invert-0
+            after:content-[""] after:absolute after:inset-0 after:[background-image:var(--white-gradient),var(--aurora)] 
+            after:dark:[background-image:var(--dark-gradient),var(--aurora)]
+            after:[background-size:200%,_100%] 
+            after:animate-aurora after:[background-attachment:fixed] after:mix-blend-difference
+            pointer-events-none
+            absolute -inset-[10px] opacity-50 will-change-transform ${showRadialGradient ?
+                            `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]` : ''
+                        }`
+                    }
+                ></div>
+            </div>
+            {children}
         </div>
     )
 }

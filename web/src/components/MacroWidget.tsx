@@ -1,64 +1,111 @@
+
 import { motion } from 'framer-motion'
-import { GlassCard } from './ui/GlassCard'
-import { Activity, Flame, Zap } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 export function MacroWidget() {
-    const macros = [
-        { label: 'Protein', value: 180, total: 200, color: 'bg-blue-500', icon: Activity },
-        { label: 'Carbs', value: 240, total: 300, color: 'bg-violet-500', icon: Zap },
-        { label: 'Fats', value: 65, total: 80, color: 'bg-pink-500', icon: Flame },
-    ]
+    const [progress, setProgress] = useState(0)
+
+    useEffect(() => {
+        const timer = setTimeout(() => setProgress(1), 500)
+        return () => clearTimeout(timer)
+    }, [])
 
     return (
-        <GlassCard
-            className="w-full max-w-sm mx-auto overflow-visible"
-            intensity="high"
-            initial={{ opacity: 0, scale: 0.9, rotateX: 20 }}
-            whileInView={{ opacity: 1, scale: 1, rotateX: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+        <div className="w-full max-w-sm mx-auto p-4">
+            <div className="relative aspect-square max-h-[300px] mx-auto flex items-center justify-center">
+                {/* Central Calorie Display */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="text-center"
+                    >
+                        <span className="text-4xl font-bold text-white block">2,450</span>
+                        <span className="text-sm text-slate-400 uppercase tracking-wider font-medium">kcal left</span>
+                    </motion.div>
+                </div>
+
+                {/* Circular Progress Rings */}
+                <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+                    {/* Background Ring */}
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="none"
+                        stroke="rgba(139, 92, 246, 0.1)"
+                        strokeWidth="8"
+                    />
+
+                    {/* Progress Ring */}
+                    <motion.circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="none"
+                        stroke="url(#gradient)"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 0.75 }}
+                        transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
+                        style={{ pathLength: progress }}
+                    />
+
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#8b5cf6" />
+                            <stop offset="100%" stopColor="#d946ef" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+
+                {/* Floating Macro Pills */}
+                <MacroPill label="Protein" value="180g" color="bg-emerald-500" delay={0.8} angle={-30} />
+                <MacroPill label="Carbs" value="220g" color="bg-blue-500" delay={0.9} angle={90} />
+                <MacroPill label="Fats" value="65g" color="bg-amber-500" delay={1.0} angle={210} />
+            </div>
+
+            <div className="mt-8 grid grid-cols-3 gap-4 text-center">
+                <MacroStat label="Protein" value="145/180g" color="text-emerald-400" />
+                <MacroStat label="Carbs" value="110/220g" color="text-blue-400" />
+                <MacroStat label="Fats" value="45/65g" color="text-amber-400" />
+            </div>
+        </div>
+    )
+}
+
+function MacroPill({ label, value, color, delay, angle }: { label: string, value: string, color: string, delay: number, angle: number }) {
+    // Calculate position on the circle border (radius 45% roughly)
+    // We'll just position them absolutely for simplicity in this mock, or use transform
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", delay }}
+            className={`absolute px-3 py-1 rounded-full bg-slate-800/80 backdrop-blur-md border border-slate-700 flex items-center gap-2 text-xs font-semibold shadow-xl z-20`}
+            style={{
+                transform: `rotate(${angle}deg) translate(140px) rotate(-${angle}deg)`, // Translate out from center
+                // Note: The translate value depends on container size. 
+                // Let's use standard CSS positioning for a cleaner look in the simpler version
+                // Actually, let's just create a decorative visual layout
+            }}
         >
-            <div className="flex items-center justify-between mb-6">
-                <div>
-                    <h3 className="text-lg font-bold text-white">Daily Targets</h3>
-                    <p className="text-xs text-slate-400">On track for muscle gain</p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center animate-pulse">
-                    <span className="text-xs font-bold text-violet-300">92%</span>
-                </div>
-            </div>
+            <div className={`w-2 h-2 rounded-full ${color}`} />
+            <span className="text-slate-200">{label}</span>
+            <span className="text-white">{value}</span>
+        </motion.div>
+    )
+}
 
-            <div className="space-y-5">
-                {macros.map((m, i) => (
-                    <div key={m.label} className="space-y-2">
-                        <div className="flex justify-between text-xs">
-                            <span className="text-slate-300 flex items-center gap-1">
-                                <m.icon className="w-3 h-3" /> {m.label}
-                            </span>
-                            <span className="text-slate-400">{m.value} / {m.total}g</span>
-                        </div>
-                        {/* Bar Container */}
-                        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-                            <motion.div
-                                className={`h-full ${m.color} shadow-[0_0_10px_currentColor]`}
-                                initial={{ width: 0 }}
-                                whileInView={{ width: `${(m.value / m.total) * 100}%` }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 1.5, delay: 0.2 + (i * 0.1), ease: "easeOut" }}
-                            />
-                        </div>
-                    </div>
-                ))}
-            </div>
 
-            {/* Floating 'Live' Badge */}
-            <motion.div
-                className="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg shadow-red-500/40"
-                animate={{ y: [0, -3, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-            >
-                LIVE
-            </motion.div>
-        </GlassCard>
+function MacroStat({ label, value, color }: { label: string, value: string, color: string }) {
+    return (
+        <div>
+            <div className={`text-sm font-bold ${color} mb-1`}>{label}</div>
+            <div className="text-slate-400 text-xs">{value}</div>
+        </div>
     )
 }

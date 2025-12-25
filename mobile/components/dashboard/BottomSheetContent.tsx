@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getMealsPerDay } from './dashboardUtils';
-import { getMealSections } from '../../screens/MealsScreen'; // Import getMealSections
+import { getMealSections } from '../../utils/mealUtils'; // Import getMealSections
 
 interface MentalHealthOption {
   label: string;

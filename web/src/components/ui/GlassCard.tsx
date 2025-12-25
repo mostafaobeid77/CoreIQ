@@ -1,37 +1,36 @@
-import { motion, type HTMLMotionProps } from 'framer-motion'
 import { cn } from '../../utils/cn'
-import type { ReactNode } from 'react'
 
-interface GlassCardProps extends HTMLMotionProps<"div"> {
-    children: ReactNode
-    hoverEffect?: boolean
+interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
+    children: React.ReactNode
+    className?: string
     intensity?: 'low' | 'medium' | 'high'
+    hoverEffect?: boolean
 }
 
 export function GlassCard({
     children,
     className,
-    hoverEffect = true,
     intensity = 'medium',
+    hoverEffect = false,
     ...props
 }: GlassCardProps) {
+    const intensityStyles = {
+        low: 'bg-white/5 border-white/5 backdrop-blur-sm',
+        medium: 'bg-white/10 border-white/10 backdrop-blur-md',
+        high: 'bg-white/15 border-white/20 backdrop-blur-lg',
+    }
+
     return (
-        <motion.div
+        <div
             className={cn(
-                "glass-panel rounded-3xl p-6 relative overflow-hidden",
-                hoverEffect && "glass-card-hover group",
+                'rounded-2xl border transition-all duration-300',
+                intensityStyles[intensity],
+                hoverEffect && 'hover:bg-white/20 hover:scale-[1.02] hover:shadow-xl hover:shadow-violet-500/10',
                 className
             )}
             {...props}
         >
-            {/* Optional inner gradient for 'high' intensity */}
-            {intensity === 'high' && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50 pointer-events-none" />
-            )}
-
-            <div className="relative z-10">
-                {children}
-            </div>
-        </motion.div>
+            {children}
+        </div>
     )
 }

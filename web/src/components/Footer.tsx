@@ -25,6 +25,7 @@ export function Footer() {
 									background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%)',
 									WebkitBackgroundClip: 'text',
 									WebkitTextFillColor: 'transparent',
+									backgroundClip: 'text',
 								}}
 							>
 								CoreIQ
@@ -85,8 +86,18 @@ export function Footer() {
 					</div>
 				</div>
 
+				{/* Rewind Interaction */}
+				<motion.button
+					onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+					className="w-full py-8 border-t border-white/5 flex flex-col items-center justify-center group hover:bg-white/5 transition-colors cursor-pointer"
+					whileHover={{ scale: 1.01 }}
+				>
+					<span className="text-slate-500 text-sm font-mono tracking-widest uppercase mb-2 group-hover:text-violet-400 transition-colors">Rewind to Start</span>
+					<div className="w-px h-8 bg-gradient-to-t from-transparent via-slate-500 to-transparent group-hover:via-violet-400 transition-colors" />
+				</motion.button>
+
 				{/* Bottom bar */}
-				<div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-600">
+				<div className="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-600">
 					<p>© {new Date().getFullYear()} CoreIQ. All rights reserved.</p>
 
 				</div>

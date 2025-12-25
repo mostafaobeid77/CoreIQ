@@ -1,26 +1,24 @@
-import { motion } from 'framer-motion'
+import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../utils/cn'
 
 interface BadgeProps {
     children: React.ReactNode
+    icon?: LucideIcon
     className?: string
-    icon?: React.ElementType
 }
 
-export function Badge({ children, className, icon: Icon }: BadgeProps) {
+export function Badge({ children, icon: Icon, className }: BadgeProps) {
     return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+        <div
             className={cn(
-                "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium",
-                "bg-violet-500/10 border border-violet-500/20 text-violet-300 backdrop-blur-sm",
-                "shadow-[0_0_15px_rgba(139,92,246,0.1)]",
+                "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium",
+                "bg-white/5 border border-white/10 text-white/80 backdrop-blur-sm",
+                "shadow-sm shadow-black/20",
                 className
             )}
         >
-            {Icon && <Icon className="w-3.5 h-3.5" />}
+            {Icon && <Icon className="w-3.5 h-3.5 text-violet-400" />}
             {children}
-        </motion.div>
+        </div>
     )
 }

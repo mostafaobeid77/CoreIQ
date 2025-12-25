@@ -1,69 +1,60 @@
-import { Section } from '../components/ui/Section'
-import { FeatureCard } from '../components/ui/FeatureCard'
+import { SceneSection } from '../components/SceneSection'
 import { Badge } from '../components/ui/Badge'
-import { Activity, Calendar, BrainCircuit, Moon, Droplets, Dumbbell, Zap } from 'lucide-react'
+import { FeatureCard } from '../components/ui/FeatureCard'
 import { MacroWidget } from '../components/MacroWidget'
 import { GlassCard } from '../components/ui/GlassCard'
+import { BarChart3, Calculator, Utensils, Zap, Brain, Target } from 'lucide-react'
 
 const features = [
-	// Highlight Feature (Smart Nutrition) - Handled separately
 	{
-		title: 'Workout Tracking',
-		description: 'Log exercises with precision. Track sets, reps, and RPE with an interface designed for speed.',
-		icon: Dumbbell,
+		title: 'Smart Meal Plans',
+		description: 'AI-generated nutrition plans that update weekly based on your metabolism.',
+		icon: Utensils,
 	},
 	{
-		title: 'Adaptive Plans',
-		description: 'Generate 14-90 day training cycles that evolve based on your performance feedback.',
-		icon: Calendar,
+		title: 'Macro Precision',
+		description: 'Track every gram. Our database verifies labels against USDA standards.',
+		icon: Calculator,
 	},
 	{
-		title: 'Sleep & Recovery',
-		description: 'Monitor sleep quality and correlate rest with your strength gains.',
-		icon: Moon,
+		title: 'Workout Analytics',
+		description: 'Visualize your progressive overload. See strength gains in real-time.',
+		icon: BarChart3,
 	},
 	{
-		title: 'Hydration Tracking',
-		description: 'Quick-add water logging to ensure you stay hydrated for peak performance.',
-		icon: Droplets,
+		title: 'Goal Automation',
+		description: 'Set a target weight. We adjust your calories automatically as you progress.',
+		icon: Target,
 	},
 	{
-		title: 'Deep Analytics',
-		description: 'Visualize your progress with cinema-quality charts and weekly insights.',
-		icon: BrainCircuit,
+		title: 'Zero Latency',
+		description: 'Optimized for speed. Log sets and meals instantly, even offline.',
+		icon: Zap,
 	},
 ]
 
 export function Features() {
 	return (
-		<Section id="features" className="relative z-10">
+		<SceneSection id="features" className="relative z-10" type="zoom">
 			<div className="flex flex-col items-center text-center mb-16 space-y-4">
-				<Badge icon={Zap}>Powerful Tools</Badge>
-				<h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white">
-					Everything you need to <span className="text-violet-400">excel.</span>
+				<Badge icon={Brain}>Intelligence Layer</Badge>
+				<h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
+					Not just tracking. <br />
+					<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+						Coaching.
+					</span>
 				</h2>
-				<p className="text-slate-400 max-w-2xl text-lg text-balance">
-					CoreIQ isn't just a tracker. It's a complete operating system for your body.
+				<p className="text-slate-400 text-lg max-w-2xl text-balance">
+					Most apps are glorified spreadsheets. CoreIQ analyzes your data to tell you what to do next.
 				</p>
 			</div>
 
 			<div className="grid md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
 				{/* Signature Interaction: Live Macro Tracking */}
 				<div className="md:col-span-2 md:row-span-2">
-					<GlassCard
-						className="h-full flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-violet-900/10 to-transparent"
-						intensity="high"
-					>
-						<div className="absolute top-0 right-0 p-6 opacity-50">
-							<Activity className="w-24 h-24 text-violet-500/20" />
-						</div>
-						<div className="relative z-10 w-full">
-							<div className="mb-6 text-center md:text-left">
-								<h3 className="text-2xl font-bold text-white mb-2">Smart Nutrition</h3>
-								<p className="text-slate-400">Real-time macro adjustments based on your activity.</p>
-							</div>
-							<MacroWidget />
-						</div>
+					<GlassCard className="h-full flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-violet-900/10 to-transparent" intensity="high">
+						<div className="absolute inset-0 bg-noise opacity-20 pointer-events-none" />
+						<MacroWidget />
 					</GlassCard>
 				</div>
 
@@ -76,6 +67,6 @@ export function Features() {
 					/>
 				))}
 			</div>
-		</Section>
+		</SceneSection>
 	)
 }

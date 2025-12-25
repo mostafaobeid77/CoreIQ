@@ -1,16 +1,13 @@
 import { motion } from 'framer-motion'
 import { Badge } from '../components/ui/Badge'
-import { Button } from '../components/ui/Button'
 import { Section } from '../components/ui/Section'
+import { MagneticButton } from '../components/ui/MagneticButton'
 import { PhoneMockup } from '../components/PhoneMockup'
 import { Sparkles, ArrowRight } from 'lucide-react'
 
 export function Hero() {
 	return (
 		<Section className="pt-32 pb-16 lg:pt-48 lg:pb-32 overflow-hidden" noPadding>
-			{/* Background Ambience */}
-			<div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-violet-600/20 blur-[120px] rounded-full opacity-30 pointer-events-none -z-10" />
-
 			<div className="flex flex-col lg:flex-row items-center gap-16 relative z-10">
 				{/* Content */}
 				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 max-w-2xl lg:w-1/2">
@@ -43,12 +40,12 @@ export function Hero() {
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.8, delay: 0.2 }}
 					>
-						<Button size="lg" className="group">
+						<MagneticButton className="group">
 							Download App <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-						</Button>
-						<Button variant="ghost" size="lg">
+						</MagneticButton>
+						<MagneticButton variant="ghost">
 							Learn More
-						</Button>
+						</MagneticButton>
 					</motion.div>
 
 					{/* Social Proof */}

@@ -6,7 +6,7 @@ import Colors from '../../constants/Colors';
 import { mealTemplateService, MealTemplateType } from '../../services/mealTemplateService';
 import { workoutTemplatesService } from '../../services/workoutTemplatesService';
 import { planService } from '../../services/planService';
-import { getMealSections } from '../../screens/MealsScreen';
+import { getMealSections } from '../../utils/mealUtils';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { format, addDays } from 'date-fns';
 
