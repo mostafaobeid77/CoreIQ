@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Github, Instagram, Linkedin, Heart } from 'lucide-react'
+import { Github, Instagram, Linkedin } from 'lucide-react'
 
 
 const socials = [
@@ -88,9 +88,7 @@ export function Footer() {
 				{/* Bottom bar */}
 				<div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-600">
 					<p>© {new Date().getFullYear()} CoreIQ. All rights reserved.</p>
-					<p className="flex items-center gap-1">
-						Designed with <Heart className="w-3 h-3 text-red-900 fill-red-900" /> by CoreIQ Team
-					</p>
+
 				</div>
 			</div>
 		</footer>
