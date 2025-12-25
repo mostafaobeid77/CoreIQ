@@ -4,7 +4,6 @@ import { PinnedSteps } from '../components/PinnedSteps'
 import { Download } from '../sections/Download'
 import { Features } from '../sections/Features'
 import { Hero } from '../sections/Hero'
-import { Reviews } from '../sections/Reviews'
 import { Particles } from '../components/Particles'
 import { ScrollExperience } from '../components/ScrollExperience'
 import { AuroraBackground } from '../components/AuroraBackground'
@@ -22,7 +21,6 @@ export function HomePage() {
 					<Hero />
 					<Features />
 					<PinnedSteps />
-					<Reviews />
 					<Download />
 				</ScrollExperience>
 			</main>

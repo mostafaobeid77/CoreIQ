@@ -9,7 +9,7 @@ interface ScrollExperienceProps {
 export function ScrollExperience({ children }: ScrollExperienceProps) {
     // For now, a simple wrapper. We can add smooth scrolling (Lenis) here later if requested.
     return (
-        <div className="w-full relative">
+        <div className="w-full relative perspective-container preserve-3d">
             {children}
         </div>
     )

@@ -13,21 +13,36 @@ export function Hero() {
 		offset: ["start start", "end end"]
 	})
 
-	const phoneY = useTransform(scrollYProgress, [0, 1], [0, -120])
-	const phoneRotate = useTransform(scrollYProgress, [0, 0.5, 1], [-2, 0, 5])
+	const phoneY = useTransform(scrollYProgress, [0, 1], [0, -150])
+	const phoneRotate = useTransform(scrollYProgress, [0, 0.5, 1], [-5, 0, 10])
+
+	// 3D Perspective shifts
+	const rotateX = useTransform(scrollYProgress, [0, 1], [0, 15])
+	const z = useTransform(scrollYProgress, [0, 1], [0, -200])
+	const opacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 1, 0])
 
 	return (
-		<Section className="pt-20 pb-12 lg:pt-32 lg:pb-20 overflow-hidden" noPadding>
-			<div ref={containerRef} className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+		<Section className="relative overflow-visible" noPadding>
+			<motion.div
+				ref={containerRef}
+				className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center preserve-3d pt-20 pb-12 lg:pt-32 lg:pb-20"
+				style={{ rotateX, z, opacity }}
+			>
 				{/* Content */}
-				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8">
-					<Badge icon={Sparkles}>Reimagining Fitness Tracking</Badge>
+				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 preserve-3d">
+					<motion.div
+						initial={{ opacity: 0, z: 100 }}
+						animate={{ opacity: 1, z: 0 }}
+						transition={{ duration: 1 }}
+					>
+						<Badge icon={Sparkles}>Reimagining Fitness Tracking</Badge>
+					</motion.div>
 
 					<motion.h1
 						className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-balance"
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8 }}
+						initial={{ opacity: 0, rotateX: 45, z: -100 }}
+						animate={{ opacity: 1, rotateX: 0, z: 0 }}
+						transition={{ duration: 1, ease: "easeOut" }}
 					>
 						Master your body <br />
 						<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
@@ -37,9 +52,9 @@ export function Hero() {
 
 					<motion.p
 						className="text-lg text-slate-400 max-w-xl leading-relaxed text-balance"
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8, delay: 0.1 }}
+						initial={{ opacity: 0, scale: 0.9 }}
+						animate={{ opacity: 1, scale: 1 }}
+						transition={{ duration: 1, delay: 0.1 }}
 					>
 						CoreIQ combines advanced analytics with intuitive design to help you build muscle, lose fat, and stay consistent. Zero guesswork.
 					</motion.p>
@@ -75,14 +90,15 @@ export function Hero() {
 					</motion.div>
 				</div>
 
+				{/* Product Visual */}
 				<motion.div
-					className="w-full max-w-[320px] mx-auto lg:max-w-none lg:mx-0 flex justify-center relative"
+					className="w-full max-w-[320px] mx-auto lg:max-w-none lg:mx-0 flex justify-center relative perspective-container"
 					style={{ y: phoneY, rotate: phoneRotate }}
 				>
 					<div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[300px] w-[300px] bg-violet-600/40 blur-[120px] rounded-full z-[-1] animate-pulse" />
 					<PhoneMockup />
 				</motion.div>
-			</div>
+			</motion.div>
 		</Section>
 	)
 }

@@ -6,15 +6,20 @@ export const LANDING_CONFIG = {
         headerHeight: "h-20",
     },
     motion: {
-        reduceMotion: false, // Should be hooked to media query in real implementation
+        reduceMotion: false,
+        perspective: "1200px",
         fadeUp: {
-            initial: { opacity: 0, y: 16, scale: 0.98 },
-            whileInView: { opacity: 1, y: 0, scale: 1 },
-            viewport: { once: true, margin: "-50px" },
+            initial: { opacity: 0, y: 40, z: -100, rotateX: 10 },
+            whileInView: { opacity: 1, y: 0, z: 0, rotateX: 0 },
+            viewport: { once: false, margin: "-50px" }, // once: false for re-triggering cinematic feel
             transition: {
-                duration: 0.6,
-                ease: [0.22, 1, 0.36, 1] as any // cubic-bezier custom
+                duration: 0.8,
+                ease: [0.22, 1, 0.36, 1] as any
             }
+        },
+        tilt: {
+            max: 5,
+            perspective: 1000
         },
         stagger: 0.1,
     },

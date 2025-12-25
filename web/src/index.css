@@ -37,6 +37,19 @@
 		@apply absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent pointer-events-none;
 	}
 
+	.perspective-container {
+		perspective: 1200px;
+		perspective-origin: 50% 50%;
+	}
+
+	.preserve-3d {
+		transform-style: preserve-3d;
+	}
+
+	.backface-hidden {
+		backface-visibility: hidden;
+	}
+
 	.text-balance {
 		text-wrap: balance;
 	}
