@@ -13,8 +13,8 @@ export function Hero() {
 		offset: ["start start", "end end"]
 	})
 
-	const phoneY = useTransform(scrollYProgress, [0, 1], [0, -50])
-	const phoneRotate = useTransform(scrollYProgress, [0, 1], [0, 5])
+	const phoneY = useTransform(scrollYProgress, [0, 1], [0, -120])
+	const phoneRotate = useTransform(scrollYProgress, [0, 0.5, 1], [-2, 0, 5])
 
 	return (
 		<Section className="pt-20 pb-12 lg:pt-32 lg:pb-20 overflow-hidden" noPadding>
@@ -75,12 +75,11 @@ export function Hero() {
 					</motion.div>
 				</div>
 
-				{/* Product Visual */}
 				<motion.div
 					className="w-full max-w-[320px] mx-auto lg:max-w-none lg:mx-0 flex justify-center relative"
 					style={{ y: phoneY, rotate: phoneRotate }}
 				>
-					<div className="absolute inset-0 bg-violet-500/30 blur-[100px] rounded-full z-[-1]" />
+					<div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[300px] w-[300px] bg-violet-600/40 blur-[120px] rounded-full z-[-1] animate-pulse" />
 					<PhoneMockup />
 				</motion.div>
 			</div>

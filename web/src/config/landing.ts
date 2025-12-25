@@ -10,7 +10,7 @@ export const LANDING_CONFIG = {
         fadeUp: {
             initial: { opacity: 0, y: 16, scale: 0.98 },
             whileInView: { opacity: 1, y: 0, scale: 1 },
-            viewport: { once: true, margin: "-100px" },
+            viewport: { once: true, margin: "-50px" },
             transition: {
                 duration: 0.6,
                 ease: [0.22, 1, 0.36, 1] as any // cubic-bezier custom

@@ -50,14 +50,14 @@ export function Features() {
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(250px,auto)]">
 				{/* Hero Feature: Live Macro Tracking */}
-				<div className="md:col-span-2 md:row-span-2 relative group">
-					<GlassCard className="h-full flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-violet-900/20 to-transparent p-0" intensity="high">
-						<div className="absolute inset-0 bg-noise opacity-30 pointer-events-none mix-blend-overlay" />
+				<div className="md:col-span-2 md:row-span-2 relative group mt-8 md:mt-0">
+					<GlassCard className="h-full flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-violet-600/10 via-transparent to-indigo-600/10 p-0 border-white/10" intensity="high">
+						<div className="absolute inset-0 bg-grid-white/[0.02] -z-10" />
 						<div className="absolute top-6 left-6 z-10">
-							<h3 className="text-xl font-bold text-white">Live Macro Tracking</h3>
-							<p className="text-slate-400 text-sm">Real-time visualizations of your daily targets.</p>
+							<h3 className="text-xl font-bold text-white tracking-tight">Live Macro Intelligence</h3>
+							<p className="text-slate-400 text-sm">Real-time visualizations of your bio-targets.</p>
 						</div>
-						<div className="scale-90 md:scale-100 transition-transform duration-500 group-hover:scale-105">
+						<div className="scale-90 md:scale-105 transition-transform duration-700 group-hover:scale-110">
 							<MacroWidget />
 						</div>
 					</GlassCard>
