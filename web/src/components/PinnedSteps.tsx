@@ -142,21 +142,21 @@ function OpacityStep({ index, progress, step }: { index: number, progress: any, 
     // 1 -> 1-2 (normalized to 0.33, 0.66 in total scroll)
     const start = index / 3
     const end = (index + 1) / 3
-    const opacity = useTransform(progress,
-        [start, start + 0.1, end - 0.1, end],
-        [0.3, 1, 1, 0.3]
-    )
+    const center = (start + end) / 2;
 
-    // Scale highlight only
-    const color = useTransform(progress,
-        [start, start + 0.1, end - 0.1, end],
-        ["#94a3b8", "#f8fafc", "#f8fafc", "#94a3b8"]
+    const rotateX = useTransform(progress, [start, center, end], [30, 0, -30])
+    const z = useTransform(progress, [start, center, end], [-100, 0, -100])
+    const opacity = useTransform(progress, [start, center, end], [0, 1, 0])
+    const color = useTransform(
+        progress,
+        [start, center, end],
+        ["rgba(148, 163, 184, 0.4)", "rgba(255, 255, 255, 1)", "rgba(148, 163, 184, 0.4)"]
     )
 
     return (
-        <motion.div style={{ opacity, color }} className="transition-colors duration-300">
-            <h3 className="text-lg lg:text-2xl font-bold mb-1 lg:mb-2">{step.title}</h3>
-            <p className="text-sm lg:text-lg leading-relaxed opacity-80">{step.desc}</p>
+        <motion.div style={{ opacity, color, rotateX, z, transformStyle: "preserve-3d" }} className="transition-colors duration-300">
+            <h3 className="text-lg lg:text-3xl font-bold mb-1 lg:mb-4 tracking-tight">{step.title}</h3>
+            <p className="text-sm lg:text-xl leading-relaxed opacity-80 max-w-md">{step.desc}</p>
         </motion.div>
     )
 }
@@ -173,17 +173,23 @@ function VisualCard({ index, progress, Visual }: { index: number, progress: any,
     const y = useTransform(progress,
         [start, start + 0.1, end - 0.1, end],
         [40, 0, 0, -40]
-    )
-    const scale = useTransform(progress,
-        [start, start + 0.1, end - 0.1, end],
-        [0.9, 1, 1, 0.9]
-    )
+    // Removed 'y' transform as it's not in the new instruction
+    // const y = useTransform(progress,
+    //     [start, start + 0.1, end - 0.1, end],
+    //     [40, 0, 0, -40]
+    // )
+
+    // New transforms from instruction
+    const rotateY = useTransform(progress, [start, center, end], [-15, 0, 15])
+    const rotateX = useTransform(progress, [start, center, end], [10, 0, -10])
+    const scale = useTransform(progress, [start, center, end], [0.8, 1, 0.8])
+    const z = useTransform(progress, [start, center, end], [-200, 0, -200])
 
     // Using z index to stack properly
     return (
         <motion.div
-            style={{ opacity, y, scale }}
-            className="absolute inset-0"
+            style={{ opacity, scale, rotateY, rotateX, z, transformStyle: "preserve-3d" }}
+            className="absolute inset-0 flex items-center justify-center backface-hidden"
         >
             <GlassCard className="h-full w-full p-0 overflow-hidden" intensity="high">
                 <Visual />

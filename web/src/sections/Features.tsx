@@ -1,4 +1,5 @@
 import { SceneSection } from '../components/SceneSection'
+import { motion } from 'framer-motion'
 import { Badge } from '../components/ui/Badge'
 import { FeatureCard } from '../components/ui/FeatureCard'
 import { MacroWidget } from '../components/MacroWidget'

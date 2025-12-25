@@ -1,7 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { GlassCard } from './GlassCard'
 import { cn } from '../../utils/cn'
-import React, { ElementType } from 'react'
+import React, { type ElementType } from 'react'
 
 interface FeatureCardProps {
     title: string
