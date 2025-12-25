@@ -104,7 +104,7 @@ export function PinnedSteps() {
     })
 
     return (
-        <div ref={containerRef} className="relative h-[250vh]">
+        <div ref={containerRef} id="how-it-works" className="relative h-[250vh]">
             <div className="sticky top-0 h-screen flex items-center overflow-hidden">
                 <div className="w-full max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 
