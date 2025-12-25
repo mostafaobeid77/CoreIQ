@@ -1,105 +1,98 @@
 import { motion } from 'framer-motion'
-import { Github, Instagram, Linkedin } from 'lucide-react'
+import { Github, Twitter, Mail, ArrowUp } from 'lucide-react'
 
 
 const socials = [
-	{ icon: Instagram, href: 'https://instagram.com/', label: 'Instagram' },
+	{ icon: Twitter, href: 'https://twitter.com/', label: 'Twitter' },
 	{ icon: Github, href: 'https://github.com/', label: 'GitHub' },
-	{ icon: Linkedin, href: 'https://linkedin.com/', label: 'LinkedIn' },
+	{ icon: Mail, href: 'mailto:hello@coreiq.app', label: 'Email' },
 ]
 
 export function Footer() {
 	return (
-		<footer className="relative bg-[#020202] border-t border-white/5 pt-20 pb-10 overflow-hidden">
-			{/* Ambient background */}
-			<div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent opacity-50" />
+		<footer className="relative bg-slate-950 border-t border-white/5 overflow-hidden">
+			{/* Gradient accent line */}
+			<div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500 to-transparent" />
 
-			<div className="mx-auto max-w-7xl px-6 lg:px-8">
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-16">
-					{/* Brand & Mission */}
-					<div className="space-y-8">
-						<a href="#home" className="inline-block">
-							<span
-								className="text-2xl font-black tracking-tight"
-								style={{
-									background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%)',
-									WebkitBackgroundClip: 'text',
-									WebkitTextFillColor: 'transparent',
-									backgroundClip: 'text',
-								}}
-							>
-								CoreIQ
-							</span>
+			{/* Ambient glow */}
+			<div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-violet-500/10 blur-[150px] pointer-events-none" />
+
+			<div className="relative mx-auto max-w-7xl px-6 lg:px-8 py-16">
+				{/* Main Content */}
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 mb-12">
+					{/* Brand */}
+					<div className="lg:col-span-1">
+						<a href="#home" className="inline-block mb-6">
+							<span className="text-2xl font-black text-white tracking-tight">CoreIQ</span>
 						</a>
-
-						<div className="space-y-6 max-w-lg">
-							<h3 className="text-white text-lg font-semibold">
-								Built for the obsessed.
-							</h3>
-							<p className="text-slate-400 leading-relaxed text-sm">
-								We believe fitness isn't just about moving weight—it's about understanding your body.
-								Most trackers are glorified spreadsheets. CoreIQ is an intelligence layer for your health,
-								designed to help you make decisions, not just log data.
-							</p>
-							<p className="text-slate-400 leading-relaxed text-sm">
-								No ads. No data selling. Just pure, unadulterated progress tracking for those who take their journey seriously.
-							</p>
-						</div>
+						<p className="text-slate-400 text-sm leading-relaxed max-w-sm">
+							The intelligent fitness platform for those who take their transformation seriously. Track smarter, not harder.
+						</p>
 					</div>
 
-					{/* Links & Newsletter */}
-					<div className="flex flex-col gap-8 lg:items-end">
-						<div className="grid grid-cols-2 gap-8 sm:gap-16">
-							<div>
-								<h4 className="text-white font-semibold mb-4 text-sm">Product</h4>
-								<ul className="space-y-3 text-sm text-slate-500">
-									<li><a href="#features" className="hover:text-violet-400 transition-colors">Features</a></li>
-									<li><a href="#download" className="hover:text-violet-400 transition-colors">Download</a></li>
-									<li><a href="#" className="hover:text-violet-400 transition-colors">Changelog</a></li>
-								</ul>
-							</div>
-							<div>
-								<h4 className="text-white font-semibold mb-4 text-sm">Legal</h4>
-								<ul className="space-y-3 text-sm text-slate-500">
-									<li><a href="#" className="hover:text-violet-400 transition-colors">Privacy</a></li>
-									<li><a href="#" className="hover:text-violet-400 transition-colors">Terms</a></li>
-								</ul>
-							</div>
+					{/* Links */}
+					<div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-8">
+						<div>
+							<h4 className="text-white font-bold mb-4 text-sm">Product</h4>
+							<ul className="space-y-3 text-sm text-slate-400">
+								<li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+								<li><a href="#how-it-works" className="hover:text-white transition-colors">How it works</a></li>
+								<li><a href="#download" className="hover:text-white transition-colors">Download</a></li>
+							</ul>
 						</div>
+						<div>
+							<h4 className="text-white font-bold mb-4 text-sm">Company</h4>
+							<ul className="space-y-3 text-sm text-slate-400">
+								<li><a href="#" className="hover:text-white transition-colors">About</a></li>
+								<li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+								<li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+							</ul>
+						</div>
+						<div>
+							<h4 className="text-white font-bold mb-4 text-sm">Legal</h4>
+							<ul className="space-y-3 text-sm text-slate-400">
+								<li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
+								<li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
 
-						{/* Social links */}
-						<div className="flex items-center gap-4 mt-auto">
+				{/* Divider */}
+				<div className="h-px w-full bg-white/5 mb-8" />
+
+				{/* Bottom Bar */}
+				<div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+					<p className="text-slate-500 text-sm">© {new Date().getFullYear()} CoreIQ. All rights reserved.</p>
+
+					<div className="flex items-center gap-6">
+						{/* Social Links */}
+						<div className="flex items-center gap-3">
 							{socials.map(({ icon: Icon, href, label }) => (
 								<motion.a
 									key={label}
 									href={href}
 									target="_blank"
 									rel="noreferrer"
-									whileHover={{ y: -2, backgroundColor: 'rgba(255,255,255,0.1)' }}
-									className="flex h-10 w-10 items-center justify-center rounded-xl transition-colors bg-white/5 border border-white/10 text-slate-400 hover:text-white"
+									whileHover={{ y: -2 }}
+									className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
 									aria-label={label}
 								>
-									<Icon size={18} strokeWidth={1.5} />
+									<Icon size={16} />
 								</motion.a>
 							))}
 						</div>
+
+						{/* Back to top */}
+						<motion.button
+							onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+							whileHover={{ y: -2 }}
+							className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
+						>
+							<ArrowUp size={14} />
+							<span>Top</span>
+						</motion.button>
 					</div>
-				</div>
-
-				{/* Rewind Interaction */}
-				<motion.button
-					onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-					className="w-full py-8 border-t border-white/5 flex flex-col items-center justify-center group hover:bg-white/5 transition-colors cursor-pointer"
-					whileHover={{ scale: 1.01 }}
-				>
-					<span className="text-slate-500 text-sm font-mono tracking-widest uppercase mb-2 group-hover:text-violet-400 transition-colors">Rewind to Start</span>
-					<div className="w-px h-8 bg-gradient-to-t from-transparent via-slate-500 to-transparent group-hover:via-violet-400 transition-colors" />
-				</motion.button>
-
-				{/* Bottom bar */}
-				<div className="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-600">
-					<p>© {new Date().getFullYear()} CoreIQ. All rights reserved.</p>
-
 				</div>
 			</div>
 		</footer>

@@ -1,111 +1,91 @@
 
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
 
 export function MacroWidget() {
-    const [progress, setProgress] = useState(0)
-
-    useEffect(() => {
-        const timer = setTimeout(() => setProgress(1), 500)
-        return () => clearTimeout(timer)
-    }, [])
-
     return (
-        <div className="w-full max-w-sm mx-auto p-4">
-            <div className="relative aspect-square max-h-[300px] mx-auto flex items-center justify-center">
-                {/* Central Calorie Display */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                        className="text-center"
-                    >
-                        <span className="text-4xl font-bold text-white block">2,450</span>
-                        <span className="text-sm text-slate-400 uppercase tracking-wider font-medium">kcal left</span>
-                    </motion.div>
-                </div>
+        <div className="w-full max-w-md mx-auto p-6">
+            {/* Main Ring + Calories */}
+            <div className="relative w-64 h-64 mx-auto mb-8">
+                {/* Outer glow */}
+                <div className="absolute inset-0 bg-violet-500/20 blur-3xl rounded-full" />
 
-                {/* Circular Progress Rings */}
-                <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+                {/* Ring Container */}
+                <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                     {/* Background Ring */}
-                    <circle
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        fill="none"
-                        stroke="rgba(139, 92, 246, 0.1)"
-                        strokeWidth="8"
-                    />
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" />
 
-                    {/* Progress Ring */}
+                    {/* Animated Progress Ring */}
                     <motion.circle
-                        cx="50"
-                        cy="50"
-                        r="45"
+                        cx="50" cy="50" r="42"
                         fill="none"
-                        stroke="url(#gradient)"
-                        strokeWidth="8"
+                        stroke="url(#macroGradient)"
+                        strokeWidth="10"
                         strokeLinecap="round"
                         initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 0.75 }}
-                        transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
-                        style={{ pathLength: progress }}
+                        animate={{ pathLength: 0.72 }}
+                        transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
                     />
 
                     <defs>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <linearGradient id="macroGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="#8b5cf6" />
-                            <stop offset="100%" stopColor="#d946ef" />
+                            <stop offset="50%" stopColor="#d946ef" />
+                            <stop offset="100%" stopColor="#f97316" />
                         </linearGradient>
                     </defs>
                 </svg>
 
-                {/* Floating Macro Pills */}
-                <MacroPill label="Protein" value="180g" color="bg-emerald-500" delay={0.8} angle={-30} />
-                <MacroPill label="Carbs" value="220g" color="bg-blue-500" delay={0.9} angle={90} />
-                <MacroPill label="Fats" value="65g" color="bg-amber-500" delay={1.0} angle={210} />
+                {/* Center Content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="text-center"
+                    >
+                        <div className="text-5xl font-black text-white tracking-tight">2,450</div>
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">kcal remaining</div>
+                    </motion.div>
+                </div>
             </div>
 
-            <div className="mt-8 grid grid-cols-3 gap-4 text-center">
-                <MacroStat label="Protein" value="145/180g" color="text-emerald-400" />
-                <MacroStat label="Carbs" value="110/220g" color="text-blue-400" />
-                <MacroStat label="Fats" value="45/65g" color="text-amber-400" />
+            {/* Macro Bars - Horizontal */}
+            <div className="grid grid-cols-3 gap-3">
+                <MacroBar label="Protein" current={145} target={180} color="from-emerald-500 to-emerald-400" delay={0.6} />
+                <MacroBar label="Carbs" current={110} target={220} color="from-blue-500 to-cyan-400" delay={0.7} />
+                <MacroBar label="Fats" current={45} target={65} color="from-amber-500 to-orange-400" delay={0.8} />
             </div>
+
         </div>
     )
 }
 
-function MacroPill({ label, value, color, delay, angle }: { label: string, value: string, color: string, delay: number, angle: number }) {
-    // Calculate position on the circle border (radius 45% roughly)
-    // We'll just position them absolutely for simplicity in this mock, or use transform
+function MacroBar({ label, current, target, color, delay }: {
+    label: string,
+    current: number,
+    target: number,
+    color: string,
+    delay: number
+}) {
+    const percentage = Math.min((current / target) * 100, 100)
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", delay }}
-            className={`absolute px-3 py-1 rounded-full bg-slate-800/80 backdrop-blur-md border border-slate-700 flex items-center gap-2 text-xs font-semibold shadow-xl z-20`}
-            style={{
-                transform: `rotate(${angle}deg) translate(140px) rotate(-${angle}deg)`, // Translate out from center
-                // Note: The translate value depends on container size. 
-                // Let's use standard CSS positioning for a cleaner look in the simpler version
-                // Actually, let's just create a decorative visual layout
-            }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay }}
+            className="p-3 rounded-xl bg-slate-800/50 border border-white/5 text-center"
         >
-            <div className={`w-2 h-2 rounded-full ${color}`} />
-            <span className="text-slate-200">{label}</span>
-            <span className="text-white">{value}</span>
+            <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">{label}</div>
+            <div className="text-lg font-black text-white">{current}<span className="text-xs text-slate-500 font-medium">/{target}g</span></div>
+            <div className="h-1.5 bg-slate-700/50 rounded-full overflow-hidden mt-2">
+                <motion.div
+                    className={`h-full bg-gradient-to-r ${color} rounded-full`}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${percentage}%` }}
+                    transition={{ duration: 1, ease: "easeOut", delay: delay + 0.2 }}
+                />
+            </div>
         </motion.div>
-    )
-}
-
-
-function MacroStat({ label, value, color }: { label: string, value: string, color: string }) {
-    return (
-        <div>
-            <div className={`text-sm font-bold ${color} mb-1`}>{label}</div>
-            <div className="text-slate-400 text-xs">{value}</div>
-        </div>
     )
 }

@@ -1,36 +1,42 @@
 import { cn } from '../../utils/cn'
+import { designTokens } from '../../config/design'
 
 interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode
     className?: string
     intensity?: 'low' | 'medium' | 'high'
-    hoverEffect?: boolean
 }
 
 export function GlassCard({
     children,
     className,
     intensity = 'medium',
-    hoverEffect = false,
     ...props
 }: GlassCardProps) {
     const intensityStyles = {
-        low: 'bg-white/5 border-white/5 backdrop-blur-sm',
-        medium: 'bg-white/10 border-white/10 backdrop-blur-md',
-        high: 'bg-white/15 border-white/20 backdrop-blur-lg',
+        low: 'bg-white/2 border-white/5 backdrop-blur-md',
+        medium: 'bg-white/5 border-white/10 backdrop-blur-xl',
+        high: 'bg-white/8 border-white/20 backdrop-blur-2xl',
     }
 
     return (
         <div
             className={cn(
-                'rounded-2xl border transition-all duration-300',
+                'relative overflow-hidden rounded-2xl border shadow-2xl transition-all duration-500',
                 intensityStyles[intensity],
-                hoverEffect && 'hover:bg-white/20 hover:scale-[1.02] hover:shadow-xl hover:shadow-violet-500/10',
                 className
             )}
+            style={{
+                boxShadow: designTokens.glass.innerGlow ? `inset 0 0 20px rgba(255, 255, 255, 0.02)` : undefined
+            }}
             {...props}
         >
-            {children}
+            {/* Inner highlight sheen */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+
+            <div className="relative z-10 px-8 py-8">
+                {children}
+            </div>
         </div>
     )
 }

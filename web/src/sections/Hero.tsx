@@ -5,6 +5,7 @@ import { MagneticButton } from '../components/ui/MagneticButton'
 import { PhoneMockup } from '../components/PhoneMockup'
 import { Sparkles, ArrowRight } from 'lucide-react'
 import { useRef } from 'react'
+import { LANDING_CONFIG } from '../config/landing'
 
 export function Hero() {
 	const containerRef = useRef<HTMLDivElement>(null)
@@ -13,91 +14,93 @@ export function Hero() {
 		offset: ["start start", "end end"]
 	})
 
-	const phoneY = useTransform(scrollYProgress, [0, 1], [0, -150])
+	const phoneY = useTransform(scrollYProgress, [0, 1], [0, -100])
 	const phoneRotate = useTransform(scrollYProgress, [0, 0.5, 1], [-5, 0, 10])
 
-	// 3D Perspective shifts
-	const rotateX = useTransform(scrollYProgress, [0, 1], [0, 15])
-	const z = useTransform(scrollYProgress, [0, 1], [0, -200])
-	const opacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 1, 0])
-
 	return (
-		<Section className="relative overflow-visible" noPadding>
+		<Section className="relative overflow-visible min-h-[90vh] flex items-center" noPadding>
 			<motion.div
 				ref={containerRef}
-				className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center preserve-3d pt-20 pb-12 lg:pt-32 lg:pb-20"
-				style={{ rotateX, z, opacity }}
+				className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center pt-32 pb-20"
 			>
 				{/* Content */}
-				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 preserve-3d">
+				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-10">
 					<motion.div
-						initial={{ opacity: 0, z: 100 }}
-						animate={{ opacity: 1, z: 0 }}
-						transition={{ duration: 1 }}
+						initial={{ opacity: 0, scale: 0.9 }}
+						animate={{ opacity: 1, scale: 1 }}
+						transition={{ duration: 0.8 }}
 					>
 						<Badge icon={Sparkles}>THE GENESIS OF THE META-HUMAN</Badge>
 					</motion.div>
 
 					<motion.h1
-						className="text-5xl sm:text-6xl lg:text-8xl font-black tracking-tighter text-balance"
-						initial={{ opacity: 0, rotateX: 45, z: -100 }}
-						animate={{ opacity: 1, rotateX: 0, z: 0 }}
-						transition={{ duration: 1, ease: "easeOut" }}
+						className={LANDING_CONFIG.typography.h1}
+						initial={{ opacity: 0, y: 30 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
 					>
 						Master the machine <br />
-						<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400">
+						<span className={`${LANDING_CONFIG.styles.gradient} animate-gradient`}>
 							that is your body.
 						</span>
 					</motion.h1>
 
 					<motion.p
-						className="text-xl text-slate-400 max-w-xl leading-relaxed text-balance font-medium"
-						initial={{ opacity: 0, scale: 0.9 }}
-						animate={{ opacity: 1, scale: 1 }}
+						className={LANDING_CONFIG.typography.body + " max-w-xl"}
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 1, delay: 0.1 }}
 					>
 						CoreIQ is the neural bridge between your ambition and your biological reality. Stop tracking. Start evolving with predictive intelligence.
 					</motion.p>
 
 					<motion.div
-						className="flex flex-wrap gap-4 justify-center lg:justify-start"
+						className="flex flex-wrap gap-6 justify-center lg:justify-start"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.8, delay: 0.2 }}
 					>
-						<MagneticButton className="group">
-							Download App <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-						</MagneticButton>
-						<MagneticButton variant="ghost">
-							Learn More
-						</MagneticButton>
+						<a href="#download">
+							<MagneticButton variant="primary" className="group !px-10 !py-5">
+								Get Started <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+							</MagneticButton>
+						</a>
+						<a href="#features">
+							<MagneticButton variant="glass" className="!px-10 !py-5">
+								See Features
+							</MagneticButton>
+						</a>
 					</motion.div>
 
 					<motion.div
-						className="flex items-center gap-4 text-sm text-slate-500 pt-4"
+						className="flex items-center gap-6 text-sm text-slate-500 pt-6"
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						transition={{ delay: 0.5 }}
 					>
-						<div className="flex -space-x-2">
+						<div className="flex -space-x-3">
 							{[1, 2, 3, 4].map(i => (
-								<div key={i} className="w-8 h-8 rounded-full bg-slate-800 border border-black flex items-center justify-center text-xs font-bold text-slate-400">
-									U{i}
+								<div key={i} className="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-950 flex items-center justify-center text-xs font-bold text-slate-400 overflow-hidden">
+									<img src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
 								</div>
 							))}
 						</div>
-						<p>Join 1,000+ active users</p>
+						<p className="font-semibold tracking-wide uppercase text-[10px] text-slate-400">Join 1,000+ elite performers</p>
 					</motion.div>
 				</div>
 
 				{/* Product Visual */}
 				<motion.div
-					className="w-full max-w-[320px] mx-auto lg:max-w-none lg:mx-0 flex justify-center relative perspective-container"
+					className="w-full max-w-[400px] mx-auto lg:max-w-none lg:mx-0 flex justify-center relative perspective-container"
 					style={{ y: phoneY, rotate: phoneRotate }}
 				>
-					<div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[300px] w-[300px] bg-violet-600/40 blur-[120px] rounded-full z-[-1] animate-pulse" />
-					<PhoneMockup />
+					<div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[400px] w-[400px] bg-white/5 blur-[120px] rounded-full z-[-1]" />
+					<div className="animate-float">
+						<PhoneMockup />
+					</div>
 				</motion.div>
+
+
 			</motion.div>
 		</Section>
 	)

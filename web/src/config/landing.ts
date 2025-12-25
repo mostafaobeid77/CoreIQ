@@ -1,31 +1,33 @@
-
 export const LANDING_CONFIG = {
     layout: {
-        container: "max-w-6xl mx-auto px-6 lg:px-8",
-        sectionSpacing: "py-24 lg:py-32",
+        container: "max-w-7xl mx-auto px-6 lg:px-12",
+        sectionSpacing: "py-32 lg:py-48", // More breathing room for cinematic feel
         headerHeight: "h-20",
     },
     motion: {
         reduceMotion: false,
-        perspective: "1200px",
+        perspective: "1500px", // Deeper perspective
         fadeUp: {
-            initial: { opacity: 0, y: 40, z: -100, rotateX: 10 },
+            initial: { opacity: 0, y: 60, z: -150, rotateX: 20 },
             whileInView: { opacity: 1, y: 0, z: 0, rotateX: 0 },
-            viewport: { once: false, margin: "-50px" }, // once: false for re-triggering cinematic feel
+            viewport: { once: false, margin: "-10% 0px -10% 0px" },
             transition: {
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1] as any
+                duration: 1.2, // Cinematic duration
+                ease: [0.16, 1, 0.3, 1] as any
             }
         },
-        tilt: {
-            max: 5,
-            perspective: 1000
+        stagger: 0.15,
+    },
+    styles: {
+        glass: {
+            recipe: "backdrop-blur-2xl bg-white/5 border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]",
+            glow: "shadow-[0_0_20px_rgba(255,255,255,0.05)]",
         },
-        stagger: 0.1,
+        gradient: "text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/40",
     },
     typography: {
-        h1: "text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white",
-        h2: "text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white",
-        body: "text-lg text-slate-400 leading-relaxed",
+        h1: "text-6xl sm:text-7xl lg:text-9xl font-black tracking-tighter text-white",
+        h2: "text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white",
+        body: "text-xl text-slate-400 leading-relaxed font-medium",
     }
 }
