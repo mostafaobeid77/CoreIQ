@@ -1,100 +1,88 @@
-
+import { motion, useScroll, type MotionValue, useTransform } from 'framer-motion'
 import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
 import { Badge } from './ui/Badge'
-import { Settings2, Target, TrendingUp, CheckCircle, Activity } from 'lucide-react'
+import { Settings2, BookOpen, Activity, Layout } from 'lucide-react'
 import { GlassCard } from './ui/GlassCard'
-
-
-// Visual Components for the Right Side
-const PlanVisual = () => (
-    <div className="w-full h-full p-6 space-y-4">
-        <div className="flex justify-between items-center mb-6">
-            <h4 className="text-white font-semibold">Your Plan</h4>
-            <span className="text-xs text-violet-400 bg-violet-400/10 px-2 py-1 rounded-full">Active</span>
-        </div>
-        <div className="space-y-3">
-            <div className="h-2 w-1/3 bg-slate-700 rounded-full" />
-            <div className="h-16 bg-white/5 rounded-xl border border-white/5 p-3 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-400"><Target size={18} /></div>
-                <div>
-                    <div className="h-2 w-20 bg-slate-600 rounded-full mb-1.5" />
-                    <div className="h-1.5 w-12 bg-slate-700 rounded-full" />
-                </div>
-            </div>
-            <div className="h-16 bg-white/5 rounded-xl border border-white/5 p-3 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400"><Activity size={18} /></div>
-                <div>
-                    <div className="h-2 w-24 bg-slate-600 rounded-full mb-1.5" />
-                    <div className="h-1.5 w-16 bg-slate-700 rounded-full" />
-                </div>
-            </div>
-        </div>
-    </div>
-)
-
-const TrackVisual = () => (
-    <div className="w-full h-full p-6 space-y-4">
-        <div className="flex justify-between items-center mb-6">
-            <h4 className="text-white font-semibold">Today's Macros</h4>
-        </div>
-        <div className="flex justify-center py-4">
-            <div className="w-32 h-32 rounded-full border-4 border-violet-500/30 border-t-violet-500 relative flex items-center justify-center">
-                <div className="text-center">
-                    <span className="block text-xl font-bold text-white">1,850</span>
-                    <span className="text-[10px] text-slate-400">kcal left</span>
-                </div>
-            </div>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-            {[1, 2, 3].map(i => <div key={i} className="h-12 bg-white/5 rounded-lg border border-white/5" />)}
-        </div>
-    </div>
-)
-
-const AnalyzeVisual = () => (
-    <div className="w-full h-full p-6 flex flex-col justify-end space-y-4">
-        <div className="flex justify-between items-end h-32 gap-3 px-2 pb-4 border-b border-white/5">
-            {[40, 65, 45, 80, 55, 90, 75].map((h, i) => (
-                <div key={i} className="w-full bg-violet-500/20 rounded-t-sm relative group overflow-hidden">
-                    <motion.div
-                        initial={{ height: 0 }}
-                        whileInView={{ height: `${h}%` }}
-                        transition={{ delay: i * 0.1, duration: 0.5 }}
-                        className="absolute bottom-0 w-full bg-violet-500 rounded-t-sm"
-                    />
-                </div>
-            ))}
-        </div>
-        <div className="flex justify-between text-xs text-slate-500 font-mono">
-            <span>Mon</span><span>Sun</span>
-        </div>
-    </div>
-)
 
 const steps = [
     {
-        id: 1,
-        title: "Define Your Goal",
-        desc: "Tell CoreIQ your target. We build the personalized roadmap to get you there, adapting to your lifestyle.",
-        icon: Target,
+        id: 'plan',
+        title: 'Intelligent Planning',
+        desc: 'Our AI analyzes your goal, body type, and schedule to build a dynamic curriculum.',
+        icon: BookOpen,
         Visual: PlanVisual
     },
     {
-        id: 2,
-        title: "Track Effortlessly",
-        desc: "Log meals and workouts in seconds with our smart database. Let AI handle the heavy calculation math.",
-        icon: CheckCircle,
+        id: 'track',
+        title: 'Seamless Tracking',
+        desc: 'Log sets and meals in seconds. CoreIQ learns your habits and auto-fills recurring data.',
+        icon: Activity,
         Visual: TrackVisual
     },
     {
-        id: 3,
-        title: "Analyze & Evolve",
-        desc: "Weekly reports and deep insights adapt your plan based on your actual progress. A true feedback loop.",
-        icon: TrendingUp,
+        id: 'results',
+        title: 'Quantified Results',
+        desc: 'See your evolution with predictive analytics. Know exactly when you will hit your goal.',
+        icon: Layout,
         Visual: AnalyzeVisual
     }
 ]
+
+function PlanVisual() {
+    return (
+        <div className="flex flex-col gap-4 p-8">
+            <div className="h-12 w-3/4 bg-violet-500/10 rounded-lg animate-pulse" />
+            <div className="grid grid-cols-7 gap-2">
+                {[...Array(21)].map((_, i) => (
+                    <div key={i} className={`h-8 rounded ${i < 10 ? 'bg-violet-500/40' : 'bg-slate-800'}`} />
+                ))}
+            </div>
+            <div className="h-24 w-full bg-slate-800/50 rounded-xl" />
+        </div>
+    )
+}
+
+function TrackVisual() {
+    return (
+        <div className="flex flex-col gap-6 p-8">
+            <div className="flex items-center justify-between">
+                <div className="h-6 w-32 bg-slate-800 rounded-full" />
+                <div className="h-8 w-8 rounded-full bg-violet-500/20 flex items-center justify-center">
+                    <div className="h-4 w-4 bg-violet-400 rounded-full" />
+                </div>
+            </div>
+            <div className="space-y-4">
+                {[1, 2, 3].map(i => (
+                    <div key={i} className="h-16 w-full bg-gradient-to-r from-violet-500/5 to-transparent border border-white/5 rounded-xl flex items-center px-4">
+                        <div className="h-8 w-8 rounded bg-slate-800" />
+                        <div className="ml-4 h-4 w-24 bg-slate-700 rounded" />
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+function AnalyzeVisual() {
+    return (
+        <div className="flex flex-col gap-4 p-8">
+            <div className="flex gap-2">
+                {[40, 70, 45, 90, 65].map((h, i) => (
+                    <div key={i} className="flex-1 bg-violet-500/20 rounded-t-lg relative group overflow-hidden">
+                        <motion.div
+                            initial={{ height: 0 }}
+                            animate={{ height: `${h}%` }}
+                            className="absolute bottom-0 inset-x-0 bg-violet-500/40"
+                        />
+                    </div>
+                ))}
+            </div>
+            <div className="h-32 w-full bg-slate-800/30 rounded-2xl flex items-center justify-center border border-white/5">
+                <div className="text-violet-400 font-mono text-2xl">Goal: -4.2kg</div>
+            </div>
+        </div>
+    )
+}
 
 export function PinnedSteps() {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -115,7 +103,7 @@ export function PinnedSteps() {
                             <h2 className="text-3xl lg:text-5xl font-bold text-white leading-tight">From ambition <br /> to <span className="text-violet-400">result.</span></h2>
                         </div>
 
-                        <div className="relative pl-6 lg:pl-8 border-l border-white/10 space-y-8 lg:space-y-12">
+                        <div className="relative pl-6 lg:pl-8 border-l border-white/10 space-y-8 lg:space-y-12 perspective-container">
                             {steps.map((step, index) => {
                                 return (
                                     <OpacityStep key={step.id} index={index} progress={scrollYProgress} step={step} />
@@ -125,7 +113,7 @@ export function PinnedSteps() {
                     </div>
 
                     {/* Right: Visual */}
-                    <div className="h-[300px] lg:h-[450px] w-full relative z-10">
+                    <div className="h-[300px] lg:h-[450px] w-full relative z-10 perspective-container">
                         {steps.map((step, index) => {
                             return <VisualCard key={step.id} index={index} progress={scrollYProgress} Visual={step.Visual} />
                         })}
@@ -137,12 +125,16 @@ export function PinnedSteps() {
     )
 }
 
-function OpacityStep({ index, progress, step }: { index: number, progress: any, step: any }) {
-    // 0 -> 0-1
-    // 1 -> 1-2 (normalized to 0.33, 0.66 in total scroll)
+interface StepProps {
+    index: number
+    progress: MotionValue<number>
+    step: typeof steps[0]
+}
+
+function OpacityStep({ index, progress, step }: StepProps) {
     const start = index / 3
     const end = (index + 1) / 3
-    const center = (start + end) / 2;
+    const center = (start + end) / 2
 
     const rotateX = useTransform(progress, [start, center, end], [30, 0, -30])
     const z = useTransform(progress, [start, center, end], [-100, 0, -100])
@@ -161,31 +153,17 @@ function OpacityStep({ index, progress, step }: { index: number, progress: any, 
     )
 }
 
-function VisualCard({ index, progress, Visual }: { index: number, progress: any, Visual: any }) {
+function VisualCard({ index, progress, Visual }: { index: number, progress: MotionValue<number>, Visual: React.ElementType }) {
     const start = index / 3
     const end = (index + 1) / 3
+    const center = (start + end) / 2
 
-    // Fade in/out logic
-    const opacity = useTransform(progress,
-        [start, start + 0.1, end - 0.1, end],
-        [0, 1, 1, 0]
-    )
-    const y = useTransform(progress,
-        [start, start + 0.1, end - 0.1, end],
-        [40, 0, 0, -40]
-    // Removed 'y' transform as it's not in the new instruction
-    // const y = useTransform(progress,
-    //     [start, start + 0.1, end - 0.1, end],
-    //     [40, 0, 0, -40]
-    // )
-
-    // New transforms from instruction
+    const opacity = useTransform(progress, [start, center, end], [0, 1, 0])
     const rotateY = useTransform(progress, [start, center, end], [-15, 0, 15])
     const rotateX = useTransform(progress, [start, center, end], [10, 0, -10])
     const scale = useTransform(progress, [start, center, end], [0.8, 1, 0.8])
     const z = useTransform(progress, [start, center, end], [-200, 0, -200])
 
-    // Using z index to stack properly
     return (
         <motion.div
             style={{ opacity, scale, rotateY, rotateX, z, transformStyle: "preserve-3d" }}
@@ -193,8 +171,6 @@ function VisualCard({ index, progress, Visual }: { index: number, progress: any,
         >
             <GlassCard className="h-full w-full p-0 overflow-hidden" intensity="high">
                 <Visual />
-                {/* Gloss effect */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none" />
             </GlassCard>
         </motion.div>
     )

@@ -2,19 +2,26 @@ import { SceneSection } from '../components/SceneSection'
 import { Badge } from '../components/ui/Badge'
 import { DownloadBadges } from '../components/DownloadBadges'
 import { Smartphone, Zap } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 export function Download() {
+	const { scrollYProgress } = useScroll()
+	const beamRotate = useTransform(scrollYProgress, [0.8, 1], [-10, 10])
+	const beamOpacity = useTransform(scrollYProgress, [0.8, 1], [0.5, 1])
+
 	return (
-		<div className="relative z-10">
+		<div className="relative z-10 perspective-container">
 			{/* Visual Bridge to Footer */}
 			<div className="absolute bottom-0 inset-x-0 h-64 bg-gradient-to-b from-transparent to-[#020202] pointer-events-none -z-10" />
 
 			<SceneSection id="download" className="pb-0 lg:pb-0">
-				<div className="relative rounded-3xl overflow-hidden bg-gradient-to-b from-violet-900/10 to-transparent border border-white/5 p-12 md:p-24 text-center">
+				<div className="relative rounded-3xl overflow-hidden bg-gradient-to-b from-violet-900/10 to-transparent border border-white/5 p-12 md:p-24 text-center preserve-3d">
 
 					{/* Beam of light */}
-					<div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-[500px] bg-violet-600/20 blur-[120px] rounded-full pointer-events-none -z-10 mix-blend-screen" />
+					<motion.div
+						style={{ rotateZ: beamRotate, opacity: beamOpacity, transformOrigin: "top center" }}
+						className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-[600px] bg-violet-600/30 blur-[150px] rounded-full pointer-events-none -z-10 mix-blend-screen"
+					/>
 
 					<div className="relative z-10 flex flex-col items-center space-y-8 max-w-3xl mx-auto">
 						<Badge icon={Smartphone}>Get Started Today</Badge>

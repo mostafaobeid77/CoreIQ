@@ -1,10 +1,8 @@
+import { motion, useScroll, useTransform } from 'framer-motion'
+import React, { type ReactNode } from 'react'
 
-
-import type { ReactNode } from 'react'
-
-interface AuroraBackgroundProps {
+interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
     children?: ReactNode
-    className?: string
     showRadialGradient?: boolean
 }
 
@@ -12,10 +10,23 @@ export const AuroraBackground = ({
     className,
     children,
     showRadialGradient = true,
+    ...props
 }: AuroraBackgroundProps) => {
+    const { scrollYProgress } = useScroll()
+    const rotateX = useTransform(scrollYProgress, [0, 1], [0, 10])
+    const z = useTransform(scrollYProgress, [0, 1], [0, -100])
+    const opacity = useTransform(scrollYProgress, [0, 1], [0.7, 0.4])
+
     return (
-        <div
+        <motion.div
             className={`fixed inset-0 bg-zinc-950 bg-grid transition-bg -z-50 ${className}`}
+            style={{
+                rotateX,
+                z,
+                opacity,
+                perspective: "1200px",
+                transformStyle: "preserve-3d"
+            }}
         >
             <div className="absolute inset-0 overflow-hidden">
                 <div
@@ -26,18 +37,15 @@ export const AuroraBackground = ({
             [background-size:300%,_200%]
             [background-position:50%_50%,50%_50%]
             filter blur-[10px] invert-0
-            after:content-[""] after:absolute after:inset-0 
-            after:[background-image:var(--dark-gradient),var(--aurora)]
+            after:content-[""] after:absolute after:inset-0 after:[background-image:var(--dark-gradient),var(--aurora)] 
             after:[background-size:200%,_100%] 
             after:animate-aurora after:[background-attachment:fixed] after:mix-blend-difference
             pointer-events-none
-            absolute -inset-[10px] opacity-70 will-change-transform ${showRadialGradient ?
-                            `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]` : ''
-                        }`
-                    }
+            absolute -inset-[10px] opacity-100 will-change-transform
+            ${showRadialGradient ? `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,transparent_70%)]` : ''}`}
                 ></div>
             </div>
             {children}
-        </div>
+        </motion.div>
     )
 }
