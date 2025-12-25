@@ -4,7 +4,7 @@ import { HowItWorks } from '../sections/About'
 import { Download } from '../sections/Download'
 import { Features } from '../sections/Features'
 import { Hero } from '../sections/Hero'
-import { Testimonials } from '../sections/Testimonials'
+
 
 export function HomePage() {
 	return (
@@ -14,7 +14,6 @@ export function HomePage() {
 				<Hero />
 				<Features />
 				<HowItWorks />
-				<Testimonials />
 				<Download />
 			</main>
 			<Footer />

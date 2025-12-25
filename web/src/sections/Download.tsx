@@ -28,7 +28,7 @@ export function Download() {
 					</div>
 
 					<p className="text-slate-500 text-sm mt-8">
-						100% Free • No accounts required • Private
+						Secure • Private • Personalized
 					</p>
 				</div>
 			</div>
