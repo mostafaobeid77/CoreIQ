@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { DownloadBadges } from '../components/DownloadBadges'
-import { ArrowRight } from 'lucide-react'
+
 
 export function Download() {
 	return (
