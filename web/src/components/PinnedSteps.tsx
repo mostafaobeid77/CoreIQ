@@ -106,16 +106,16 @@ export function PinnedSteps() {
     return (
         <div ref={containerRef} className="relative h-[250vh]">
             <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-                <div className="w-full max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div className="w-full max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 
                     {/* Left: Content */}
-                    <div className="space-y-12">
-                        <div className="space-y-4">
+                    <div className="space-y-6 lg:space-y-12 z-20">
+                        <div className="space-y-3 lg:space-y-4">
                             <Badge icon={Settings2}>Workflow</Badge>
-                            <h2 className="text-4xl md:text-5xl font-bold text-white">From ambition <br /> to <span className="text-violet-400">result.</span></h2>
+                            <h2 className="text-3xl lg:text-5xl font-bold text-white leading-tight">From ambition <br /> to <span className="text-violet-400">result.</span></h2>
                         </div>
 
-                        <div className="relative pl-8 border-l border-white/10 space-y-12">
+                        <div className="relative pl-6 lg:pl-8 border-l border-white/10 space-y-8 lg:space-y-12">
                             {steps.map((step, index) => {
                                 return (
                                     <OpacityStep key={step.id} index={index} progress={scrollYProgress} step={step} />
@@ -125,7 +125,7 @@ export function PinnedSteps() {
                     </div>
 
                     {/* Right: Visual */}
-                    <div className="h-[400px] w-full relative">
+                    <div className="h-[300px] lg:h-[450px] w-full relative z-10">
                         {steps.map((step, index) => {
                             return <VisualCard key={step.id} index={index} progress={scrollYProgress} Visual={step.Visual} />
                         })}
@@ -155,8 +155,8 @@ function OpacityStep({ index, progress, step }: { index: number, progress: any, 
 
     return (
         <motion.div style={{ opacity, color }} className="transition-colors duration-300">
-            <h3 className="text-2xl font-bold mb-2">{step.title}</h3>
-            <p className="text-lg leading-relaxed">{step.desc}</p>
+            <h3 className="text-lg lg:text-2xl font-bold mb-1 lg:mb-2">{step.title}</h3>
+            <p className="text-sm lg:text-lg leading-relaxed opacity-80">{step.desc}</p>
         </motion.div>
     )
 }

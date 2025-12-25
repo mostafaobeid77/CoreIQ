@@ -15,7 +15,7 @@ export const AuroraBackground = ({
 }: AuroraBackgroundProps) => {
     return (
         <div
-            className={`fixed inset-0 bg-zinc-950 transition-bg -z-50 ${className}`}
+            className={`fixed inset-0 bg-zinc-950 bg-grid transition-bg -z-50 ${className}`}
         >
             <div className="absolute inset-0 overflow-hidden">
                 <div
