@@ -11,9 +11,9 @@ export function Hero() {
 			{/* Background Ambience */}
 			<div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-violet-600/20 blur-[120px] rounded-full opacity-30 pointer-events-none -z-10" />
 
-			<div className="grid lg:grid-cols-2 gap-16 items-center">
+			<div className="flex flex-col lg:flex-row items-center gap-16 relative z-10">
 				{/* Content */}
-				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 z-10">
+				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 max-w-2xl lg:w-1/2">
 					<Badge icon={Sparkles}>Reimagining Fitness Tracking</Badge>
 
 					<motion.h1
@@ -51,7 +51,7 @@ export function Hero() {
 						</Button>
 					</motion.div>
 
-					{/* Social Proof / Trust tiny */}
+					{/* Social Proof */}
 					<motion.div
 						className="flex items-center gap-4 text-sm text-slate-500 pt-4"
 						initial={{ opacity: 0 }}
@@ -69,25 +69,15 @@ export function Hero() {
 					</motion.div>
 				</div>
 
-				{/* Product Visual */}
+				{/* Mobile Only Product Visual (Static) */}
 				<motion.div
-					className="relative mx-auto lg:mx-0 w-[300px] sm:w-[350px]"
-					initial={{ opacity: 0, scale: 0.8, rotateY: 15 }}
-					animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-					transition={{ duration: 1, ease: "easeOut" }}
+					className="lg:hidden w-full max-w-[300px] mx-auto mt-8 relative"
+					initial={{ opacity: 0, scale: 0.9 }}
+					animate={{ opacity: 1, scale: 1 }}
+					transition={{ delay: 0.3 }}
 				>
-					{/* Glow behind phone */}
 					<div className="absolute inset-0 bg-violet-500/30 blur-[60px] rounded-full z-[-1]" />
-
-					<motion.div
-						animate={{ y: [0, -15, 0] }}
-						transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-						className="relative z-10"
-					>
-						<PhoneMockup />
-					</motion.div>
-
-
+					<PhoneMockup />
 				</motion.div>
 			</div>
 		</Section>
