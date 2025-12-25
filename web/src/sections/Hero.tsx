@@ -3,7 +3,7 @@ import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Section } from '../components/ui/Section'
 import { PhoneMockup } from '../components/PhoneMockup'
-import { Sparkles, ArrowRight, Play } from 'lucide-react'
+import { Sparkles, ArrowRight } from 'lucide-react'
 
 export function Hero() {
 	return (
@@ -44,10 +44,10 @@ export function Hero() {
 						transition={{ duration: 0.8, delay: 0.2 }}
 					>
 						<Button size="lg" className="group">
-							Start Free Trial <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+							Download App <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
 						</Button>
-						<Button variant="secondary" size="lg">
-							View Demo
+						<Button variant="ghost" size="lg">
+							Learn More
 						</Button>
 					</motion.div>
 
@@ -65,7 +65,7 @@ export function Hero() {
 								</div>
 							))}
 						</div>
-						<p>Trusted by 10,000+ early adopters</p>
+						<p>Join 1,000+ active users</p>
 					</motion.div>
 				</div>
 
@@ -87,34 +87,7 @@ export function Hero() {
 						<PhoneMockup />
 					</motion.div>
 
-					{/* Floating Cards (Parallax elements) */}
-					<motion.div
-						className="absolute -left-12 top-20 bg-slate-900/90 backdrop-blur border border-white/10 p-3 rounded-2xl shadow-2xl flex items-center gap-3 z-20"
-						animate={{ y: [0, 20, 0] }}
-						transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-					>
-						<div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-							<Play className="w-5 h-5 fill-current" />
-						</div>
-						<div>
-							<p className="text-xs text-slate-400">Current Streak</p>
-							<p className="text-sm font-bold text-white">12 Days 🔥</p>
-						</div>
-					</motion.div>
 
-					<motion.div
-						className="absolute -right-8 bottom-32 bg-slate-900/90 backdrop-blur border border-white/10 p-3 rounded-2xl shadow-2xl z-20"
-						animate={{ y: [0, -15, 0] }}
-						transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-					>
-						<div className="flex items-center gap-2 mb-1">
-							<div className="w-2 h-2 rounded-full bg-orange-500" />
-							<p className="text-xs font-semibold text-white">Calories</p>
-						</div>
-						<div className="w-32 h-2 bg-slate-800 rounded-full overflow-hidden">
-							<div className="w-[70%] h-full bg-orange-500 rounded-full" />
-						</div>
-					</motion.div>
 				</motion.div>
 			</div>
 		</Section>

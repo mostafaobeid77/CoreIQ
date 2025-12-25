@@ -28,10 +28,10 @@ export function Download() {
 					</div>
 
 					<p className="text-slate-500 text-sm mt-8">
-						Free 14-day trial • No credit card required • Cancel anytime
+						100% Free • No accounts required • Private
 					</p>
 				</div>
 			</div>
-		</Section>
+		</Section >
 	)
 }
