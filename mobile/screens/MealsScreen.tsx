@@ -65,7 +65,7 @@ const MealsScreen = () => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
-  const debouncedSearch = useDebounce(search, 500);
+  const debouncedSearch = useDebounce(search, 400);
 
   const {
     isFoodDetailsModalVisible,
@@ -94,17 +94,28 @@ const MealsScreen = () => {
     setLoading(false);
   };
 
+  // Track last searched query to avoid duplicate API calls
+  const lastSearchedRef = useRef<string>('');
+
   useEffect(() => {
     const performSearch = async () => {
-      if (debouncedSearch.length > 2) {
-        setLoading(true);
-        const foods = await searchMeals(debouncedSearch);
-        setResults(foods);
-        setLoading(false);
-      } else {
+      // Skip if query is too short
+      if (debouncedSearch.length < 3) {
         setResults([]);
         setLoading(false);
+        return;
       }
+
+      // Skip if we already searched this exact query
+      if (debouncedSearch === lastSearchedRef.current) {
+        return;
+      }
+
+      setLoading(true);
+      lastSearchedRef.current = debouncedSearch;
+      const foods = await searchMeals(debouncedSearch);
+      setResults(foods);
+      setLoading(false);
     };
 
     performSearch();
@@ -325,11 +336,11 @@ const MealsScreen = () => {
                 width: 48,
                 height: 48,
                 borderRadius: 14,
-                backgroundColor: theme === 'light' ? '#f5f3ff' : '#2d264a',
+                backgroundColor: theme === 'light' ? '#f5f3ff' : '#1a1a1a',
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginRight: 14,
-                borderColor: theme === 'light' ? '#ddd6fe' : '#3c305c',
+                borderColor: theme === 'light' ? '#ddd6fe' : '#333',
                 borderWidth: 1
               }}>
                 <Ionicons name="pie-chart" size={22} color="#8b5cf6" />

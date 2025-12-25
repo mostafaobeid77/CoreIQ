@@ -9,9 +9,15 @@ exports.getWorkoutEntriesByDate = async (req, res) => {
   try {
     const { date } = req.params;
 
+    // Use date RANGE to avoid timezone issues
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
     const entries = await WorkoutEntry.find({
       userId: req.userId,
-      date: new Date(date)
+      date: { $gte: startOfDay, $lte: endOfDay }
     }).sort({ muscle_group: 1, createdAt: 1 });
 
     // Separate strength and cardio

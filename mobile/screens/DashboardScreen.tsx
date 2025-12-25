@@ -20,6 +20,7 @@ import HeightModal from '../components/dashboard/modals/HeightModal';
 import ActivityModal from '../components/dashboard/modals/ActivityModal';
 import GoalWeightModal from '../components/dashboard/modals/GoalWeightModal';
 import SleepModal from '../components/dashboard/modals/SleepModal';
+import ProgressAnalysisModal from '../components/dashboard/modals/ProgressAnalysisModal';
 import { useStatsByDate } from '../hooks/dashboard/useStatsbyDate';
 import {
   getMostRecentValues,
@@ -71,6 +72,7 @@ const DashboardScreen = () => {
   const [autoOpenWizard, setAutoOpenWizard] = useState(false);
   const [waterInput, setWaterInput] = useState('');
   const [isEditingWater, setIsEditingWater] = useState(false);
+  const [isProgressModalVisible, setIsProgressModalVisible] = useState(false);
   const [mentalHealthOptions, setMentalHealthOptions] = useState([
     { label: 'Motivated', icon: 'rocket', color: '#10b981' },
     { label: 'Neutral', icon: 'happy', color: '#6b7280' },
@@ -85,7 +87,7 @@ const DashboardScreen = () => {
   const [weightInput, setWeightInput] = useState('');
   const [heightInput, setHeightInput] = useState('');
   const [sleepInput, setSleepInput] = useState('');
-  const { currentStepCount, isPedometerAvailable } = useStepCounter();
+  const { currentStepCount, isPedometerAvailable } = useStepCounter(user?.id, user?.createdAt);
   const screenHeight = Dimensions.get('window').height;
   // const sheetAnim = useState(new Animated.Value(screenHeight))[0]; // Removed
 
@@ -277,7 +279,41 @@ const DashboardScreen = () => {
   if (activeTab === 'Home') {
     content = (
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.sectionHeader}>Today's Overview</Text>
+        <Text style={[styles.sectionHeader, { marginHorizontal: 20, marginBottom: 15, marginTop: 10 }]}>Today's Overview</Text>
+
+        {/* Smart Progress Banner */}
+        <TouchableOpacity
+          onPress={() => setIsProgressModalVisible(true)}
+          style={{
+            marginHorizontal: 20,
+            marginBottom: 20,
+            padding: 20,
+            borderRadius: 20,
+            backgroundColor: theme === 'dark' ? '#121212' : '#fff',
+            borderWidth: 1,
+            borderColor: styles.colors.border,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.05,
+            shadowRadius: 10,
+            elevation: 4
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+              <MaterialCommunityIcons name="auto-fix" size={20} color={styles.colors.primary} />
+              <Text style={{ fontSize: 16, fontWeight: '700', color: styles.colors.text }}>Smart Analysis</Text>
+            </View>
+            <Text style={{ fontSize: 13, color: styles.colors.textMuted }}>
+              Get AI insights on your calorie deficit and predicted weight trace.
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={styles.colors.textMuted} />
+        </TouchableOpacity>
+
         <CategoryCards
           stats={{ ...stats, walking: displaySteps }}
           dailyTargets={dailyTargets}
@@ -537,6 +573,21 @@ const DashboardScreen = () => {
         }}
         styles={styles}
         error={errors.sleep}
+      />
+
+      {/* Progress Analysis Modal - Smart Tracker */}
+      <ProgressAnalysisModal
+        visible={isProgressModalVisible}
+        onClose={() => setIsProgressModalVisible(false)}
+        onWeightUpdated={async () => {
+          console.log('[Dashboard] onWeightUpdated called, refreshing data for:', dateKey);
+          // FORCE refresh by resetting the cache then reloading
+          await loadMealsForDate(dateKey, true);
+          console.log('[Dashboard] Meals reloaded');
+          await loadStatsForDate(dateKey, true);
+          console.log('[Dashboard] Stats reloaded, switching to Home tab');
+          setActiveTab('Home');
+        }}
       />
     </View>
   );

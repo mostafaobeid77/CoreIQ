@@ -30,10 +30,11 @@ class MealTemplateService {
         targetProtein?: number,
         targetCarbs?: number,
         targetFats?: number,
-        mealSections?: string[]
+        mealSections?: string[],
+        days: number = 14
     ): Promise<any[]> {
         try {
-            let url = `${API_URLS[0]}/api/meal-templates/generate/${typeId}?targetCalories=${targetCalories}`;
+            let url = `${API_URLS[0]}/api/meal-templates/generate/${typeId}?targetCalories=${targetCalories}&days=${days}`;
 
             if (targetProtein) url += `&targetProtein=${targetProtein}`;
             if (targetCarbs) url += `&targetCarbs=${targetCarbs}`;
@@ -42,8 +43,7 @@ class MealTemplateService {
                 url += `&mealSections=${mealSections.join(',')}`;
             }
 
-            console.log('🚀 [MOBILE] Generating plan with URL:', url);
-            console.log('🎯 [MOBILE] LOW-CARB DEBUG - typeId:', typeId, 'targetCarbs:', targetCarbs, 'targetProtein:', targetProtein, 'targetFats:', targetFats);
+            console.log(`🚀 [MOBILE] Generating ${days}-day plan with URL:`, url);
 
             const response = await fetch(url);
             const data = await response.json();

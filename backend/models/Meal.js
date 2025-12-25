@@ -38,8 +38,8 @@ const MealSchema = new mongoose.Schema({
   },
   unit: {
     type: String,
-    required: [true, 'Unit is required'],
-    enum: ['grams', 'servings']
+    required: [true, 'Unit is required']
+    // Removed enum constraint to allow ml, cups, grams, servings, pieces, etc.
   },
   calories: {
     type: Number,
@@ -78,7 +78,7 @@ const MealSchema = new mongoose.Schema({
   planDay: {
     type: Number,
     min: 1,
-    max: 14,
+    max: 90,
     default: null
   }
 }, {

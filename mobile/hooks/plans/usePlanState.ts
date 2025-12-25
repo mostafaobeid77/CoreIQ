@@ -6,7 +6,8 @@ import { api } from '../../services/api';
 import { usePlanPersistence } from './usePlanPersistence';
 import { getMealSections } from '../../screens/MealsScreen';
 
-const DAYS = Array.from({ length: 14 }, (_, i) => i + 1);
+// Helper to generate day numbers array
+const generateDays = (count: number) => Array.from({ length: count }, (_, i) => i + 1);
 
 export const usePlanState = (goalWeight: string) => {
     const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ export const usePlanState = (goalWeight: string) => {
     const [planStatus, setPlanStatus] = useState<'draft' | 'active' | 'completed'>('draft');
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [currentDay, setCurrentDay] = useState(1);
-    const [planDays, setPlanDays] = useState<any[]>(DAYS.map(day => ({
+    const [planDays, setPlanDays] = useState<any[]>(generateDays(14).map(day => ({
         day,
         meals: mealSections.reduce((acc, section) => ({ ...acc, [section]: [] }), {}),
         workouts: []
@@ -80,6 +81,11 @@ export const usePlanState = (goalWeight: string) => {
                         });
                         setHasChanges(false); // Sync complete
                         console.log('✅ Auto-sync success');
+
+                        // Update allPlans locally so My Plans modal shows the new name
+                        setAllPlans((prev: any[]) => prev.map(p =>
+                            p._id === planId ? { ...p, name: planName } : p
+                        ));
                     } catch (err) {
                         console.warn('❌ Auto-sync failed:', err);
                     }
@@ -97,11 +103,24 @@ export const usePlanState = (goalWeight: string) => {
             setPlanId(fullPlan._id);
             setPlanName(fullPlan.name);
             setPlanStatus(fullPlan.status);
-            setStartDate(fullPlan.startDate ? new Date(fullPlan.startDate) : new Date());
+            const planStartDate = fullPlan.startDate ? new Date(fullPlan.startDate) : new Date();
+            setStartDate(planStartDate);
 
             const currentSections = mealSectionsRef.current;
 
-            const mappedDays = DAYS.map(dayNum => {
+            // Use actual plan duration from backend
+            const planDuration = fullPlan.duration || fullPlan.mealPlan?.length || 14;
+            const dynamicDays = generateDays(planDuration);
+
+            // Auto-navigate to today's day based on plan start date
+            const today = new Date();
+            const diffTime = today.getTime() - planStartDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            // Day 1 is the start date, clamp between 1 and duration
+            const calculatedCurrentDay = Math.max(1, Math.min(diffDays + 1, planDuration));
+            setCurrentDay(calculatedCurrentDay);
+
+            const mappedDays = dynamicDays.map(dayNum => {
                 const mealDay = fullPlan.mealPlan?.find((d: any) => d.day === dayNum);
                 const workoutDay = fullPlan.workoutPlan?.find((d: any) => d.day === dayNum);
 
@@ -173,8 +192,8 @@ export const usePlanState = (goalWeight: string) => {
             if (targetPlan) {
                 await loadFullPlan(targetPlan._id, shouldLoading);
             } else {
-                // Initialize new if nothing found
-                setPlanDays(DAYS.map(day => ({
+                // Initialize new if nothing found (default 14 days)
+                setPlanDays(generateDays(14).map(day => ({
                     day,
                     meals: currentSections.reduce((acc, section) => ({ ...acc, [section]: [] }), {}),
                     workouts: []
@@ -214,6 +233,7 @@ export const usePlanState = (goalWeight: string) => {
 
             const planData = {
                 name: planName,
+                duration: planDays.length, // Send actual plan duration
                 startDate: start.toISOString(),
                 mealPlan,
                 workoutPlan
@@ -275,7 +295,7 @@ export const usePlanState = (goalWeight: string) => {
                             setPlanStatus('active');
                             Alert.alert(
                                 'Plan Started! 🎉',
-                                'Your 14-day plan is now active! Check your Meals and Workouts screens to see your daily plan.',
+                                `Your ${currentPlan?.duration || 14}-day plan is now active! Check your Meals and Workouts screens to see your daily plan.`,
                                 [{ text: 'Got it!' }]
                             );
                             await loadPlan();
@@ -322,7 +342,7 @@ export const usePlanState = (goalWeight: string) => {
         setPlanName(initialName);
         setPlanStatus('draft');
         setStartDate(new Date());
-        setPlanDays(DAYS.map(day => ({
+        setPlanDays(generateDays(14).map(day => ({
             day,
             meals: mealSections.reduce((acc, section) => ({ ...acc, [section]: [] }), {}),
             workouts: []
@@ -596,7 +616,7 @@ export const usePlanState = (goalWeight: string) => {
             }
         }));
         setHasChanges(true);
-        Alert.alert('Success', `"${template.name}" routine applied to your 14-day plan!`);
+        Alert.alert('Success', `"${template.name}" routine applied to your ${currentPlan?.duration || 14}-day plan!`);
     }, []);
 
     const handleUpdateDay = useCallback((day: number, newData: any) => {

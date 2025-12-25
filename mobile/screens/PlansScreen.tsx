@@ -23,11 +23,10 @@ import PlansListModal from '../components/plans/PlansListModal';
 import CopyMealsModal from '../components/plans/CopyMealsModal';
 import WorkoutRoutineModal from '../components/plans/WorkoutRoutineModal';
 import CreatePlanWizard from '../components/plans/CreatePlanWizard';
+import ChainPlanModal from '../components/plans/ChainPlanModal';
 import AiEditModal from '../components/plans/AiEditModal';
 import { aiService } from '../services/aiService';
 import { useMealSearch } from '../hooks/meals/useMealSearch';
-
-const DAYS = Array.from({ length: 14 }, (_, i) => i + 1);
 
 interface PlansScreenProps {
     autoOpenWizard?: boolean;
@@ -89,11 +88,81 @@ export default function PlansScreen({ autoOpenWizard, onWizardReset }: PlansScre
     const [isCopyMealsVisible, setIsCopyMealsVisible] = useState(false);
     const [isWorkoutRoutineVisible, setIsWorkoutRoutineVisible] = useState(false);
     const [isWizardVisible, setIsWizardVisible] = useState(false);
+    const [isChainModalVisible, setIsChainModalVisible] = useState(false); // Chain plan modal
+    const [chainStartDate, setChainStartDate] = useState<Date | null>(null);
+    const [chainLoading, setChainLoading] = useState(false);
 
     const handleOpenCreateModal = useCallback(() => {
+        setChainStartDate(null); // Reset for fresh plan
         setIsPlansListVisible(false);
         setIsWizardVisible(true);
     }, []);
+
+    // Open chain modal when user clicks Chain Plan
+    const handleChainPlan = useCallback(() => {
+        if (currentPlan?.endDate) {
+            setIsChainModalVisible(true);
+        }
+    }, [currentPlan]);
+
+    // Handle "Keep Same Settings" option - auto-create chained plan
+    const handleChainKeepSame = useCallback(async (newName: string) => {
+        if (!currentPlan?.endDate) return;
+
+        setChainLoading(true);
+        try {
+            const nextDay = new Date(currentPlan.endDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+
+            // Use planDays (which has full meal/workout data) instead of currentPlan
+            const mealPlan = planDays.map((d: any, index: number) => {
+                const dayDate = new Date(nextDay.getTime() + index * 24 * 60 * 60 * 1000);
+                return {
+                    day: index + 1,
+                    date: dayDate,
+                    meals: Object.values(d.meals || {}).flat()
+                };
+            });
+
+            const workoutPlan = planDays.map((d: any, index: number) => {
+                const dayDate = new Date(nextDay.getTime() + index * 24 * 60 * 60 * 1000);
+                return {
+                    day: index + 1,
+                    date: dayDate,
+                    workouts: d.workouts || []
+                };
+            });
+
+            const newPlanData = {
+                name: newName,
+                startDate: nextDay.toISOString(),
+                duration: planDays.length || 14,
+                status: 'draft' as const,
+                mealPlan,
+                workoutPlan
+            };
+
+            const res = await planService.createPlan(newPlanData);
+            setIsChainModalVisible(false);
+            await loadPlan();
+            loadFullPlan(res.plan._id);
+        } catch (error) {
+            console.error('Chain plan error:', error);
+        } finally {
+            setChainLoading(false);
+        }
+    }, [currentPlan, planDays, loadPlan, loadFullPlan]);
+
+    // Handle "Customize" option - open wizard with pre-set start date
+    const handleChainCustomize = useCallback(() => {
+        if (currentPlan?.endDate) {
+            const nextDay = new Date(currentPlan.endDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+            setChainStartDate(nextDay);
+            setIsChainModalVisible(false);
+            setIsWizardVisible(true);
+        }
+    }, [currentPlan]);
 
     const handleWizardSuccess = useCallback(async (newPlanId: string) => {
         setIsWizardVisible(false);
@@ -252,6 +321,79 @@ export default function PlansScreen({ autoOpenWizard, onWizardReset }: PlansScre
         setIsFoodDetailsVisible(true);
     }, [searchMeals]);
 
+    // Handle "Repeat Plan" - clone an old plan starting today
+    const handleRepeatPlan = useCallback(async (targetPlanId: string) => {
+        setChainLoading(true);
+        try {
+            console.log('[PLANS] Repeating plan:', targetPlanId);
+            // 1. Fetch full plan data
+            const sourcePlan = await planService.getPlan(targetPlanId);
+            if (!sourcePlan) throw new Error("Plan not found");
+
+            // 2. Prepare new dates starting Today
+            const startDate = new Date();
+            const duration = sourcePlan.duration || 14;
+
+            // 3. Clone Meals (strip _id)
+            const mealPlan = (sourcePlan.mealPlan || []).map((day: any, index: number) => {
+                const dayDate = new Date(startDate);
+                dayDate.setDate(startDate.getDate() + index);
+
+                const meals = (day.meals || []).map((m: any) => {
+                    const { _id, ...rest } = m;
+                    return rest;
+                });
+
+                return {
+                    day: index + 1,
+                    date: dayDate.toISOString(),
+                    meals: meals
+                };
+            });
+
+            // 4. Clone Workouts (strip _id)
+            const workoutPlan = (sourcePlan.workoutPlan || []).map((day: any, index: number) => {
+                const dayDate = new Date(startDate);
+                dayDate.setDate(startDate.getDate() + index);
+
+                const workouts = (day.workouts || []).map((w: any) => {
+                    const { _id, ...rest } = w;
+                    return rest;
+                });
+
+                return {
+                    day: index + 1,
+                    date: dayDate.toISOString(),
+                    workouts: workouts
+                };
+            });
+
+            // 5. Create New Plan
+            const newPlanData = {
+                name: `${sourcePlan.name} (Repeat)`,
+                startDate: startDate.toISOString(),
+                duration: duration,
+                status: 'draft' as const,
+                mealPlan,
+                workoutPlan,
+                metadata: sourcePlan.metadata
+            };
+
+            const res = await planService.createPlan(newPlanData);
+
+            // 6. Reload & Open
+            setIsPlansListVisible(false);
+            await loadPlan();
+            loadFullPlan(res.plan._id);
+
+        } catch (error) {
+            console.error('Repeat plan error:', error);
+            alert('Failed to repeat plan');
+        } finally {
+            setChainLoading(false);
+        }
+    }, [loadPlan, loadFullPlan]);
+
     if (loading && planDays.length === 0) {
         return (
             <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -275,6 +417,7 @@ export default function PlansScreen({ autoOpenWizard, onWizardReset }: PlansScre
                     onOpenPlansList={() => setIsPlansListVisible(true)}
                     onDelete={() => handleDeletePlan()}
                     onChooseWorkoutRoutine={() => setIsWorkoutRoutineVisible(true)}
+                    onChainPlan={handleChainPlan}
                     isSaving={saving}
                     isGenerating={generating}
                     status={planStatus}
@@ -284,7 +427,7 @@ export default function PlansScreen({ autoOpenWizard, onWizardReset }: PlansScre
                 />
 
                 <PlanTimeline
-                    days={DAYS}
+                    days={Array.from({ length: planDays.length || currentPlan?.duration || 14 }, (_, i) => i + 1)}
                     currentDay={currentDay}
                     onSelectDay={setCurrentDay}
                     planDays={planDays}
@@ -349,21 +492,35 @@ export default function PlansScreen({ autoOpenWizard, onWizardReset }: PlansScre
                 onClose={() => setIsPlansListVisible(false)}
                 plans={allPlans}
                 currentPlanId={planId || ''}
+                currentDay={currentDay}
                 onSelectPlan={(id) => {
                     loadFullPlan(id);
                     setIsPlansListVisible(false);
                 }}
                 onDeletePlan={handleDeletePlan}
+                onRepeatPlan={handleRepeatPlan}
                 onCreateNew={handleOpenCreateModal}
+                isLoading={chainLoading}
             />
 
             <CreatePlanWizard
                 visible={isWizardVisible}
-                onClose={() => setIsWizardVisible(false)}
+                onClose={() => { setIsWizardVisible(false); setChainStartDate(null); }}
                 onSuccess={handleWizardSuccess}
                 userGoal={stats.goalWeight}
                 userGoalWeight={stats.goalWeight}
                 userTargets={calculateDailyTargets(stats)}
+                initialStartDate={chainStartDate}
+            />
+
+            <ChainPlanModal
+                visible={isChainModalVisible}
+                onClose={() => setIsChainModalVisible(false)}
+                onKeepSame={handleChainKeepSame}
+                onCustomize={handleChainCustomize}
+                currentPlanEndDate={currentPlan?.endDate ? new Date(currentPlan.endDate) : new Date()}
+                currentPlanName={planName}
+                isLoading={chainLoading}
             />
 
             <AiEditModal

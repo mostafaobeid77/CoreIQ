@@ -63,7 +63,7 @@ export default function WorkoutRoutineModal({
 
         Alert.alert(
             'Apply Routine',
-            `Apply "${selectedTemplate.name}" to your 14-day plan? This will replace all current workouts.`,
+            `Apply "${selectedTemplate.name}" to your plan? This will replace all current workouts.`,
             [
                 { text: 'Cancel', style: 'cancel' },
                 {

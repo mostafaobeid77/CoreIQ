@@ -100,7 +100,7 @@ const DailyMealPlanSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 1,
-    max: 14
+    max: 90
   },
   date: {
     type: Date,
@@ -115,7 +115,7 @@ const DailyWorkoutPlanSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 1,
-    max: 14
+    max: 90
   },
   date: {
     type: Date,
@@ -134,8 +134,14 @@ const PlanSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    default: 'My 14-Day Plan',
+    default: 'My Plan',
     maxlength: [100, 'Plan name must be less than 100 characters']
+  },
+  duration: {
+    type: Number,
+    required: true,
+    default: 14,
+    enum: [14, 30, 60, 90]
   },
   startDate: {
     type: Date,
@@ -158,22 +164,13 @@ const PlanSchema = new mongoose.Schema({
     default: 'user'
   },
   mealPlan: {
-    type: [DailyMealPlanSchema],
-    validate: {
-      validator: function (v) {
-        return v.length === 14;
-      },
-      message: 'Meal plan must contain exactly 14 days'
-    }
+    type: [DailyMealPlanSchema]
+    // Removed validator - createPlan controller validates length at creation time
+    // This validator fails during findOneAndUpdate because 'this' context isn't available
   },
   workoutPlan: {
-    type: [DailyWorkoutPlanSchema],
-    validate: {
-      validator: function (v) {
-        return v.length === 14;
-      },
-      message: 'Workout plan must contain exactly 14 days'
-    }
+    type: [DailyWorkoutPlanSchema]
+    // Removed validator - createPlan controller validates length at creation time
   },
   metadata: {
     goal: {
@@ -234,7 +231,7 @@ const PlanSchema = new mongoose.Schema({
       type: Number,
       default: 0,
       min: 0,
-      max: 14
+      max: 90
     }
   }
 }, {
@@ -245,7 +242,8 @@ const PlanSchema = new mongoose.Schema({
 PlanSchema.pre('validate', function (next) {
   if (this.startDate && !this.endDate) {
     const endDate = new Date(this.startDate);
-    endDate.setDate(endDate.getDate() + 13); // 14 days total (day 1 to day 14)
+    // Use plan duration (minus 1 because day 1 is start date)
+    endDate.setDate(endDate.getDate() + (this.duration || 14) - 1);
     this.endDate = endDate;
   }
 

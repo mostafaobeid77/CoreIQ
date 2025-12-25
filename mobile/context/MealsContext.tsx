@@ -261,12 +261,8 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     let totalCarbs = 0;
     let totalFats = 0;
 
-    console.log('🔍 Calculating total nutrients for date:', date);
-    console.log('🍽️ Meals data:', meals);
-
     Object.values(meals).forEach(mealItems => {
       mealItems.forEach(item => {
-        console.log('📝 Checking item:', { name: item.name, isCompleted: item.isCompleted, calories: item.calories });
         if (item.isCompleted) {
           totalCalories += item.calories;
           totalProtein += item.protein;
@@ -283,7 +279,6 @@ export const MealsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       totalFats: Math.round(totalFats * 10) / 10,
     };
 
-    console.log('📊 Total nutrients calculated:', result);
     return result;
   }, [getMealsForDate]);
 

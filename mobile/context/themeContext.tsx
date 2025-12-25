@@ -19,13 +19,13 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       if (stored === 'light' || stored === 'dark') {
         setTheme(stored);
       }
-    } catch (_e) {}
+    } catch (_e) { }
   }, []);
 
   useEffect(() => {
     try {
       (global as any)?.localStorage?.setItem?.('app_theme', theme);
-    } catch (_e) {}
+    } catch (_e) { }
   }, [theme]);
 
   const toggleTheme = () => {
@@ -43,10 +43,36 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+export const themeColors = {
+  light: {
+    background: '#f9fafb',
+    card: '#ffffff',
+    text: '#111827',
+    textSecondary: '#6b7280',
+    primary: '#8b5cf6',
+    border: '#e5e7eb',
+    success: '#10b981',
+    error: '#ef4444',
+  },
+  dark: {
+    background: '#111827',
+    card: '#1f2937',
+    text: '#f9fafb',
+    textSecondary: '#9ca3af',
+    primary: '#a78bfa',
+    border: '#374151',
+    success: '#34d399',
+    error: '#f87171',
+  }
+};
+
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
     throw new Error("useTheme must be used within ThemeProvider");
   }
-  return context;
+  return {
+    ...context,
+    colors: themeColors[context.theme]
+  };
 };

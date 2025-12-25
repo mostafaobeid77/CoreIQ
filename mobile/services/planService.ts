@@ -3,6 +3,7 @@ import { api } from './api';
 export type Plan = {
     _id: string;
     name: string;
+    duration: number; // Plan length in days (14, 30, 60, 90)
     startDate: string;
     endDate: string;
     status: 'draft' | 'active' | 'completed';
@@ -16,6 +17,7 @@ export type Plan = {
     };
     mealPlan?: any[];
     workoutPlan?: any[];
+    metadata?: any;
 };
 
 export const planService = {

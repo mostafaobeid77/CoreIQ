@@ -70,7 +70,7 @@ export default function CopyMealsModal({
 
                     {/* Days List */}
                     <ScrollView style={styles.daysList} showsVerticalScrollIndicator={false}>
-                        {Array.from({ length: 14 }, (_, i) => i + 1).map(day => {
+                        {Array.from({ length: planDays.length }, (_, i) => i + 1).map(day => {
                             const meals = planDays[day - 1]?.meals || {};
                             const mealCount = Object.values(meals).flat().length;
                             const isCurrentDay = day === currentDay;

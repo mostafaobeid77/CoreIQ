@@ -11,6 +11,7 @@ interface PlanSummary {
     status: 'active' | 'draft' | 'completed';
     startDate: string;
     endDate: string;
+    duration?: number;
     progress?: {
         daysCompleted: number;
     };
@@ -21,9 +22,11 @@ interface PlansListModalProps {
     onClose: () => void;
     plans: PlanSummary[];
     currentPlanId?: string;
+    currentDay?: number; // Currently selected day for the active plan
     onSelectPlan: (planId: string) => void;
     onCreateNew: () => void;
     onDeletePlan: (planId: string) => void;
+    onRepeatPlan?: (planId: string) => void;
     isLoading?: boolean;
 }
 
@@ -32,9 +35,11 @@ export default function PlansListModal({
     onClose,
     plans,
     currentPlanId,
+    currentDay: selectedDay,
     onSelectPlan,
     onCreateNew,
     onDeletePlan,
+    onRepeatPlan,
     isLoading
 }: PlansListModalProps) {
     const { theme } = useTheme();
@@ -98,13 +103,52 @@ export default function PlansListModal({
                         <Text style={[styles.dateText, { color: colors.textSecondary }]}>
                             {new Date(item.startDate).toLocaleDateString()}
                         </Text>
+                        {item.status === 'completed' && (
+                            <TouchableOpacity
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    backgroundColor: '#8b5cf615',
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 5,
+                                    borderRadius: 12,
+                                    marginLeft: 10,
+                                    gap: 4
+                                }}
+                                onPress={(e) => {
+                                    e.stopPropagation(); // Prevent card selection
+                                    onRepeatPlan?.(item._id);
+                                }}
+                            >
+                                <Ionicons name="refresh" size={14} color="#8b5cf6" />
+                                <Text style={{ fontSize: 12, color: '#8b5cf6', fontWeight: '600' }}>Repeat</Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
 
-                    {item.progress && (
-                        <Text style={[styles.progressText, { color: colors.textSecondary }]}>
-                            Day {item.progress.daysCompleted + 1} of 14
-                        </Text>
-                    )}
+                    {(() => {
+                        const duration = item.duration || 14;
+                        let displayDay: number;
+
+                        // If this is the currently selected plan and we have a selectedDay, use it
+                        if (isActive && selectedDay) {
+                            displayDay = selectedDay;
+                        } else {
+                            // Calculate current day based on today's date vs plan start date
+                            const planStart = new Date(item.startDate);
+                            const today = new Date();
+                            const diffTime = today.getTime() - planStart.getTime();
+                            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                            // Day 1 is the start date, clamp between 1 and duration
+                            displayDay = Math.max(1, Math.min(diffDays + 1, duration));
+                        }
+
+                        return (
+                            <Text style={[styles.progressText, { color: colors.textSecondary }]}>
+                                Day {displayDay} of {duration}
+                            </Text>
+                        );
+                    })()}
                 </TouchableOpacity>
             </Swipeable>
         );

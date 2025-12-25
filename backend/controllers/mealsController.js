@@ -6,10 +6,24 @@ exports.getMealsByDate = async (req, res) => {
   try {
     const { date } = req.params;
 
+    // Use date RANGE to avoid timezone issues
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    console.log(`[MEALS] Query for date: ${date}`);
+    console.log(`[MEALS] Range: ${startOfDay.toISOString()} to ${endOfDay.toISOString()}`);
+
     const meals = await Meal.find({
       userId: req.userId,
-      date: new Date(date)
+      date: { $gte: startOfDay, $lte: endOfDay }
     }).sort({ mealType: 1, addedAt: 1 });
+
+    console.log(`[MEALS] Found ${meals.length} meals for ${date}`);
+    if (meals.length > 0) {
+      console.log(`[MEALS] First meal date: ${meals[0].date}`);
+    }
 
     // Group by mealType
     const groupedMeals = {};
@@ -53,7 +67,11 @@ exports.addMeal = async (req, res) => {
       carbs = serving.carbs * quantity;
       fats = serving.fat * quantity;
     } else {
-      const multiplier = quantity / 100;
+      // Fallback: If unit is NOT metric (g, ml, grams), assume it's a serving count (1 unit = 1x base nutrients)
+      // If it IS metric, assume base nutrients are per 100g/ml
+      const isMetric = ['g', 'ml', 'grams', 'gram'].includes(unit.toLowerCase());
+      const multiplier = isMetric ? quantity / 100 : quantity;
+
       calories = (food.nutrients.calories || 0) * multiplier;
       protein = (food.nutrients.protein || 0) * multiplier;
       carbs = (food.nutrients.carbs || 0) * multiplier;
@@ -150,9 +168,15 @@ exports.getTotalNutrients = async (req, res) => {
   try {
     const { date } = req.params;
 
+    // Use date RANGE to avoid timezone issues
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
     const meals = await Meal.find({
       userId: req.userId,
-      date: new Date(date),
+      date: { $gte: startOfDay, $lte: endOfDay },
       isCompleted: true
     });
 
@@ -180,9 +204,15 @@ exports.deleteMealsByDate = async (req, res) => {
   try {
     const { date } = req.params;
 
+    // Use date RANGE to avoid timezone issues
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
     await Meal.deleteMany({
       userId: req.userId,
-      date: new Date(date)
+      date: { $gte: startOfDay, $lte: endOfDay }
     });
 
     res.json({ message: 'All meals for the date deleted successfully' });

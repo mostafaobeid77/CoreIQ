@@ -24,6 +24,7 @@ interface CreatePlanWizardProps {
         carbs: number;
         fats: number;
     };
+    initialStartDate?: Date | null; // For plan chaining - pre-set the start date
 }
 
 export default function CreatePlanWizard({
@@ -32,7 +33,8 @@ export default function CreatePlanWizard({
     onSuccess,
     userGoal = '',
     userGoalWeight,
-    userTargets
+    userTargets,
+    initialStartDate
 }: CreatePlanWizardProps) {
     const { theme } = useTheme();
     const colors = Colors[theme];
@@ -51,6 +53,7 @@ export default function CreatePlanWizard({
     const [selectedMealType, setSelectedMealType] = useState<MealTemplateType | null>(null);
     const [selectedWorkoutTemplate, setSelectedWorkoutTemplate] = useState<any | null>(null);
     const [selectedDays, setSelectedDays] = useState<number>(4);
+    const [selectedDuration, setSelectedDuration] = useState<number>(14);
     const [startDate, setStartDate] = useState(new Date());
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -62,10 +65,12 @@ export default function CreatePlanWizard({
             setSelectedMealType(null);
             setSelectedWorkoutTemplate(null);
             setSelectedDays(4);
-            setStartDate(new Date());
+            setSelectedDuration(14);
+            // Use initialStartDate for chaining, otherwise default to today
+            setStartDate(initialStartDate || new Date());
             loadData();
         }
-    }, [visible]);
+    }, [visible, initialStartDate]);
 
     const loadData = async () => {
         try {
@@ -105,19 +110,21 @@ export default function CreatePlanWizard({
             const templateId = selectedMealType.id.toLowerCase();
             if (templateId.includes('low') && (templateId.includes('carb') || templateId.includes(' carb'))) {
                 // LOW CARB: <100g carbs, high fat, moderate protein
-                targetProtein = userTargets?.protein || Math.round(targetCals * 0.25 / 4); // 25% protein
-                targetCarbs = 80; // Fixed low carbs (~80g/day)
-                targetFats = Math.round((targetCals - (targetProtein * 4) - (targetCarbs * 4)) / 9); // Fill rest with fats
+                // Use user target if available, otherwise calc
+                targetProtein = userTargets?.protein || Math.round(targetCals * 0.30 / 4);
+                targetCarbs = userTargets?.carbs || 80; // Default to 80g if no target
+                targetFats = userTargets?.fats || Math.round((targetCals - (targetProtein * 4) - (targetCarbs * 4)) / 9);
             } else if (templateId.includes('high') && (templateId.includes('protein') || templateId.includes(' protein'))) {
                 // HIGH PROTEIN: High protein, moderate carbs, lower fat
-                targetProtein = Math.round(targetCals * 0.35 / 4); // 35% protein
-                targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.35 / 4); // 35% carbs
-                targetFats = Math.round(targetCals * 0.30 / 9); // 30% fats
+                // PRIORITIZE USER TARGETS if they exist
+                targetProtein = userTargets?.protein || Math.round(targetCals * 0.35 / 4);
+                targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.35 / 4);
+                targetFats = userTargets?.fats || Math.round(targetCals * 0.30 / 9);
             } else {
                 // BALANCED/DEFAULT: Use user targets or balanced macros
-                targetProtein = userTargets?.protein || Math.round(targetCals * 0.30 / 4); // 30% protein
-                targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.40 / 4); // 40% carbs
-                targetFats = userTargets?.fats || Math.round(targetCals * 0.30 / 9); // 30% fats
+                targetProtein = userTargets?.protein || Math.round(targetCals * 0.30 / 4);
+                targetCarbs = userTargets?.carbs || Math.round(targetCals * 0.40 / 4);
+                targetFats = userTargets?.fats || Math.round(targetCals * 0.30 / 9);
             }
 
             const mealSections = getMealSections(userGoalWeight);
@@ -128,14 +135,16 @@ export default function CreatePlanWizard({
                 targetProtein,
                 targetCarbs,
                 targetFats,
-                mealSections
+                mealSections,
+                selectedDuration
             );
 
-            const workoutPlan = workoutTemplatesService.applyTemplateToPlan(selectedWorkoutTemplate);
+            const workoutPlan = workoutTemplatesService.applyTemplateToPlan(selectedWorkoutTemplate, selectedDuration);
 
             const res = await planService.createPlan({
-                name: name || 'My Custom Plan',
+                name: name || `My ${selectedDuration}-Day Plan`,
                 startDate: startDate.toISOString(),
+                duration: selectedDuration,
                 status: 'draft',
                 mealPlan,
                 workoutPlan,
@@ -292,8 +301,51 @@ export default function CreatePlanWizard({
 
     const renderStep4_Schedule = () => (
         <View style={styles.stepContainer}>
-            <Text style={[styles.stepTitle, { color: colors.text }]}>When do we start?</Text>
-            <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>Pick a start date for your 14-day plan.</Text>
+            {initialStartDate && (
+                <View style={{ backgroundColor: '#8b5cf620', padding: 12, borderRadius: 12, marginBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <Ionicons name="link" size={18} color="#8b5cf6" />
+                    <Text style={{ color: '#8b5cf6', fontWeight: '600', flex: 1 }}>
+                        Chaining from current plan • Starts {format(initialStartDate, 'MMM d, yyyy')}
+                    </Text>
+                </View>
+            )}
+            <Text style={[styles.stepTitle, { color: colors.text }]}>Plan Duration</Text>
+            <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>How long should your plan be?</Text>
+
+            <View style={{ flexDirection: 'row', gap: 8, marginBottom: 24 }}>
+                {[14, 30, 60, 90].map(duration => (
+                    <TouchableOpacity
+                        key={duration}
+                        onPress={() => setSelectedDuration(duration)}
+                        style={{
+                            flex: 1,
+                            paddingVertical: 16,
+                            alignItems: 'center',
+                            borderRadius: 12,
+                            backgroundColor: selectedDuration === duration ? '#8b5cf6' : colors.card,
+                            borderWidth: 1,
+                            borderColor: selectedDuration === duration ? '#8b5cf6' : colors.border
+                        }}
+                    >
+                        <Text style={{
+                            fontSize: 18,
+                            fontWeight: '700',
+                            color: selectedDuration === duration ? '#FFF' : colors.text
+                        }}>
+                            {duration}
+                        </Text>
+                        <Text style={{
+                            fontSize: 12,
+                            color: selectedDuration === duration ? '#FFF' : colors.textSecondary
+                        }}>
+                            days
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+
+            <Text style={[styles.stepTitle, { color: colors.text, fontSize: 20, marginTop: 8 }]}>Start Date</Text>
+            <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>When do we begin?</Text>
 
             <View style={styles.scheduleGrid}>
                 {[
@@ -342,23 +394,23 @@ export default function CreatePlanWizard({
                 <View style={styles.summaryRow}>
                     <Text style={[styles.summaryText, { color: colors.textSecondary }]}>Plan Range:</Text>
                     <Text style={[styles.summaryDate, { color: colors.text }]}>
-                        {format(startDate, 'MMM d')} - {format(addDays(startDate, 13), 'MMM d, yyyy')}
+                        {format(startDate, 'MMM d')} - {format(addDays(startDate, selectedDuration - 1), 'MMM d, yyyy')}
                     </Text>
                 </View>
                 <Text style={[styles.infoText, { marginTop: 8 }]}>
-                    Your plan will last exactly 14 days. You can prepare it now and it will be waiting for you!
+                    Your plan will last {selectedDuration} days. You can prepare it now and it will be waiting for you!
                 </Text>
             </View>
 
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
+                minimumDate={new Date()}
                 onConfirm={(date: Date) => {
                     setStartDate(date);
                     setDatePickerVisibility(false);
                 }}
                 onCancel={() => setDatePickerVisibility(false)}
-                minimumDate={new Date()}
             />
         </View>
     );
@@ -398,7 +450,7 @@ export default function CreatePlanWizard({
             <View style={styles.infoBox}>
                 <Ionicons name="rocket-outline" size={20} color="#8b5cf6" />
                 <Text style={styles.infoText}>
-                    Ready for a lifestyle upgrade? Hit create below to build your 14-day blueprint.
+                    Ready for a lifestyle upgrade? Hit create below to build your {selectedDuration}-day blueprint.
                 </Text>
             </View>
         </View>

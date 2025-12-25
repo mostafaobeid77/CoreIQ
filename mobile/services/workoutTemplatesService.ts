@@ -27,11 +27,11 @@ class WorkoutTemplatesService {
         return data.templates;
     }
 
-    applyTemplateToPlan(template: any): any[] {
+    applyTemplateToPlan(template: any, days: number = 14): any[] {
         const planDays: any[] = [];
         const holdExercises = ['plank', 'wall sit', 'dead hang', 'hollow hold'];
 
-        for (let day = 1; day <= 14; day++) {
+        for (let day = 1; day <= days; day++) {
             const dayKey = `day${((day - 1) % 7) + 1}`;
             const workoutName = template?.schedule?.[dayKey];
 

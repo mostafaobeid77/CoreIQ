@@ -95,7 +95,7 @@ const PlanTimeline = React.memo(function PlanTimeline({
                                 styles.dayNumber,
                                 { color: isSelected ? '#fff' : colors.text }
                             ]}>
-                                {day}
+                                {dayNum}
                             </Text>
 
                             {/* Dot indicator for content */}

@@ -99,6 +99,14 @@ mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
   .then(async () => {
     console.log('MongoDB connected');
 
+    // START SERVER ONLY AFTER MONGO IS CONNECTED
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on port ${PORT}`);
+      console.log(`Local: http://localhost:${PORT}`);
+      console.log(`Network: http://0.0.0.0:${PORT}`);
+    });
+
     // MongoDB Keep-Alive to prevent cold starts (Atlas Free Tier)
     setInterval(async () => {
       if (mongoose.connection.readyState === 1) {
@@ -127,9 +135,3 @@ mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
   })
   .catch(err => console.error('MongoDB connection error:', err));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Local: http://localhost:${PORT}`);
-  console.log(`Network: http://0.0.0.0:${PORT}`);
-});

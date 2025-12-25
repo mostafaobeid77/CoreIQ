@@ -39,7 +39,11 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         </Text>
         <Image
           source={avatarSource}
-          style={styles.avatar}
+          style={[
+            styles.avatar,
+            // Apply white tint only if it's the default local asset (logo.png)
+            typeof avatarSource === 'number' && { tintColor: 'white' }
+          ]}
         />
       </View>
     )}

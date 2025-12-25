@@ -44,6 +44,15 @@ const DailyStatsSchema = new mongoose.Schema({
     default: 0,
     min: [0, 'Weight must be positive or zero']
   },
+  weightSource: {
+    type: String,
+    enum: ['manual', 'estimated'],
+    default: 'manual'
+  },
+  estimatedMeta: {
+    type: mongoose.Schema.Types.Mixed, // Stores details like netCalories, calculation range
+    default: null
+  },
   height: {
     type: Number,
     default: 0,

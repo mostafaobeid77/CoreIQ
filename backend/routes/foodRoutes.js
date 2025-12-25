@@ -3,6 +3,7 @@ const router = express.Router();
 const Food = require('../models/Food');
 
 // GET /api/foods - Get all foods with optional filtering
+// Uses multi-tier relevance scoring: exact > prefix > contains > description
 router.get('/', async (req, res) => {
   try {
     const { name, category, limit = 50 } = req.query;
@@ -17,10 +18,8 @@ router.get('/', async (req, res) => {
       createdAt: 1,
       updatedAt: 1
     };
-    let sort = { name: 1 };
 
     if (name) {
-      // Use regex for better matching
       // Escape regex special characters to handle parentheses etc.
       const escapedName = name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
       query = {
@@ -29,9 +28,6 @@ router.get('/', async (req, res) => {
           { description: { $regex: escapedName, $options: 'i' } }
         ]
       };
-
-      // Simple sort by name
-      sort = { name: 1 };
     }
 
     if (category) {
@@ -40,26 +36,63 @@ router.get('/', async (req, res) => {
 
     // Use lean() for speed and maxTimeMS to avoid long-running queries
     const foods = await Food.find(query, projection)
-      .sort(sort)
-      .limit(parseInt(limit))
+      .limit(parseInt(limit) * 2) // Fetch extra to have room after scoring
       .maxTimeMS(2000)
       .lean();
 
-    // If searching by name, reorder results to prioritize exact matches
+    // Multi-tier relevance scoring
     if (name) {
-      foods.sort((a, b) => {
-        const aExact = a.name.toLowerCase() === name.toLowerCase();
-        const bExact = b.name.toLowerCase() === name.toLowerCase();
+      const searchLower = name.toLowerCase().trim();
 
-        if (aExact && !bExact) return -1;
-        if (!aExact && bExact) return 1;
+      // Score each food based on match quality
+      const scoredFoods = foods.map(food => {
+        const nameLower = food.name.toLowerCase();
+        const descLower = (food.description || '').toLowerCase();
 
-        // If both are exact or both are not exact, sort alphabetically
+        let score = 0;
+
+        // Tier 1: Exact match (highest priority)
+        if (nameLower === searchLower) {
+          score = 1000;
+        }
+        // Tier 2: Name starts with search term (prefix match)
+        else if (nameLower.startsWith(searchLower)) {
+          score = 800;
+        }
+        // Tier 3: Word in name starts with search term
+        else if (nameLower.split(/\s+/).some(word => word.startsWith(searchLower))) {
+          score = 600;
+        }
+        // Tier 4: Name contains search term anywhere
+        else if (nameLower.includes(searchLower)) {
+          score = 400;
+        }
+        // Tier 5: Description contains search term
+        else if (descLower.includes(searchLower)) {
+          score = 200;
+        }
+
+        // Bonus: Shorter names are usually more relevant (e.g., "Eggs" vs "Scrambled Eggs with Cheese")
+        // Add small bonus for shorter names to break ties
+        score += Math.max(0, 50 - food.name.length);
+
+        return { ...food, _score: score };
+      });
+
+      // Sort by score (highest first), then alphabetically for ties
+      scoredFoods.sort((a, b) => {
+        if (b._score !== a._score) return b._score - a._score;
         return a.name.localeCompare(b.name);
       });
+
+      // Remove internal score field and limit results
+      const result = scoredFoods.slice(0, parseInt(limit)).map(({ _score, ...food }) => food);
+      return res.json(result);
     }
 
-    res.json(foods);
+    // No search term - just return sorted by name
+    foods.sort((a, b) => a.name.localeCompare(b.name));
+    res.json(foods.slice(0, parseInt(limit)));
   } catch (err) {
     console.error('❌ Error fetching foods:', err.message);
     res.status(500).json({ message: 'Failed to fetch foods', error: err.message });

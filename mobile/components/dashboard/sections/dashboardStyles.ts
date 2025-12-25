@@ -2,16 +2,16 @@ import { StyleSheet } from 'react-native';
 
 export function createDashboardStyles(isLight: boolean) {
   const palette = {
-    bg: isLight ? '#f8fafc' : '#0f0f0f', // Sophisticated off-white surface
-    bg2: isLight ? '#ffffff' : '#1a1a1a', // Pure white cards for elevation
-    text: isLight ? '#0f172a' : '#fff', // Deep charcoal for readability
-    textMuted: isLight ? '#64748b' : '#94a3b8',
-    border: isLight ? 'rgba(0,0,0,0.05)' : '#2d2d2d', // Softer borders
-    border2: isLight ? '#f1f5f9' : '#262626',
-    navBg: isLight ? '#ffffff' : '#181818',
-    inputBg: isLight ? '#f8fafc' : '#222',
-    primary: '#8b5cf6', // Standardized Premium Violet
-    overlay: 'rgba(0, 0, 0, 0.5)'
+    bg: isLight ? '#f8fafc' : '#000000', // PURE BLACK
+    bg2: isLight ? '#ffffff' : '#121212', // Dark Grey for cards
+    text: isLight ? '#0f172a' : '#ffffff',
+    textMuted: isLight ? '#64748b' : '#A0A0A0', // Neutral Grey (No Blue)
+    border: isLight ? 'rgba(0,0,0,0.05)' : '#333333',
+    border2: isLight ? '#f1f5f9' : '#222222',
+    navBg: isLight ? '#ffffff' : '#000000',
+    inputBg: isLight ? '#f8fafc' : '#1A1A1A',
+    primary: '#8b5cf6', // Violet
+    overlay: 'rgba(0, 0, 0, 0.7)'
   };
   const styles = StyleSheet.create({
     container: { flex: 1 },

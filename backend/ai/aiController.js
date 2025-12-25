@@ -120,15 +120,24 @@ exports.addMessage = async (req, res) => {
                     }
                 };
 
-                const systemPrompt = `You are CoreIQ, a premium AI health and fitness coach. 
-Your personality is warm, professional, and deeply empathetic but disciplined. You feel like a high-end personal coach who knows their stuff.
-You MUST address the user as '${user.fullName || 'there'}' naturally in the conversation.
+                const systemPrompt = `You are CoreIQ, a specialized AI fitness and nutrition coach. 
+Your personality is professional, encouraging, and focused.
+You MUST address the user as '${user.fullName || 'there'}' naturally.
 You have access to the user's current profile and targets: ${JSON.stringify(statsContext)}.
+
+STRICT DOMAIN RESTRICTION:
+You are strictly limited to the domain of: Health, Fitness, Nutrition, Muscle Building, Weight Loss, and Personal Development related to these topics.
+- IF asked about sports results (e.g., "Who won the World Cup?", "Score of the game"), politics, entertainment, history, or general trivia:
+  You MUST REFUSE to answer.
+  Reply politely: "I focus exclusively on your fitness and nutrition goals. Let's get back to your training or diet plan."
+- Do NOT engage in casual chit-chat unrelated to health/fitness.
+- Do NOT provide coding, math, or homework help.
+- ONLY answer questions that help the user achieve their physical goals.
 
 CORE PRODUCT CONNECTION:
 - If the user discusses specific goals like gaining weight, losing weight, or body shaping, explain that the BEST results come from creating a structured plan using our app's "Plans" feature.
 - Advise them to let the app generate their multi-day roadmap first.
-- Emphasize that your role as AI Coach is to support them, answer questions, and fine-tune things once that foundational plan is active. This ensures their journey is structured and scientifically backed.
+- Emphasize that your role as AI Coach is to support them, answer questions, and fine-tune things once that foundational plan is active.
 
 CRITICAL GUIDELINES:
 1. LANGUAGE DYNAMISM: Detect the user's language and respond in the SAME language. If they speak Arabic, respond in Arabic. If they speak English, respond in English.
@@ -359,7 +368,7 @@ CRITICAL RULES:
 
 Analyze the request and respond with JSON ONLY (no markdown):
 {
-  "intent": "swap_food" | "add_meal" | "remove_meal" | "add_workout" | "remove_workout" | "update_workout" | "adjust_macros" | "general_edit",
+  "intent": "swap_food" | "swap_workout" | "add_meal" | "remove_meal" | "add_workout" | "remove_workout" | "update_workout" | "adjust_macros" | "general_edit",
   "target": "breakfast" | "lunch" | "dinner" | "snacks" | "workout" | null,
   "action": "detailed description of what to do",
   "foodsToAdd": [{ "name": "food name", "quantity": 100, "mealType": "breakfast" }],
@@ -407,7 +416,11 @@ Analyze the request and respond with JSON ONLY (no markdown):
                 (lowerInstruction.includes('workout') ||
                     currentDay.workouts?.length > 0);
 
-            const intent = lowerInstruction.includes('swap') || lowerInstruction.includes('replace') ? 'swap_food' :
+            const intent = lowerInstruction.includes('swap') || lowerInstruction.includes('replace') ?
+                (lowerInstruction.includes('workout') || lowerInstruction.includes('exercise') ||
+                    lowerInstruction.includes('bench') || lowerInstruction.includes('squat') ||
+                    lowerInstruction.includes('deadlift') || lowerInstruction.includes('press') ?
+                    'swap_workout' : 'swap_food') :
                 isWorkoutUpdate ? 'update_workout' :
                     lowerInstruction.includes('add') && lowerInstruction.includes('workout') ? 'add_workout' :
                         lowerInstruction.includes('add') ? 'add_meal' :
@@ -808,6 +821,108 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             changesMade.push(`Removed ${workoutName}`);
                         }
                     }
+                }
+                break;
+
+            case 'swap_workout':
+                // Swap workout (remove old, add new)
+                console.log('[AI EDIT] Processing swap_workout');
+                if (modifiedDay.workouts && (aiPlan.workoutsToRemove || aiPlan.workoutsToAdd)) {
+                    // Remove old workout
+                    if (aiPlan.workoutsToRemove) {
+                        for (const workoutName of aiPlan.workoutsToRemove) {
+                            const beforeCount = modifiedDay.workouts.length;
+                            modifiedDay.workouts = modifiedDay.workouts.filter(
+                                w => !w.name.toLowerCase().includes(workoutName.toLowerCase())
+                            );
+                            if (modifiedDay.workouts.length < beforeCount) {
+                                changesMade.push(`Removed ${workoutName}`);
+                            }
+                        }
+                    }
+
+                    // Add new workout
+                    if (aiPlan.workoutsToAdd) {
+                        for (const workoutName of aiPlan.workoutsToAdd) {
+                            const lowerName = workoutName.toLowerCase().trim();
+                            // INTELLIGENT MATCHING
+                            // Use scoring to find the BEST match, not just the first one
+                            const findBestWorkoutMatch = (query, workouts) => {
+                                const q = query.toLowerCase().trim();
+                                const qWords = q.split(/\s+/).filter(w => w.length > 2);
+
+                                let bestMatch = null;
+                                let bestScore = 0;
+
+                                for (const w of workouts) {
+                                    const name = w.name.toLowerCase();
+                                    let score = 0;
+
+                                    // 1. Exact Match (Highest Priority)
+                                    if (name === q) score += 100;
+
+                                    // 2. Contains whole phrase
+                                    else if (name.includes(q)) score += 60;
+
+                                    // 3. Reverse contains (User typed more than name)
+                                    else if (q.includes(name)) score += 50;
+
+                                    // 4. Word Overlap (Fuzzy)
+                                    else {
+                                        let matches = 0;
+                                        qWords.forEach(word => {
+                                            if (name.includes(word)) matches++;
+                                        });
+                                        if (matches > 0) score += (matches * 10);
+                                    }
+
+                                    // Penalize "Incline" or "Decline" if user didn't ask for it
+                                    if (!q.includes('incline') && name.includes('incline')) score -= 25;
+                                    if (!q.includes('decline') && name.includes('decline')) score -= 25;
+
+                                    // Penalize length difference (prefer concise matches)
+                                    const lenDiff = Math.abs(name.length - q.length);
+                                    score -= (lenDiff * 0.5);
+
+                                    if (score > bestScore) {
+                                        bestScore = score;
+                                        bestMatch = w;
+                                    }
+                                }
+                                return bestMatch;
+                            };
+
+                            let workoutMatch = findBestWorkoutMatch(workoutName, allWorkouts);
+
+                            if (workoutMatch) {
+                                const isCardio = (workoutMatch.category?.toLowerCase() === 'cardio') ||
+                                    (workoutMatch.type?.toLowerCase() === 'cardio');
+
+                                const workoutEntry = {
+                                    workoutId: workoutMatch._id,
+                                    name: workoutMatch.name,
+                                    workoutType: isCardio ? 'cardio' : 'strength',
+                                    muscle_group: workoutMatch.muscle_group || '',
+                                };
+
+                                if (isCardio) {
+                                    workoutEntry.minutes = 30;
+                                } else {
+                                    workoutEntry.sets = Array(3).fill(null).map(() => ({
+                                        reps: 10,
+                                        weight: 0
+                                    }));
+                                }
+
+                                modifiedDay.workouts.push(workoutEntry);
+                                changesMade.push(`Added ${workoutMatch.name}`);
+                            } else {
+                                changesMade.push(`⚠️ Could not find workout: ${workoutName}`);
+                            }
+                        }
+                    }
+                } else {
+                    console.warn('[AI EDIT] swap_workout: Missing workouts array or swap data');
                 }
                 break;
 

@@ -18,6 +18,7 @@ router.get('/generate/:type', async (req, res) => {
     try {
         const { type } = req.params;
         const targetCalories = parseInt(req.query.targetCalories) || 2000;
+        const days = parseInt(req.query.days) || 14; // Support flexible duration
 
         // Accept user's calculated macro targets (override template defaults)
         const targetProtein = req.query.targetProtein ? parseInt(req.query.targetProtein) : null;
@@ -33,10 +34,10 @@ router.get('/generate/:type', async (req, res) => {
         if (targetFats) options.targetFats = targetFats;
         if (mealSections) options.mealSections = mealSections;
 
-        console.log(`🎯 [ROUTE] LOW-CARB DEBUG - Type: ${type}, Received targetCarbs: ${targetCarbs}, targetProtein: ${targetProtein}, targetFats: ${targetFats}`);
+        console.log(`🎯 [ROUTE] Generating ${days}-day plan - Type: ${type}, Calories: ${targetCalories}`);
 
-        // Default to 14 days
-        const plan = await mealTemplateService.generateTemplate(type, 14, options);
+        // Pass days to generateTemplate
+        const plan = await mealTemplateService.generateTemplate(type, days, options);
         res.json({ success: true, plan });
     } catch (error) {
         console.error('Generate template error:', error);

@@ -7,7 +7,8 @@ A comprehensive health and fitness tracking mobile application built with React 
 - **Daily Health Tracking**: Water intake, sleep, mental health, weight, height, activity level
 - **Meal Planning**: Track meals, calculate nutrition, manage favorites
 - **Workout Tracking**: Strength and cardio workouts with progress tracking
-- **14-Day Plans**: Unified meal and workout plans with AI generation
+- **Flexible Plans**: 14-90 day meal and workout plans with AI generation
+- **Smart Analysis**: Weekly progress reports with calorie verdicts and weight projections
 - **AI Assistant**: Chat-based health and fitness guidance
 - **User Authentication**: Secure registration, login, and password reset
 - **Preferences**: Theme (light/dark), units (metric/imperial), notifications
@@ -52,18 +53,21 @@ CoreIQ/
 │   ├── routes/           # API routes
 │   ├── middleware/       # Auth & validation
 │   └── server.js         # Express server
-├── mobile/                # React Native frontend
+├── mobile/               # React Native frontend
 │   ├── app/              # Expo Router screens
 │   ├── components/       # Reusable components
 │   ├── context/          # React Context providers
 │   ├── services/         # API service layer
 │   └── screens/          # Screen components
+├── web/                  # React web admin panel
+│   ├── src/pages/        # Admin dashboard & login
+│   └── src/components/   # Web components
 └── docs/                 # Documentation files
 ```
 
 ## 🗄️ Database
 
-**12 MongoDB Collections:**
+**15 MongoDB Collections:**
 - `users` - User accounts and authentication
 - `userPreferences` - User settings and preferences
 - `dailyStats` - Daily health metrics tracking
@@ -72,9 +76,13 @@ CoreIQ/
 - `foodFavorites` - User's favorite foods
 - `aiConversations` - AI chat conversations
 - `passwordResetTokens` - Password reset tokens
-- `plans` - 14-day unified meal and workout plans
+- `plans` - Unified meal and workout plans
 - `foods` - Food database/templates
 - `workouts` - Workout database/templates
+- `admins` - Admin user accounts
+- `foodSubmissions` - User food submissions
+- `workoutSubmissions` - User workout submissions
+- `emailVerificationTokens` - Email verification
 
 **For complete schema details, see [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md)**
 
@@ -86,22 +94,25 @@ CoreIQ/
 - `POST /api/auth/forgot-password` - Request password reset
 - `POST /api/auth/verify-code` - Verify reset code
 - `POST /api/auth/reset-password` - Reset password
-- `POST /api/auth/change-password` - Change password
+- `GET /api/auth/me` - Get current user
 
-### Plans (14-Day Plans)
+### Plans
 - `GET /api/plans` - Get all user's plans
 - `GET /api/plans/:id` - Get plan details
 - `POST /api/plans` - Create new plan
 - `PUT /api/plans/:id` - Update plan
 - `DELETE /api/plans/:id` - Delete plan
 - `POST /api/plans/:id/activate` - Activate plan
-- `GET /api/plans/:id/progress` - Get plan progress
 
 ### AI Features
 - `GET /api/ai/conversations` - Get all conversations
 - `POST /api/ai/conversations` - Create conversation
 - `POST /api/ai/:conversationId/generate-plan` - AI generate plan
-- `PUT /api/ai/:conversationId/modify-plan/:planId` - AI modify plan
+
+### Stats & Analysis
+- `GET /api/stats/:date` - Get daily stats
+- `PATCH /api/stats/:date` - Update daily stats
+- `GET /api/stats/progress-report` - Get Smart Analysis weekly report
 
 **For complete API documentation, see [backend/API_DOCUMENTATION.md](./backend/API_DOCUMENTATION.md)**
 
@@ -113,16 +124,24 @@ CoreIQ/
 - All routes configured
 - Authentication system
 - Plan management system
-- AI plan generation
+- AI plan generation (Groq)
 
-### Frontend: ⏳ 85% Complete
+### Frontend: ✅ 100% Complete
+- All screens implemented
 - Service layer created
-- Login/Register integrated
-- Remaining screens need backend sync
-- Contexts need backend integration
-- Plan UI needs implementation
+- Login/Register/Password Reset integrated
+- Dashboard with daily tracking
+- Meals and Workout tracking
+- AI-powered Plans generation
+- Smart Analysis weekly reports
+- Settings with theme and unit preferences
 
-**See [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) for detailed status**
+### Web Admin: ✅ 100% Complete
+- Admin authentication
+- Dashboard with overview
+- Workouts management
+- Meals management
+- User management
 
 ## 🔒 Security
 
@@ -139,6 +158,7 @@ CoreIQ/
 - MongoDB & Mongoose
 - JWT authentication
 - bcrypt for password hashing
+- Groq AI for plan generation
 
 ### Frontend
 - React Native with Expo
@@ -146,6 +166,11 @@ CoreIQ/
 - React Context API
 - TypeScript
 - Ionicons
+
+### Web Admin
+- React with TypeScript
+- React Router
+- Tailwind CSS
 
 ## 📝 Development
 
@@ -157,17 +182,7 @@ PORT=5000
 MONGO_URI=mongodb://localhost:27017/coreiq
 JWT_SECRET=your_secret_key
 JWT_EXPIRY=7d
-```
-
-### Running Tests
-```bash
-# Backend tests (TODO)
-cd backend
-npm test
-
-# Frontend tests (TODO)
-cd mobile
-npm test
+GROQ_API_KEY=your_groq_key
 ```
 
 ## 📖 Learn More
@@ -187,12 +202,8 @@ npm test
 
 ## 📄 License
 
-[Add your license here]
+MIT License
 
 ---
 
 **Need help?** Check the documentation files or refer to [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) for detailed information.
-
-
-
-CoreIQ is an AI-driven fitness and nutrition ecosystem built as a full-stack product suite. The React marketing site delivers a polished brand presence with animated hero elements, responsive navigation that adapts to the underlying section, a refined footer, and download CTAs that highlight the iOS and Android apps. The same web stack hosts a rich admin console that uses React Router to provide multiple views: an overview with visual KPIs, a workouts console where categories and primary muscle groups are pulled live from the backend so administrators can publish new programmes with trustworthy metadata, and a meals console tailored to the canonical food categories stored in the database—drinks, fast foods, fruits, grains and carbs, proteins, salads, and vegetables—while capturing nutrients per 100 grams and optional serving shortcuts for accurate tracking. The admin experience also includes a user-management hub that surfaces recent registrations, supports search, and notifies operators when new athletes join, plus a system tab that summarizes infrastructure health and compliance workspaces. Underpinning the interface is a Node.js and Express API connected to MongoDB; it exposes endpoints for workouts, foods, user accounts, and dedicated admin routes for both authentication and content creation. Mongoose models handle hashed credentials, nutrient schemas, workout metadata, and admin authorizations, while utility scripts manage bulk data ingestion for workouts and ingredient libraries. A React Native mobile client is present in the repo as well, mirroring CoreIQ’s coaching features on handheld devices. Altogether, the project is structured as a coordinated platform where marketing, operational control, and data services integrate to deliver an intelligent coaching experience with rigorous admin oversight and extensible data models.

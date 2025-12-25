@@ -16,7 +16,7 @@ type LoadingState = Record<string, boolean>;
 
 interface StatsContextType {
   statsByDate: { [date: string]: DashboardStats };
-  loadStatsForDate: (dateKey: string) => Promise<void>;
+  loadStatsForDate: (dateKey: string, force?: boolean) => Promise<void>;
   updateStatsForDate: (dateKey: string, updates: Partial<DashboardStats>) => Promise<void>;
   loadingDates: LoadingState;
   resetStats: () => void;
@@ -87,13 +87,18 @@ export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   const loadStatsForDate = useCallback(
-    async (dateKey: string) => {
+    async (dateKey: string, force = false) => {
       if (
         !user ||
-        loadedDatesRef.current[dateKey] ||
+        (!force && loadedDatesRef.current[dateKey]) ||
         loadingDatesRef.current[dateKey]
       ) {
         return;
+      }
+
+      // Clear cache if force reload
+      if (force) {
+        delete loadedDatesRef.current[dateKey];
       }
 
       setLoadingDates((prev) => ({ ...prev, [dateKey]: true }));

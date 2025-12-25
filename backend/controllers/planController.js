@@ -9,7 +9,7 @@ exports.getAllPlans = async (req, res) => {
   try {
     const plans = await Plan.find({ userId: req.userId })
       .sort({ createdAt: -1 })
-      .select('name startDate endDate status createdBy progress createdAt')
+      .select('name startDate endDate duration status createdBy progress createdAt')
       .lean(); // Optimize for read-only
 
     res.json(plans);
@@ -42,22 +42,26 @@ exports.getPlan = async (req, res) => {
 // Create new plan
 exports.createPlan = async (req, res) => {
   try {
-    const { name, startDate, mealPlan, workoutPlan, metadata, createdBy } = req.body;
+    const { name, startDate, mealPlan, workoutPlan, metadata, createdBy, duration = 14 } = req.body;
 
     if (!startDate) {
       return res.status(400).json({ message: 'Start date is required' });
     }
 
+    // Validate duration
+    const validDurations = [14, 30, 60, 90];
+    const planDuration = validDurations.includes(duration) ? duration : 14;
+
     const start = new Date(startDate);
     const end = new Date(start);
-    end.setDate(end.getDate() + 13); // 14 days total
+    end.setDate(end.getDate() + planDuration - 1); // Dynamic duration
 
-    // Validate mealPlan and workoutPlan have 14 days
-    if (mealPlan && mealPlan.length !== 14) {
-      return res.status(400).json({ message: 'Meal plan must contain exactly 14 days' });
+    // Validate mealPlan and workoutPlan match duration
+    if (mealPlan && mealPlan.length !== planDuration) {
+      return res.status(400).json({ message: `Meal plan must contain exactly ${planDuration} days` });
     }
-    if (workoutPlan && workoutPlan.length !== 14) {
-      return res.status(400).json({ message: 'Workout plan must contain exactly 14 days' });
+    if (workoutPlan && workoutPlan.length !== planDuration) {
+      return res.status(400).json({ message: `Workout plan must contain exactly ${planDuration} days` });
     }
 
     // Calculate dates for each day
@@ -83,7 +87,8 @@ exports.createPlan = async (req, res) => {
 
     const plan = new Plan({
       userId: req.userId,
-      name: name || 'My 14-Day Plan',
+      name: name || `My ${planDuration}-Day Plan`,
+      duration: planDuration,
       startDate: start,
       endDate: end,
       mealPlan: processedMealPlan,
@@ -92,6 +97,7 @@ exports.createPlan = async (req, res) => {
       createdBy: createdBy || 'user',
       status: 'draft'
     });
+
 
     await plan.save();
     res.status(201).json({ message: 'Plan created successfully', plan });
@@ -182,9 +188,97 @@ exports.updatePlan = async (req, res) => {
       return res.status(404).json({ message: 'Plan not found' });
     }
 
+    // SYNC ACTIVE PLANS TO MEAL/WORKOUT ENTRIES
+    // If the plan is active, sync changes to Meal and WorkoutEntry collections
+    if (plan.status === 'active' && (updateData.mealPlan || updateData.workoutPlan)) {
+      console.log('[SYNC] Plan is active, syncing changes to entries...');
+
+      try {
+        // If mealPlan was updated, sync meals
+        if (updateData.mealPlan && plan.mealPlan) {
+          for (const day of plan.mealPlan) {
+            // Delete existing meals for this plan+day
+            await Meal.deleteMany({
+              userId: req.userId,
+              planId: plan._id,
+              planDay: day.day
+            });
+
+            // Recreate meals from plan
+            const mealEntries = [];
+            for (const meal of day.meals) {
+              mealEntries.push({
+                userId: req.userId,
+                date: day.date,
+                mealType: meal.mealType,
+                foodId: meal.foodId,
+                name: meal.name,
+                brand: meal.brand || 'Generic',
+                quantity: meal.quantity,
+                unit: meal.unit,
+                calories: meal.calories,
+                protein: meal.protein,
+                carbs: meal.carbs,
+                fats: meal.fats,
+                isCompleted: false,
+                planId: plan._id,
+                planDay: day.day
+              });
+            }
+            if (mealEntries.length > 0) {
+              await Meal.insertMany(mealEntries);
+            }
+          }
+          console.log('[SYNC] Meals synced');
+        }
+
+        // If workoutPlan was updated, sync workouts
+        if (updateData.workoutPlan && plan.workoutPlan) {
+          for (const day of plan.workoutPlan) {
+            // Delete existing workout entries for this plan+day
+            await WorkoutEntry.deleteMany({
+              userId: req.userId,
+              planId: plan._id,
+              planDay: day.day
+            });
+
+            // Recreate workout entries from plan
+            const workoutEntries = [];
+            for (const workout of day.workouts) {
+              if (!workout.workoutId) continue;
+
+              workoutEntries.push({
+                userId: req.userId,
+                date: day.date,
+                workoutId: workout.workoutId,
+                workoutType: workout.workoutType || 'strength',
+                name: workout.name,
+                description: workout.description || '',
+                muscle_group: workout.muscle_group || '',
+                sets: workout.sets || [],
+                minutes: workout.minutes || 0,
+                isCompleted: false,
+                planId: plan._id,
+                planDay: day.day
+              });
+            }
+            if (workoutEntries.length > 0) {
+              await WorkoutEntry.insertMany(workoutEntries);
+            }
+          }
+          console.log('[SYNC] Workouts synced');
+        }
+      } catch (syncError) {
+        console.error('[SYNC] Error syncing plan entries:', syncError.message);
+        // Don't fail the request, just log the error
+      }
+    }
+
     res.json({ message: 'Plan updated successfully', plan });
   } catch (error) {
     console.error('Update plan error:', error.message);
+    console.error('Update plan error stack:', error.stack);
+    console.error('Update plan full error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -242,9 +336,17 @@ exports.activatePlan = async (req, res) => {
     workoutsById.forEach(w => workoutMap.set(w._id.toString(), w));
     workoutsByName.forEach(w => workoutMap.set(w.name, w));
 
-    // Deactivate any other active plan
+    // Deactivate any active plans that OVERLAP with this plan's date range
+    // Plans that don't overlap (e.g., chained plans that start after) can stay active
     await Plan.updateMany(
-      { userId: req.userId, status: 'active' },
+      {
+        userId: req.userId,
+        status: 'active',
+        _id: { $ne: plan._id },
+        // Overlapping = this plan's start <= other's end AND this plan's end >= other's start
+        startDate: { $lte: plan.endDate },
+        endDate: { $gte: plan.startDate }
+      },
       { status: 'draft' }
     );
 
@@ -329,13 +431,26 @@ exports.activatePlan = async (req, res) => {
       console.warn(`[ACTIVATE] Skipped items with missing IDs - Meals: ${skippedMeals}, Workouts: ${skippedWorkouts}`);
     }
 
+    console.log(`[ACTIVATE] Plan ${plan.name} - Creating ${mealEntries.length} meals and ${workoutEntries.length} workouts`);
+    console.log(`[ACTIVATE] Plan dates: ${plan.startDate} to ${plan.endDate}`);
+    if (mealEntries.length > 0) {
+      console.log(`[ACTIVATE] First meal date: ${mealEntries[0].date}, Last meal date: ${mealEntries[mealEntries.length - 1].date}`);
+    }
+
     // 5. Save all entries (faster with insertMany)
-    if (mealEntries.length > 0) await Meal.insertMany(mealEntries);
-    if (workoutEntries.length > 0) await WorkoutEntry.insertMany(workoutEntries);
+    if (mealEntries.length > 0) {
+      const insertedMeals = await Meal.insertMany(mealEntries);
+      console.log(`[ACTIVATE] ✅ Inserted ${insertedMeals.length} meals`);
+    }
+    if (workoutEntries.length > 0) {
+      const insertedWorkouts = await WorkoutEntry.insertMany(workoutEntries);
+      console.log(`[ACTIVATE] ✅ Inserted ${insertedWorkouts.length} workouts`);
+    }
 
     // Update plan status
     plan.status = 'active';
     await plan.save();
+    console.log(`[ACTIVATE] ✅ Plan ${plan._id} activated successfully`);
 
     res.json({
       message: 'Plan activated successfully',
@@ -347,6 +462,8 @@ exports.activatePlan = async (req, res) => {
     });
   } catch (error) {
     console.error('Activate plan error:', error.message);
+    console.error('Activate plan error stack:', error.stack);
+    console.error('Activate plan full error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

@@ -26,16 +26,24 @@ class StatsService {
     return api.get<DailyStats>(`/stats/${date}`);
   }
 
-  async getStatsRange(startDate: string, endDate: string): Promise<DailyStats[]> {
-    return api.get<DailyStats[]>(`/stats?startDate=${startDate}&endDate=${endDate}`);
+  async getStatsRange(startDate: string, endDate: string): Promise<any[]> {
+    return api.get<any[]>(`/stats/range?startDate=${startDate}&endDate=${endDate}`);
   }
 
-  async updateStats(date: string, stats: Partial<DailyStats>): Promise<{ stats: DailyStats; message: string }> {
-    return api.put(`/stats/${date}`, stats);
+  async getAdherenceReport(startDate: string, endDate: string): Promise<any> {
+    return api.get<any>(`/stats/progress-report?startDate=${startDate}&endDate=${endDate}`);
+  }
+
+  async updateStats(date: string, data: Partial<DailyStats>): Promise<{ stats: DailyStats; message: string }> {
+    return api.put(`/stats/${date}`, data);
   }
 
   async patchStats(date: string, stats: Partial<DailyStats>): Promise<{ stats: DailyStats; message: string }> {
     return api.patch(`/stats/${date}`, stats);
+  }
+
+  async applyEstimatedWeight(data: { weight: number; netCalories: number; daysSince: number; date?: string }): Promise<any> {
+    return api.post('/stats/apply-estimated-weight', data);
   }
 }
 

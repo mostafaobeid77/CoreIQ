@@ -60,166 +60,113 @@ function solveDayMeals(dayMeals, smartBuffet, targets) {
         distributeGramsInitial(meal, mealCalTarget);
     });
 
-    // Step 3: Simple 2-Phase Solver
+    // Step 3: Robust Convergence Solver
     const CAL_TOLERANCE = 0.02;
     const PRO_TOLERANCE = 0.05;
+    const MAX_ITERATIONS = 20;
 
     console.log(`🎯 [SOLVER] Target: ${targets.calories}kcal, ${targets.protein}g P, ${targets.carbs}g C, ${targets.fats}g F`);
 
-    // PHASE 1: Fix calories
-    for (let iter = 0; iter < 10; iter++) {
+    for (let mainIter = 0; mainIter < MAX_ITERATIONS; mainIter++) {
         const totals = calculateDayTotals(processedMeals);
-        const calRatio = targets.calories / Math.max(1, totals.calories);
 
-        if (Math.abs(calRatio - 1) < CAL_TOLERANCE) {
-            console.log(`✅ Calories converged: ${totals.calories}kcal`);
+        // Check if we are close enough
+        const calDiffPct = Math.abs(1 - (totals.calories / targets.calories));
+        const proDiffPct = Math.abs(1 - (totals.protein / targets.protein));
+
+        // Stricter checking: Cal < 2% off, Pro < 5% off (or just under max if we are stricter)
+        if (calDiffPct < CAL_TOLERANCE && proDiffPct < PRO_TOLERANCE) {
+            console.log(`✅ Converged at iter ${mainIter}: ${totals.calories}kcal, ${totals.protein}g P`);
             break;
         }
+
+        // 1. CALORIE ADJUSTMENT (Global Scale)
+        // But be careful not to scale UP if protein is already too high
+        const calRatio = targets.calories / Math.max(1, totals.calories);
+
+        // If we need to scale UP (ratio > 1) BUT protein is already too high (> 1.05 target),
+        // we should NOT scale up high-protein items.
+        const proteinIsTooHigh = totals.protein > targets.protein * 1.05;
 
         processedMeals.forEach(meal => {
             meal.items.forEach(item => {
-                item.grams *= calRatio;
+                let scalingFactor = calRatio;
+
+                // If scaling up and protein is high, freeze high-protein items
+                if (calRatio > 1 && proteinIsTooHigh && item.p > 10) {
+                    scalingFactor = 1.0; // Don't increase
+                }
+
+                // Apply scaling
+                item.grams *= scalingFactor;
                 item.grams = Math.max(20, Math.min(item.grams, 500));
             });
         });
-    }
 
-    // PHASE 2: Fix protein (only adjust high-protein foods)
-    for (let iter = 0; iter < 15; iter++) {
-        const totals = calculateDayTotals(processedMeals);
-        const proDiff = targets.protein - totals.protein;
-        const proError = Math.abs(proDiff / targets.protein);
-
-        if (proError < PRO_TOLERANCE) {
-            console.log(`✅ Protein converged: ${totals.protein}g`);
-            break;
-        }
-
-        const allItems = processedMeals.flatMap(m => m.items);
-        const proItems = allItems.filter(i => i.p > 15).sort((a, b) => b.p - a.p).slice(0, 3);
-
-        if (proItems.length === 0) break;
-
-        proItems.forEach(item => {
-            const proPer1g = item.p / 100;
-            const gramChange = (proDiff / proItems.length) / proPer1g;
-            item.grams += gramChange * 0.7;
-            item.grams = Math.max(20, Math.min(item.grams, 500));
-        });
-    }
-
-    // PHASE 3.5: Cap protein if it's way over (reduce high-protein foods)
-    const finalCheck = calculateDayTotals(processedMeals);
-    if (finalCheck.protein > targets.protein * 1.25) { // If protein is >25% over target
-        console.log(`⚠️ Protein too high (${finalCheck.protein}g), capping to target range...`);
-        for (let iter = 0; iter < 10; iter++) {
-            const totals = calculateDayTotals(processedMeals);
-            if (totals.protein <= targets.protein * 1.15) break; // Stop if within 15% of target
-
-            // Reduce the highest protein foods slightly
-            const allItems = processedMeals.flatMap(m => m.items);
-            const highProItems = allItems.filter(i => i.p > 20).sort((a, b) => b.p - a.p).slice(0, 2);
-
-            highProItems.forEach(item => {
-                item.grams *= 0.92; // Reduce by 8%
-                item.grams = Math.max(30, item.grams);
-            });
-        }
-    }
-
-    // PHASE 4: Re-fix calories (protein adjustments threw them off)
-    for (let iter = 0; iter < 5; iter++) {
-        const totals = calculateDayTotals(processedMeals);
-        const calRatio = targets.calories / Math.max(1, totals.calories);
-
-        if (Math.abs(calRatio - 1) < CAL_TOLERANCE) {
-            break;
-        }
-
-        processedMeals.forEach(meal => {
-            meal.items.forEach(item => {
-                item.grams *= calRatio;
-                item.grams = Math.max(20, Math.min(item.grams, 500));
-            });
-        });
-    }
-
-    // PHASE 3: Cap Carbs (Specifically for Low Carb plans)
-    // If carbs are significantly over target, aggressively reduce high-carb items
-    // and slightly boost high-fat items to compensate calories
-    for (let iter = 0; iter < 10; iter++) {
-        const totals = calculateDayTotals(processedMeals);
-        if (totals.carbs <= targets.carbs * 1.15) break; // Accept 15% buffer
-
-        const carbDiffRatio = totals.carbs / targets.carbs; // e.g., 1.5 (50% over)
-
-        // Find high carb items (>10g carbs per 100g)
-        const allItems = processedMeals.flatMap(m => m.items);
-        const highCarbItems = allItems.filter(i => i.c > 10);
-        const fatSources = allItems.filter(i => i.f > 10 && i.c < 5); // Compensate with fat
-
-        if (highCarbItems.length === 0) break;
-
-        // Reduce high carb items
-        highCarbItems.forEach(item => {
-            // Reduce proportional to diff, but max 20% per iteration
-            const reductionFactor = Math.max(0.80, 1 / (carbDiffRatio * 0.9));
-            item.grams *= reductionFactor;
-            item.grams = Math.max(10, item.grams); // Allow cleaner reduction to 10g
-        });
-
-        // Compensate calories with fat sources (if available)
-        // Calculate missing calories after carb reduction
+        // 2. PROTEIN ADJUSTMENT (Targeted)
         const currentTotals = calculateDayTotals(processedMeals);
-        const caloriesMissing = targets.calories - currentTotals.calories;
+        const currentProDiff = targets.protein - currentTotals.protein;
 
-        if (fatSources.length > 0 && caloriesMissing > 50) {
-            const extraCalsPerItem = caloriesMissing / fatSources.length;
+        // If protein is OFF by more than tolerance
+        if (Math.abs(currentProDiff / targets.protein) > PRO_TOLERANCE) {
+            const allItems = processedMeals.flatMap(m => m.items);
 
-            fatSources.forEach(item => {
-                const addGrams = (extraCalsPerItem / item.cal) * 100;
-                item.grams += addGrams;
-                item.grams = Math.min(item.grams, 500); // Respect limit
-            });
+            if (currentProDiff > 0) {
+                // Protein is LOW -> Increase high-protein items
+                const proItems = allItems.filter(i => i.p > 15).sort((a, b) => b.p - a.p).slice(0, 3);
+                proItems.forEach(item => {
+                    item.grams *= 1.15; // Boost by 15%
+                    item.grams = Math.max(20, Math.min(item.grams, 500));
+                });
+            } else {
+                // Protein is HIGH -> Decrease high-protein items
+                const highProItems = allItems.filter(i => i.p > 15).sort((a, b) => b.p - a.p).slice(0, 4);
+                highProItems.forEach(item => {
+                    item.grams *= 0.85; // Reduce by 15%
+                    item.grams = Math.max(20, Math.min(item.grams, 500));
+                });
+            }
         }
     }
 
-    // PHASE 4: Re-fix calories (Final Polish)
-    // Run this AFTER carb reduction to ensure we hit calorie target
-    for (let iter = 0; iter < 5; iter++) {
+    // FINAL SAFEGUARD: Hard cap on limits
+    // If we exited loop and protein is STILL crazy high, force reduce it
+    // and rely on fats/carbs to hold the calories up.
+    for (let iter = 0; iter < 10; iter++) { // Increased iterations
         const totals = calculateDayTotals(processedMeals);
-        const calRatio = targets.calories / Math.max(1, totals.calories);
+        if (totals.protein <= targets.protein * 1.05) break; // Accept 5% overage max
 
-        if (Math.abs(calRatio - 1) < CAL_TOLERANCE) {
-            break;
-        }
-
-        processedMeals.forEach(meal => {
-            meal.items.forEach(item => {
-                item.grams *= calRatio;
-                item.grams = Math.max(20, Math.min(item.grams, 500));
-            });
-        });
-    }
-
-    // PHASE 5: Final Protein Safeguard
-    // If protein is STILL blown up (likely due to Phase 4 scaling), cap it again.
-    // This prioritizes Protein Target over Calorie Target slightly, to avoid massive protein overages.
-    for (let iter = 0; iter < 5; iter++) {
-        const totals = calculateDayTotals(processedMeals);
-        if (totals.protein <= targets.protein * 1.15) break;
-
-        console.log(`⚠️ Final Protein Safeguard: ${totals.protein}g > ${targets.protein}g. Reducing high-protein items.`);
+        console.log(`⚠️ Final Safeguard: ${totals.protein}g > target. Switching calories from Protein to Carbs/Fats.`);
 
         const allItems = processedMeals.flatMap(m => m.items);
-        const highProItems = allItems.filter(i => i.p > 20).sort((a, b) => b.p - a.p).slice(0, 3);
+
+        // 1. Identify items to cut (High Protein) and items to boost (Low Protein)
+        const highProItems = allItems.filter(i => i.p > 12).sort((a, b) => b.p - a.p);
+        const fillerItems = allItems.filter(i => i.p < 8 && i.cal > 0); // Broader definition of fillers
 
         if (highProItems.length === 0) break;
 
+        // 2. Calculate calories to remove from Protein
+        let caloriesRemoved = 0;
         highProItems.forEach(item => {
-            item.grams *= 0.90; // 10% reduction
-            item.grams = Math.max(30, item.grams);
+            const oldGrams = item.grams;
+            item.grams *= 0.90; // Cut by 10%
+            item.grams = Math.max(20, item.grams);
+
+            const gramDiff = oldGrams - item.grams;
+            caloriesRemoved += (gramDiff / 100) * item.cal;
         });
+
+        // 3. Redistribute those calories to Fillers
+        if (fillerItems.length > 0 && caloriesRemoved > 0) {
+            const caloriesPerFiller = caloriesRemoved / fillerItems.length;
+
+            fillerItems.forEach(item => {
+                const gramsToAdd = (caloriesPerFiller / item.cal) * 100;
+                item.grams += gramsToAdd;
+                item.grams = Math.min(item.grams, 600); // Respect limit
+            });
+        }
     }
 
     const finalTotals = calculateDayTotals(processedMeals);

@@ -402,21 +402,17 @@ exports.getMe = async (req, res) => {
 
     // Optimize: Use lean() and select only needed fields
     // Removed 'profilePhoto' to prevent 18s+ load times due to large base64 strings
-    // Removed 'settings' as it's not in the User schema
     const user = await User.findById(req.userId)
-      .select('fullName username email birthDate gender emailVerified updatedAt')
+      .select('fullName username email birthDate gender emailVerified updatedAt createdAt weight height goalWeight activityLevel targetCalories targetProtein targetCarbs targetFats')
       .lean();
 
-    // Check if photo exists (lightweight)
-    const photoCheck = await User.exists({ _id: req.userId, profilePhoto: { $exists: true, $ne: null } });
-    const hasPhoto = !!photoCheck;
+    console.log(`[GetMe] DB Query took ${Date.now() - queryStart}ms`);
 
-    if (hasPhoto && user) {
+    // Always provide photo URL - browser handles 404 gracefully
+    if (user) {
       const timestamp = user.updatedAt ? new Date(user.updatedAt).getTime() : Date.now();
       user.profilePhoto = `/api/users/${user._id}/photo?v=${timestamp}`;
     }
-
-    console.log(`[GetMe] DB Query took ${Date.now() - queryStart}ms`);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

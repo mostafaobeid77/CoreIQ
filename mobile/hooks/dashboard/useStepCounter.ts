@@ -5,7 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STEP_START_TIME_KEY = '@CoreIQ:stepCounterStartTime';
 
-export function useStepCounter() {
+// userId and userCreatedAt are passed to ensure isolation
+export function useStepCounter(userId?: string, userCreatedAt?: string) {
   const [currentStepCount, setCurrentStepCount] = useState(0);
   const [isPedometerAvailable, setIsPedometerAvailable] = useState<boolean | null>(null);
 
@@ -13,53 +14,38 @@ export function useStepCounter() {
     let subscription: { remove: () => void } | null = null;
     let interval: any = null;
 
-    const getStepCounterStartTime = async (): Promise<Date> => {
-      try {
-        const stored = await AsyncStorage.getItem(STEP_START_TIME_KEY);
-        if (stored) {
-          return new Date(stored);
+    const getStartTime = (): Date => {
+      const now = new Date();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // If we have user info, check if account was created today
+      if (userCreatedAt) {
+        const createdDate = new Date(userCreatedAt);
+        const createdDay = new Date(createdDate);
+        createdDay.setHours(0, 0, 0, 0);
+
+        // If created today, start counting from creation time (or shortly after)
+        // This effectively "ignores" steps taken before the account existed today
+        if (createdDay.getTime() === today.getTime()) {
+          return createdDate;
         }
-
-        // First time - store current time as start
-        const now = new Date();
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        // If it's past 4 AM, count from midnight; otherwise from now
-        const startTime = now.getHours() >= 4 ? today : now;
-        await AsyncStorage.setItem(STEP_START_TIME_KEY, startTime.toISOString());
-        return startTime;
-      } catch (error) {
-        console.error('[STEPS] Error getting start time:', error);
-        const fallback = new Date();
-        fallback.setHours(0, 0, 0, 0);
-        return fallback;
       }
-    };
 
-    const resetStartTimeIfNewDay = async () => {
-      try {
-        const stored = await AsyncStorage.getItem(STEP_START_TIME_KEY);
-        if (stored) {
-          const storedDate = new Date(stored);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-
-          // If stored date is from a previous day, reset to today's midnight
-          if (storedDate < today) {
-            await AsyncStorage.setItem(STEP_START_TIME_KEY, today.toISOString());
-          }
-        }
-      } catch (error) {
-        console.error('[STEPS] Error resetting start time:', error);
-      }
+      // Default: count from midnight today
+      return today;
     };
 
     const fetchTodaySteps = async () => {
       try {
-        await resetStartTimeIfNewDay();
-        const start = await getStepCounterStartTime();
+        const start = getStartTime();
         const end = new Date();
+
+        // Safety: ensure start is before end
+        if (start > end) {
+          setCurrentStepCount(0);
+          return;
+        }
 
         const result = await Pedometer.getStepCountAsync(start, end);
         if (result && typeof result.steps === 'number') {
@@ -84,7 +70,7 @@ export function useStepCounter() {
               fetchTodaySteps();
             });
 
-            // More frequent fallback for Android
+            // More frequent fallback for Android/updates
             interval = setInterval(fetchTodaySteps, 5000);
           } else {
             console.warn('[STEPS] Pedometer permission denied');
@@ -102,7 +88,7 @@ export function useStepCounter() {
       if (subscription) subscription.remove();
       if (interval) clearInterval(interval);
     };
-  }, []);
+  }, [userId, userCreatedAt]); // Re-run if user changes
 
   return { currentStepCount, isPedometerAvailable };
 }

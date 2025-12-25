@@ -16,6 +16,7 @@ interface PlanHeaderProps {
     onOpenPlansList: () => void;
     onDelete: () => void;
     onChooseWorkoutRoutine?: () => void;
+    onChainPlan?: () => void; // Chain a new plan after this one ends
     isSaving: boolean;
     isGenerating: boolean;
     status: 'draft' | 'active' | 'completed';
@@ -34,6 +35,7 @@ export default function PlanHeader({
     onOpenPlansList,
     onDelete,
     onChooseWorkoutRoutine,
+    onChainPlan,
     isSaving,
     isGenerating,
     status,
@@ -166,10 +168,21 @@ export default function PlanHeader({
                         <Text style={styles.primaryButtonText}>Start Plan</Text>
                     </TouchableOpacity>
                 ) : (
-                    <View style={[styles.activeBadge, { backgroundColor: '#22c55e20' }]}>
-                        <Ionicons name="checkmark-circle" size={16} color="#22c55e" />
-                        <Text style={[styles.activeText, { color: '#22c55e' }]}>Active</Text>
-                    </View>
+                    <>
+                        <View style={[styles.activeBadge, { backgroundColor: '#22c55e20' }]}>
+                            <Ionicons name="checkmark-circle" size={16} color="#22c55e" />
+                            <Text style={[styles.activeText, { color: '#22c55e' }]}>Active</Text>
+                        </View>
+                        {onChainPlan && plan?.endDate && (
+                            <TouchableOpacity
+                                style={[styles.actionButton, { backgroundColor: '#8b5cf620', borderWidth: 1, borderColor: '#8b5cf650' }]}
+                                onPress={onChainPlan}
+                            >
+                                <Ionicons name="link" size={16} color="#8b5cf6" />
+                                <Text style={[styles.actionText, { color: '#8b5cf6' }]}>Chain Plan</Text>
+                            </TouchableOpacity>
+                        )}
+                    </>
                 )}
             </ScrollView>
         </View >
