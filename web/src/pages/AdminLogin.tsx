@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { motion } from 'framer-motion'
 import { ShieldCheck, Mail, Lock, Loader2, ArrowLeft, Sparkles } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'

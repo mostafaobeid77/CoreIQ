@@ -1,96 +1,90 @@
 import { motion } from 'framer-motion'
 import { DownloadBadges } from '../components/DownloadBadges'
 import { PhoneMockup } from '../components/PhoneMockup'
-import { fadeUp, staggerChildren } from '../lib/motion'
 
 export function Hero() {
 	return (
 		<section
 			id="home"
-			className="relative overflow-hidden bg-slate-950 pb-28 pt-32 text-white md:pb-36 md:pt-36"
+			className="relative overflow-hidden pb-20 pt-36 text-white md:pb-28 md:pt-44"
+			style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #000000 100%)' }}
 		>
-			<div className="absolute inset-0">
-				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(99,102,241,0.25),_transparent_55%)]" />
-				<div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(14,165,233,0.2),_transparent_55%)]" />
-				<div className="absolute inset-0 opacity-40 mix-blend-screen">
-					<div className="bg-grid-mask absolute inset-0" />
-				</div>
-			</div>
+			{/* Animated gradient orb */}
+			<motion.div
+				className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none"
+				style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%)' }}
+				animate={{ scale: [1, 1.15, 1], x: [0, 30, 0] }}
+				transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+			/>
 
-			<div className="relative mx-auto flex max-w-6xl flex-col gap-16 px-6 lg:grid lg:grid-cols-[minmax(0,_1fr)_minmax(0,_420px)] lg:items-center">
+			<div className="relative mx-auto flex max-w-6xl flex-col gap-12 px-6 lg:grid lg:grid-cols-[minmax(0,_1fr)_minmax(0,_380px)] lg:items-center lg:gap-16">
 				<motion.div
-					variants={staggerChildren(0.15)}
-					initial="hidden"
-					whileInView="show"
-					viewport={{ once: true, amount: 0.5 }}
-					className="max-w-2xl space-y-7"
+					initial={{ opacity: 0, y: 30 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.7 }}
+					className="max-w-xl space-y-6"
 				>
-					<motion.span
-						variants={fadeUp}
-						className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-200"
-					>
-						AI Fitness · Nutrition · Recovery
-					</motion.span>
-					<motion.h1
-						variants={fadeUp}
-						className="text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl"
-					>
-						Your AI Fitness &amp; Nutrition Companion for effortless consistency
-					</motion.h1>
-					<motion.p
-						variants={fadeUp}
-						className="max-w-xl text-lg leading-relaxed text-slate-300"
-					>
-						CoreIQ builds personalised training and fuel plans in seconds, adapts to your mood and recovery,
-						and keeps you motivated with smart insights that evolve with every rep and meal.
-					</motion.p>
-					<motion.ul
-						variants={fadeUp}
-						className="grid gap-3 text-sm font-medium text-slate-200 sm:grid-cols-2"
-					>
-						<li className="flex items-center gap-2">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 text-xs font-bold text-white">
-								1
-							</span>
-							Adaptive workouts and macros tuned daily
-						</li>
-						<li className="flex items-center gap-2">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 text-xs font-bold text-white">
-								2
-							</span>
-							Real-time coaching with actionable feedback
-						</li>
-						<li className="flex items-center gap-2">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 text-xs font-bold text-white">
-								3
-							</span>
-							Track mood, sleep, hydration &amp; recovery
-						</li>
-						<li className="flex items-center gap-2">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 text-xs font-bold text-white">
-								4
-							</span>
-							Securely syncs with wearables you already use
-						</li>
-					</motion.ul>
+					{/* Badge */}
 					<motion.div
-						variants={fadeUp}
-						className="flex flex-col gap-4 sm:flex-row sm:items-center"
+						initial={{ opacity: 0, scale: 0.9 }}
+						animate={{ opacity: 1, scale: 1 }}
+						transition={{ delay: 0.2 }}
+						className="inline-flex items-center gap-2 rounded-full px-4 py-2"
+						style={{
+							background: 'rgba(139, 92, 246, 0.1)',
+							border: '1px solid rgba(139, 92, 246, 0.2)',
+						}}
 					>
-						<motion.span
-							variants={fadeUp}
-							className="text-base font-semibold text-indigo-200 mb-1 text-center sm:text-left"
-						>
-							Download CoreIQ for free:
-						</motion.span>
-						<DownloadBadges className="mx-auto sm:mx-0" />
+						<span
+							className="w-2 h-2 rounded-full"
+							style={{ backgroundColor: '#8b5cf6' }}
+						/>
+						<span className="text-sm font-medium" style={{ color: '#a78bfa' }}>
+							Fitness · Nutrition · Progress
+						</span>
 					</motion.div>
+
+					{/* Heading */}
+					<h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
+						Track your fitness
+						<br />
+						journey with{' '}
+						<span
+							style={{
+								background: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
+								WebkitBackgroundClip: 'text',
+								WebkitTextFillColor: 'transparent',
+							}}
+						>
+							CoreIQ
+						</span>
+					</h1>
+
+					{/* Subtitle */}
+					<p className="text-lg leading-relaxed" style={{ color: '#888888' }}>
+						Your complete fitness companion for tracking workouts, planning meals, and reaching your goals.
+					</p>
+
+					{/* CTA */}
+					<div className="pt-2">
+						<DownloadBadges />
+					</div>
 				</motion.div>
 
-				<PhoneMockup />
+				{/* Phone Mockup */}
+				<motion.div
+					initial={{ opacity: 0, x: 40 }}
+					animate={{ opacity: 1, x: 0 }}
+					transition={{ duration: 0.8, delay: 0.3 }}
+				>
+					<motion.div
+						animate={{ y: [0, -10, 0] }}
+						transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+					>
+						<PhoneMockup />
+					</motion.div>
+				</motion.div>
 			</div>
 		</section>
 	)
 }
-
-

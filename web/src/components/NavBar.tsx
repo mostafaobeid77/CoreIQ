@@ -13,9 +13,7 @@ export function NavBar() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeHref, setActiveHref] = useState('#home')
-  const [darkNav, setDarkNav] = useState(false)
 
-  // ✅ Detect scroll for transparency/shadow
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
     onScroll()
@@ -23,7 +21,6 @@ export function NavBar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // ✅ Highlight active link based on scroll
   useEffect(() => {
     const handler = () => {
       const sections = navLinks.map(l => document.querySelector(l.href))
@@ -41,45 +38,6 @@ export function NavBar() {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  // ✅ Switch nav color based on visible section
-  useEffect(() => {
-	const handleNavStyle = () => {
-	  // adjust trigger point: ~30% from top instead of middle
-	  const y = window.scrollY + window.innerHeight * 0.3 
-  
-	  const home = document.querySelector('#home') as HTMLElement | null
-	  const about = document.querySelector('#about') as HTMLElement | null
-	  const features = document.querySelector('#features') as HTMLElement | null
-	  const download = document.querySelector('#download') as HTMLElement | null
-  
-	  let dark = true // default
-  
-	  // Light nav (white text) in Home + Features
-	  if (
-		(home && y >= home.offsetTop && about && y < about.offsetTop) ||
-		(features && download && y >= features.offsetTop && y < download.offsetTop)
-	  ) {
-		dark = false
-	  }
-	  // Dark nav (dark text) in About + Download
-	  else if (
-		(about && features && y >= about.offsetTop && y < features.offsetTop) ||
-		(download && y >= download.offsetTop)
-	  ) {
-		dark = true
-	  }
-  
-	  setDarkNav(dark)
-	}
-  
-	window.addEventListener('scroll', handleNavStyle, { passive: true })
-	handleNavStyle()
-	return () => window.removeEventListener('scroll', handleNavStyle)
-  }, [])
-  
-  
-
-  // ✅ Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
     return () => {
@@ -91,61 +49,81 @@ export function NavBar() {
     <header className="fixed inset-x-0 top-0 z-50">
       <motion.div
         initial={false}
-        animate={{ opacity: 1, y: scrolled ? 0 : -18, scale: 1 }}
+        animate={{ opacity: 1, y: scrolled ? 0 : -10, scale: 1 }}
         transition={{ type: 'spring', stiffness: 200, damping: 30 }}
         style={{
-          background: scrolled ? 'rgba(16,20,32,0.82)' : 'rgba(16,20,32,0.55)',
+          background: scrolled ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.5)',
           backdropFilter: 'blur(16px)',
-          border: scrolled ? '1.5px solid rgba(99,102,241,0.10)' : '1.5px solid transparent',
-          boxShadow: scrolled ? '0 4px 36px rgba(18,16,47,0.16)' : 'none',
+          border: scrolled ? '1px solid #333333' : '1px solid transparent',
+          boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.3)' : 'none',
         }}
-        className="absolute left-1/2 top-2 -translate-x-1/2 max-w-6xl w-[96%] rounded-2xl shadow-xl transition-all duration-500 border border-transparent"
+        className="absolute left-1/2 top-2 -translate-x-1/2 max-w-6xl w-[96%] rounded-2xl transition-all duration-500"
       />
-      <nav
-        className={`relative mx-auto flex w-full max-w-6xl items-center justify-between rounded-2xl px-7 py-3 md:px-10 ${
-          darkNav ? 'text-slate-800' : 'text-slate-100'
-        }`}
-      >
-        <span
-          className={`text-xl font-extrabold tracking-tight transition select-none drop-shadow-sm ${
-            darkNav ? 'text-slate-800' : 'text-slate-100'
-          }`}
-        >
-          CoreIQ
-        </span>
+      <nav className="relative mx-auto flex w-full max-w-6xl items-center justify-between rounded-2xl px-7 py-3 md:px-10">
+        {/* Logo Text */}
+        <a href="#home" className="group flex items-center select-none">
+          <motion.span
+            className="text-2xl font-black tracking-tight"
+            whileHover={{ scale: 1.02 }}
+            style={{
+              background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            CoreIQ
+          </motion.span>
+        </a>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-10">
+        <div className="hidden lg:flex items-center gap-8">
           {navLinks.map(link => (
-            <a
+            <motion.a
               key={link.href}
               href={link.href}
-              className={`px-2 py-1 font-semibold transition-all duration-200 rounded-lg text-base tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 ${
-                activeHref === link.href
-                  ? darkNav
-                    ? 'text-indigo-600'
-                    : 'text-indigo-300'
-                  : darkNav
-                    ? 'text-slate-800 hover:text-indigo-600'
-                    : 'text-slate-100 hover:text-indigo-200'
-              }`}
+              whileHover={{ y: -2 }}
+              transition={{ type: 'spring', stiffness: 400 }}
+              className={`px-3 py-2 font-medium transition-colors duration-200 text-sm tracking-tight ${activeHref === link.href
+                  ? 'text-violet-400'
+                  : 'text-white/70 hover:text-white'
+                }`}
             >
               {link.label}
-            </a>
+            </motion.a>
           ))}
+
+          {/* Admin Link */}
+          <motion.a
+            href="/admin"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200"
+            style={{
+              backgroundColor: 'rgba(139, 92, 246, 0.15)',
+              color: '#a78bfa',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+            }}
+          >
+            Admin
+          </motion.a>
         </div>
 
         {/* Mobile Button */}
-        <button
+        <motion.button
           type="button"
-          className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border ${
-            darkNav ? 'border-slate-300 text-slate-700' : 'border-slate-700 text-slate-100'
-          } transition-all lg:hidden shadow`}
+          whileTap={{ scale: 0.9 }}
+          className="inline-flex h-11 w-11 items-center justify-center rounded-xl transition-all lg:hidden"
+          style={{
+            backgroundColor: '#121212',
+            border: '1px solid #333333',
+            color: '#ffffff',
+          }}
           onClick={() => setOpen(val => !val)}
           aria-label="Toggle menu"
         >
           {open ? <X size={24} strokeWidth={1.8} /> : <Menu size={24} strokeWidth={1.8} />}
-        </button>
+        </motion.button>
       </nav>
 
       {/* Mobile Menu */}
@@ -155,45 +133,61 @@ export function NavBar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[80] bg-slate-900/90 backdrop-blur-lg"
+            className="fixed inset-0 z-[80] backdrop-blur-lg"
+            style={{ backgroundColor: 'rgba(0,0,0,0.9)' }}
           >
             <motion.div
-              initial={{ y: '-100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '-100%' }}
-              transition={{ type: 'spring', damping: 22, stiffness: 220 }}
-              className={`mx-auto mt-16 w-[96%] max-w-sm rounded-3xl border ${
-                darkNav ? 'border-slate-300 bg-white/90' : 'border-slate-800 bg-slate-950/95'
-              } p-7 shadow-2xl flex flex-col gap-6`}
+              initial={{ y: '-100%', opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '-100%', opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="mx-auto mt-16 w-[96%] max-w-sm rounded-3xl p-7 shadow-2xl flex flex-col gap-6"
+              style={{ backgroundColor: '#121212', border: '1px solid #333333' }}
             >
-              <div className="flex items-center gap-3 mb-2">
+              <div className="flex items-center mb-2">
                 <span
-                  className={`text-lg font-extrabold tracking-tight ${
-                    darkNav ? 'text-slate-800' : 'text-slate-100'
-                  }`}
+                  className="text-2xl font-black"
+                  style={{
+                    background: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  }}
                 >
                   CoreIQ
                 </span>
               </div>
               <div className="flex flex-col gap-2">
-                {navLinks.map(link => (
-                  <a
+                {navLinks.map((link, i) => (
+                  <motion.a
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className={`block text-lg px-5 py-3 rounded-xl font-semibold transition-all ${
-                      activeHref === link.href
-                        ? darkNav
-                          ? 'text-indigo-600'
-                          : 'text-indigo-300'
-                        : darkNav
-                          ? 'text-slate-800 hover:text-indigo-600'
-                          : 'text-slate-100 hover:text-indigo-200'
-                    }`}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: i * 0.05 }}
+                    className={`block text-lg px-5 py-3 rounded-xl font-semibold transition-all ${activeHref === link.href
+                        ? 'text-violet-400 bg-violet-400/10'
+                        : 'text-white/70 hover:text-white hover:bg-white/5'
+                      }`}
                   >
                     {link.label}
-                  </a>
+                  </motion.a>
                 ))}
+                <motion.a
+                  href="/admin"
+                  onClick={() => setOpen(false)}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="block text-lg px-5 py-3 rounded-xl font-semibold mt-2"
+                  style={{
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    color: '#8b5cf6',
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                  }}
+                >
+                  Admin Panel
+                </motion.a>
               </div>
             </motion.div>
           </motion.div>
