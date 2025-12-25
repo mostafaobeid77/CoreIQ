@@ -302,18 +302,3 @@ function ResultsScreen() {
         </div>
     )
 }
-
-function FloatingMetric({ icon: Icon, color, top, left, right, bottom, delay, progress }: any) {
-    const y = useTransform(progress, [0, 1], [0, -120 * (delay + 1)])
-    const rotate = useTransform(progress, [0, 1], [0, 30 * (delay + 1)])
-
-    return (
-        <motion.div
-            style={{ top, left, right, bottom, y, rotate, transformStyle: "preserve-3d", translateZ: 180 }}
-            className={`absolute w-12 h-12 rounded-2xl bg-slate-900 border border-white/20 flex items-center justify-center ${color} shadow-2xl backdrop-blur-xl`}
-        >
-            <Icon className="w-6 h-6" />
-            <div className="absolute inset-0 rounded-2xl border border-white/10" style={{ transform: "translateZ(5px)" }} />
-        </motion.div>
-    )
-}
