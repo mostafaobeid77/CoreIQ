@@ -8,9 +8,9 @@ import { Sparkles, ArrowRight } from 'lucide-react'
 export function Hero() {
 	return (
 		<Section className="pt-32 pb-16 lg:pt-48 lg:pb-32 overflow-hidden" noPadding>
-			<div className="flex flex-col lg:flex-row items-center gap-16 relative z-10">
+			<div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 				{/* Content */}
-				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 max-w-2xl lg:w-1/2">
+				<div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8">
 					<Badge icon={Sparkles}>Reimagining Fitness Tracking</Badge>
 
 					<motion.h1
@@ -48,7 +48,6 @@ export function Hero() {
 						</MagneticButton>
 					</motion.div>
 
-					{/* Social Proof */}
 					<motion.div
 						className="flex items-center gap-4 text-sm text-slate-500 pt-4"
 						initial={{ opacity: 0 }}
@@ -66,14 +65,14 @@ export function Hero() {
 					</motion.div>
 				</div>
 
-				{/* Mobile Only Product Visual (Static) */}
+				{/* Product Visual */}
 				<motion.div
-					className="lg:hidden w-full max-w-[300px] mx-auto mt-8 relative"
-					initial={{ opacity: 0, scale: 0.9 }}
-					animate={{ opacity: 1, scale: 1 }}
-					transition={{ delay: 0.3 }}
+					className="w-full max-w-[320px] mx-auto lg:max-w-none lg:mx-0 flex justify-center relative"
+					initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
+					animate={{ opacity: 1, scale: 1, rotate: 0 }}
+					transition={{ duration: 1, ease: "easeOut" }}
 				>
-					<div className="absolute inset-0 bg-violet-500/30 blur-[60px] rounded-full z-[-1]" />
+					<div className="absolute inset-0 bg-violet-500/30 blur-[100px] rounded-full z-[-1]" />
 					<PhoneMockup />
 				</motion.div>
 			</div>

@@ -10,7 +10,7 @@ export function Download() {
 			{/* Visual Bridge to Footer */}
 			<div className="absolute bottom-0 inset-x-0 h-64 bg-gradient-to-b from-transparent to-[#020202] pointer-events-none -z-10" />
 
-			<SceneSection id="download" className="pb-0 lg:pb-0" type="spotlight">
+			<SceneSection id="download" className="pb-0 lg:pb-0">
 				<div className="relative rounded-3xl overflow-hidden bg-gradient-to-b from-violet-900/10 to-transparent border border-white/5 p-12 md:p-24 text-center">
 
 					{/* Beam of light */}

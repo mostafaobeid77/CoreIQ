@@ -32,10 +32,9 @@ const features = [
 		icon: Zap,
 	},
 ]
-
 export function Features() {
 	return (
-		<SceneSection id="features" className="relative z-10" type="zoom">
+		<SceneSection id="features">
 			<div className="flex flex-col items-center text-center mb-16 space-y-4">
 				<Badge icon={Brain}>Intelligence Layer</Badge>
 				<h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
@@ -49,12 +48,18 @@ export function Features() {
 				</p>
 			</div>
 
-			<div className="grid md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
-				{/* Signature Interaction: Live Macro Tracking */}
-				<div className="md:col-span-2 md:row-span-2">
-					<GlassCard className="h-full flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-violet-900/10 to-transparent" intensity="high">
-						<div className="absolute inset-0 bg-noise opacity-20 pointer-events-none" />
-						<MacroWidget />
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(250px,auto)]">
+				{/* Hero Feature: Live Macro Tracking */}
+				<div className="md:col-span-2 md:row-span-2 relative group">
+					<GlassCard className="h-full flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-violet-900/20 to-transparent p-0" intensity="high">
+						<div className="absolute inset-0 bg-noise opacity-30 pointer-events-none mix-blend-overlay" />
+						<div className="absolute top-6 left-6 z-10">
+							<h3 className="text-xl font-bold text-white">Live Macro Tracking</h3>
+							<p className="text-slate-400 text-sm">Real-time visualizations of your daily targets.</p>
+						</div>
+						<div className="scale-90 md:scale-100 transition-transform duration-500 group-hover:scale-105">
+							<MacroWidget />
+						</div>
 					</GlassCard>
 				</div>
 
@@ -62,8 +67,8 @@ export function Features() {
 					<FeatureCard
 						key={i}
 						{...feature}
-						delay={i * 0.1 + 0.2}
-						className="h-full"
+						delay={i * 0.1}
+						className={i === 0 || i === 3 ? "md:col-span-1" : ""}
 					/>
 				))}
 			</div>
