@@ -15,7 +15,7 @@ export const AuroraBackground = ({
 }: AuroraBackgroundProps) => {
     return (
         <div
-            className={`relative flex flex-col  h-[100vh] items-center justify-center bg-zinc-900  text-slate-950 transition-bg ${className}`}
+            className={`fixed inset-0 bg-zinc-950 transition-bg -z-50 ${className}`}
         >
             <div className="absolute inset-0 overflow-hidden">
                 <div
@@ -31,7 +31,7 @@ export const AuroraBackground = ({
             after:[background-size:200%,_100%] 
             after:animate-aurora after:[background-attachment:fixed] after:mix-blend-difference
             pointer-events-none
-            absolute -inset-[10px] opacity-50 will-change-transform ${showRadialGradient ?
+            absolute -inset-[10px] opacity-70 will-change-transform ${showRadialGradient ?
                             `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]` : ''
                         }`
                     }

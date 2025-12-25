@@ -1,10 +1,10 @@
 
 import { useRef } from 'react'
-import { motion, useScroll, useTransform, useSpring, useMotionTemplate } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Badge } from './ui/Badge'
-import { Settings2, Target, BarChart3, TrendingUp, CheckCircle, Activity } from 'lucide-react'
+import { Settings2, Target, TrendingUp, CheckCircle, Activity } from 'lucide-react'
 import { GlassCard } from './ui/GlassCard'
-import { cn } from '../utils/cn'
+
 
 // Visual Components for the Right Side
 const PlanVisual = () => (
@@ -103,10 +103,8 @@ export function PinnedSteps() {
         offset: ["start start", "end end"]
     })
 
-    const activeStep = useTransform(scrollYProgress, [0, 1], [0, 3])
-
     return (
-        <div ref={containerRef} className="relative h-[300vh]">
+        <div ref={containerRef} className="relative h-[250vh]">
             <div className="sticky top-0 h-screen flex items-center overflow-hidden">
                 <div className="w-full max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
 
@@ -119,13 +117,6 @@ export function PinnedSteps() {
 
                         <div className="relative pl-8 border-l border-white/10 space-y-12">
                             {steps.map((step, index) => {
-                                // Opacity based on scroll progress
-                                // Simple logic: Highlight if current scroll matches index
-                                const rangeStart = index
-                                const rangeEnd = index + 1
-                                // We simply style based on activeStep which is 0-3 float
-                                // But Framer motion logic is cleaner if we map.
-                                // Let's stick to standard Opacity for ease.
                                 return (
                                     <OpacityStep key={step.id} index={index} progress={scrollYProgress} step={step} />
                                 )
