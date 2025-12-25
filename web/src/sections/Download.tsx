@@ -1,56 +1,37 @@
-import { motion } from 'framer-motion'
+import { Section } from '../components/ui/Section'
+import { Badge } from '../components/ui/Badge'
 import { DownloadBadges } from '../components/DownloadBadges'
-
+import { Smartphone } from 'lucide-react'
 
 export function Download() {
 	return (
-		<section id="download" className="relative py-24" style={{ background: '#000000' }}>
-			{/* Subtle gradient */}
-			<div
-				className="absolute inset-0 pointer-events-none"
-				style={{ background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.08) 0%, transparent 70%)' }}
-			/>
+		<Section id="download">
+			<div className="relative rounded-3xl overflow-hidden bg-gradient-to-b from-violet-900/20 to-slate-900/50 border border-white/10 p-12 md:p-24 text-center">
+				{/* Background Effects */}
+				<div className="absolute inset-0 bg-noise opacity-20" />
+				<div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-violet-600/30 blur-[100px] rounded-full pointer-events-none" />
 
-			<div className="relative mx-auto max-w-4xl px-6 text-center">
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					viewport={{ once: true }}
-					transition={{ duration: 0.6 }}
-					className="space-y-8"
-				>
-					<p
-						className="text-sm font-semibold uppercase tracking-[0.3em]"
-						style={{ color: '#8b5cf6' }}
-					>
-						Get Started
-					</p>
+				<div className="relative z-10 flex flex-col items-center space-y-8 max-w-3xl mx-auto">
+					<Badge icon={Smartphone}>Get Started Today</Badge>
 
-					<h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-						Ready to transform your{' '}
-						<span style={{ color: '#a78bfa' }}>fitness journey?</span>
+					<h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-2">
+						Start your transformation.
 					</h2>
 
-					<p className="max-w-xl mx-auto text-base leading-relaxed" style={{ color: '#888888' }}>
-						Join thousands of users who are already tracking their progress and reaching their goals with CoreIQ.
+					<p className="text-lg text-slate-300 max-w-xl">
+						Join the community of serious lifters and health enthusiasts.
+						Available now on iOS and Android.
 					</p>
 
-					<div className="pt-4">
-						<DownloadBadges className="justify-center" />
+					<div className="pt-4 scale-110">
+						<DownloadBadges />
 					</div>
 
-					<motion.p
-						className="text-sm pt-4"
-						style={{ color: '#555555' }}
-						initial={{ opacity: 0 }}
-						whileInView={{ opacity: 1 }}
-						viewport={{ once: true }}
-						transition={{ delay: 0.3 }}
-					>
-						Free to download · iOS & Android
-					</motion.p>
-				</motion.div>
+					<p className="text-slate-500 text-sm mt-8">
+						Free 14-day trial • No credit card required • Cancel anytime
+					</p>
+				</div>
 			</div>
-		</section>
+		</Section>
 	)
 }
