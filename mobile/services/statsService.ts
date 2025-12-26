@@ -2,6 +2,13 @@ import { api } from './api';
 
 export const statsService = {
     /**
+     * Get stats for a specific date
+     */
+    getStats: async (date: string) => {
+        return api.get<any>(`/stats/${date}`);
+    },
+
+    /**
      * Get adherence report for a date range
      */
     getAdherenceReport: async (startDate: string, endDate: string) => {

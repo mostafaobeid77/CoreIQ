@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform, useSpring, AnimatePresence, type MotionValue } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useScroll, useTransform, useSpring, AnimatePresence, useMotionValueEvent, type MotionValue } from 'framer-motion'
+import { useRef, useState } from 'react'
 import { Activity, Apple, Brain, Target, Trophy, Calendar, TrendingUp, ArrowUpRight } from 'lucide-react'
 
 interface PhoneMockupProps {
@@ -15,23 +15,27 @@ export function PhoneMockup({ externalProgress }: PhoneMockupProps) {
 
     const scrollYProgress = externalProgress || internalProgress
 
-    // Smooth values for 3D tilt - matched with PinnedSteps for sync
-    const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 })
+    // Smooth values for 3D tilt - optimized spring config for less jank
+    const smoothProgress = useSpring(scrollYProgress, { stiffness: 50, damping: 20, restDelta: 0.01 })
 
     // Parallax values for layers - CLAMPED to avoid jitter/overshoot
     const phoneRotateY = useTransform(smoothProgress, [0, 1], [-25, 25], { clamp: true })
     const phoneRotateX = useTransform(smoothProgress, [0, 1], [15, -15], { clamp: true })
 
-    // UI elements fly further
+    // UI elements fly further - defined at component level, not in render
     const uiTranslateZ = useTransform(smoothProgress, [0, 1], [40, 120], { clamp: true })
     const uiRotateY = useTransform(smoothProgress, [0, 1], [-5, 15], { clamp: true })
 
-    // Determine current screen state based on scroll
-    // Snaps at midpoints: < 0.4 (Plan), 0.4-0.6 (Track), > 0.6 (Results)
-    const activeScreen = useTransform(scrollYProgress, (value) => {
-        if (value < 0.4) return 'plan'
-        if (value < 0.6) return 'track'
-        return 'results'
+    // Secondary widget transforms - moved out of render props
+    const neuralTranslateZ = useTransform(smoothProgress, [0, 1], [80, 180], { clamp: true })
+    const neuralRotateY = useTransform(smoothProgress, [0, 1], [-10, 10], { clamp: true })
+
+    // Use React state for screen switching - more performant than .get() in render
+    const [activeScreen, setActiveScreen] = useState<'plan' | 'track' | 'results'>('plan')
+
+    useMotionValueEvent(scrollYProgress, 'change', (value) => {
+        const newScreen = value < 0.4 ? 'plan' : value < 0.6 ? 'track' : 'results'
+        setActiveScreen((prev) => prev !== newScreen ? newScreen : prev)
     })
 
     return (
@@ -113,8 +117,8 @@ export function PhoneMockup({ externalProgress }: PhoneMockupProps) {
                 {/* Neural Confidence Widget */}
                 <motion.div
                     style={{
-                        translateZ: useTransform(smoothProgress, [0, 1], [80, 180]),
-                        rotateY: useTransform(smoothProgress, [0, 1], [-10, 10]),
+                        translateZ: neuralTranslateZ,
+                        rotateY: neuralRotateY,
                         transformStyle: "preserve-3d"
                     }}
                     className="absolute -left-20 bottom-32 w-60 bg-violet-950/90 backdrop-blur-3xl border border-white/20 rounded-2xl shadow-[0_40px_80px_rgba(139,92,246,0.3)] p-5"
@@ -150,21 +154,21 @@ export function PhoneMockup({ externalProgress }: PhoneMockupProps) {
     )
 }
 
-function ScreenContent({ activeScreen }: { activeScreen: any }) {
+function ScreenContent({ activeScreen }: { activeScreen: 'plan' | 'track' | 'results' }) {
     return (
         <div className="w-full h-full p-8 font-sans">
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={activeScreen.get()}
+                    key={activeScreen}
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 1.05, y: -20 }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     className="space-y-8"
                 >
-                    {activeScreen.get() === 'plan' && <PlanScreen />}
-                    {activeScreen.get() === 'track' && <TrackScreen />}
-                    {activeScreen.get() === 'results' && <ResultsScreen />}
+                    {activeScreen === 'plan' && <PlanScreen />}
+                    {activeScreen === 'track' && <TrackScreen />}
+                    {activeScreen === 'results' && <ResultsScreen />}
                 </motion.div>
             </AnimatePresence>
         </div>
