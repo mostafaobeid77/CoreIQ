@@ -2,14 +2,14 @@ import { StyleSheet } from 'react-native';
 
 export function createDashboardStyles(isLight: boolean) {
   const palette = {
-    bg: isLight ? '#f8fafc' : '#000000', // PURE BLACK
-    bg2: isLight ? '#ffffff' : '#121212', // Dark Grey for cards
-    text: isLight ? '#0f172a' : '#ffffff',
-    textMuted: isLight ? '#64748b' : '#A0A0A0', // Neutral Grey (No Blue)
-    border: isLight ? 'rgba(0,0,0,0.05)' : '#333333',
+    bg: isLight ? '#f9fafb' : '#000000', // Was #f8fafc (blueish), now softer grey
+    bg2: isLight ? '#ffffff' : '#121212', // Cards remain white
+    text: isLight ? '#334155' : '#ffffff', // Was #0f172a (very dark), now slate-700 (softer)
+    textMuted: isLight ? '#94a3b8' : '#A0A0A0', // Softer muted
+    border: isLight ? '#e2e8f0' : '#333333', // More visible but soft border
     border2: isLight ? '#f1f5f9' : '#222222',
     navBg: isLight ? '#ffffff' : '#000000',
-    inputBg: isLight ? '#f8fafc' : '#1A1A1A',
+    inputBg: isLight ? '#f1f5f9' : '#1A1A1A', // Softer input bg
     primary: '#8b5cf6', // Violet
     overlay: 'rgba(0, 0, 0, 0.7)'
   };

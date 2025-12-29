@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native';
 
 export function createSettingsStyles(isLight: boolean) {
   const palette = {
-    bg: isLight ? '#f8fafc' : '#0f0f0f',
-    headerBg: isLight ? '#f8fafc' : '#0f0f0f',
-    border: isLight ? 'rgba(0,0,0,0.05)' : '#1d1d1d',
+    bg: isLight ? '#f9fafb' : '#0f0f0f',
+    headerBg: isLight ? '#f9fafb' : '#0f0f0f',
+    border: isLight ? '#e2e8f0' : '#1d1d1d',
     cardBg: isLight ? '#ffffff' : '#151515',
-    text: isLight ? '#0f172a' : '#fff',
-    textMuted: isLight ? '#64748b' : '#9aa0a6',
+    text: isLight ? '#334155' : '#fff', // Softer text
+    textMuted: isLight ? '#94a3b8' : '#9aa0a6',
   };
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: palette.bg },
