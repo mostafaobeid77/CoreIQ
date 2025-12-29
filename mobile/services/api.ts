@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URLS } from '../constants/api';
 
 const TOKEN_KEY = '@coreiq_token';
-export const BASE_URL = 'http://192.168.1.103:5000/api';
+// Use the active URL from constants (currently set to Render Production)
+export const BASE_URL = `${API_URLS[0]}/api`;
 
 /**
  * Ensures profile photo URLs point to the current active host.
