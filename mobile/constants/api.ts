@@ -37,9 +37,9 @@ const IS_DEVELOPMENT = true; // Set to false when ready to publish APK
 
 export const API_URLS: string[] = [
 	// LOCAL DEVELOPMENT (uncomment for local testing)
-	'http://192.168.1.103:5000',
+	// 'http://192.168.1.103:5000',
 	// PRODUCTION (comment out when testing locally)
-	// 'https://coreiq-backend.onrender.com'
+	'https://coreiq-backend.onrender.com'
 ];
 
 export function buildApiUrl(path: string): string[] {
