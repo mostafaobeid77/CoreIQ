@@ -32,8 +32,7 @@ export const usePlanState = (goalWeight: string) => {
     // List Data
     const [allPlans, setAllPlans] = useState<any[]>([]);
 
-    const { hasDraft, saveDraft, loadDraft, clearDraft } = usePlanPersistence();
-
+    const { hasDraft, saveDraft, loadDraft, clearDraft, isActivePlanCached, loadActiveCache, saveActiveCache } = usePlanPersistence();
 
     // Refs for stable callback access
     const planIdRef = useRef(planId);
@@ -47,53 +46,6 @@ export const usePlanState = (goalWeight: string) => {
     useEffect(() => { hasDraftRef.current = hasDraft; }, [hasDraft]);
     useEffect(() => { planDaysRef.current = planDays; }, [planDays]);
     useEffect(() => { mealSectionsRef.current = mealSections; }, [mealSections]);
-
-
-
-    // Auto-save: Draft (local) and Sync (server)
-    useEffect(() => {
-        if (hasChanges) {
-            const timeoutId = setTimeout(async () => {
-                if (planStatus === 'draft' || !planId) {
-                    // Save local backup
-                    await saveDraft(planName, planDays, startDate?.toISOString());
-                }
-
-                // If it's an existing plan, sync to server in background
-                if (planId && !saving) {
-                    try {
-                        const mealPlan = planDays.map((d: any) => ({
-                            day: d.day,
-                            date: d.date,
-                            meals: Object.values(d.meals).flat()
-                        }));
-                        const workoutPlan = planDays.map((d: any) => ({
-                            day: d.day,
-                            date: d.date,
-                            workouts: d.workouts
-                        }));
-
-                        console.log('🔄 Syncing plan to server...');
-                        await planService.updatePlan(planId, {
-                            name: planName,
-                            mealPlan,
-                            workoutPlan
-                        });
-                        setHasChanges(false); // Sync complete
-                        console.log('✅ Auto-sync success');
-
-                        // Update allPlans locally so My Plans modal shows the new name
-                        setAllPlans((prev: any[]) => prev.map(p =>
-                            p._id === planId ? { ...p, name: planName } : p
-                        ));
-                    } catch (err) {
-                        console.warn('❌ Auto-sync failed:', err);
-                    }
-                }
-            }, 2000); // 2s debounce for better performance, especially on Android
-            return () => clearTimeout(timeoutId);
-        }
-    }, [hasChanges, planName, planDays, planId, planStatus, saving, saveDraft]);
 
     const loadFullPlan = useCallback(async (id: string, showLoading: boolean = true) => {
         try {
@@ -145,29 +97,62 @@ export const usePlanState = (goalWeight: string) => {
         }
     }, []);
 
-
-
     const loadPlan = useCallback(async (showLoading: boolean = true) => {
-        // Access current values from refs to avoid dependency changes
         const currentPlanId = planIdRef.current;
         const currentHasChanges = hasChangesRef.current;
         const currentHasDraft = hasDraftRef.current;
         const currentPlanDays = planDaysRef.current;
         const currentSections = mealSectionsRef.current;
 
-        // Don't reload from server if we have unsaved local changes
-        // unless we don't have a planId yet.
         if (currentHasChanges && currentPlanId) {
             console.log('⏳ Skipping server load to preserve local changes');
             return;
         }
 
         try {
-            // Only show loader if explicitly requested AND we have absolutely no data structure yet
-            const shouldLoading = showLoading && currentPlanDays.length === 0;
+            // CACHE-FIRST STRATEGY:
+            // 1. If we have no data, try to load from cache immediately to show SOMETHING
+            const hasData = currentPlanDays.length > 0 && currentPlanDays[0].meals;
+            let cacheLoaded = false;
+
+            if (!hasData && !currentPlanId) {
+                const cachedPlan = await loadActiveCache();
+                if (cachedPlan) {
+                    console.log('⚡ Loaded plan from cache (instant)');
+                    // Populate state immediately
+                    setPlanId(cachedPlan._id);
+                    setPlanName(cachedPlan.name);
+                    setPlanStatus(cachedPlan.status);
+                    setStartDate(cachedPlan.startDate ? new Date(cachedPlan.startDate) : new Date());
+
+                    // Reconstruct days
+                    const planDuration = cachedPlan.duration || cachedPlan.mealPlan?.length || 14;
+                    const dynamicDays = generateDays(planDuration);
+                    const mappedDays = dynamicDays.map(dayNum => {
+                        const mealDay = cachedPlan.mealPlan?.find((d: any) => d.day === dayNum);
+                        const workoutDay = cachedPlan.workoutPlan?.find((d: any) => d.day === dayNum);
+                        const mealsByType = currentSections.reduce((acc, section) => {
+                            acc[section] = mealDay?.meals?.filter((m: any) => m.mealType === section) || [];
+                            return acc;
+                        }, {} as any);
+                        return {
+                            day: dayNum,
+                            meals: mealsByType,
+                            workouts: workoutDay?.workouts || []
+                        };
+                    });
+                    setPlanDays(mappedDays);
+                    setHasChanges(false);
+                    // Don't show loading if we have cache
+                    cacheLoaded = true;
+                }
+            }
+
+            // 2. Only show loading spinner if we didn't load cache and have no data
+            const shouldLoading = showLoading && !cacheLoaded && currentPlanDays.length === 0;
             if (shouldLoading) setLoading(true);
 
-            // Parallelize fetching plans and local draft to start both immediately
+            // 3. Fetch fresh data from network (Background Revalidation)
             const [plans, draft] = await Promise.all([
                 planService.getAllPlans(),
                 (!currentPlanId && currentHasDraft) ? loadDraft() : Promise.resolve(null)
@@ -176,6 +161,7 @@ export const usePlanState = (goalWeight: string) => {
             setAllPlans(plans);
 
             if (draft) {
+                // Draft takes precedence
                 setPlanName(draft.name);
                 setPlanDays(draft.days);
                 setPlanStatus('draft');
@@ -186,25 +172,95 @@ export const usePlanState = (goalWeight: string) => {
             }
 
             const active = plans.find((p: any) => p.status === 'active');
-            const draftPlan = plans.find((p: any) => p.status === 'draft');
-            const targetPlan = active || draftPlan;
+            const targetPlan = active || plans.find((p: any) => p.status === 'draft');
 
             if (targetPlan) {
+                // If the fresh plan is different or newer, update state
+                // Note: In a real app we might check 'updatedAt' timestamps to avoid overwriting user edits
+                // For now, we assume network is truth.
                 await loadFullPlan(targetPlan._id, shouldLoading);
+
+                // Update Cache for next time
+                if (active && active._id === targetPlan._id) {
+                    // We need full plan details to cache, loadFullPlan handles state update, 
+                    // but we need to intercept the data to save it.
+                    // Refactoring loadFullPlan to return data would be cleaner, but for now:
+                    const fullPlanData = await planService.getPlan(targetPlan._id);
+                    saveActiveCache(fullPlanData);
+                }
             } else {
-                // Initialize new if nothing found (default 14 days)
-                setPlanDays(generateDays(14).map(day => ({
-                    day,
-                    meals: currentSections.reduce((acc, section) => ({ ...acc, [section]: [] }), {}),
-                    workouts: []
-                })));
+                // No plans found from server
+                if (!cacheLoaded) {
+                    // Initialize new if nothing found (default 14 days)
+                    setPlanDays(generateDays(14).map(day => ({
+                        day,
+                        meals: currentSections.reduce((acc, section) => ({ ...acc, [section]: [] }), {}),
+                        workouts: []
+                    })));
+                }
                 if (shouldLoading) setLoading(false);
             }
         } catch (error) {
             console.error('Failed to load plan:', error);
             if (showLoading) setLoading(false);
         }
-    }, [loadFullPlan, loadDraft]);
+    }, [loadFullPlan, loadDraft, loadActiveCache, saveActiveCache]);
+
+
+
+
+
+
+    // Auto-save: Draft (local) and Sync (server)
+    useEffect(() => {
+        if (hasChanges) {
+            const timeoutId = setTimeout(async () => {
+                if (planStatus === 'draft' || !planId) {
+                    // Save local backup
+                    await saveDraft(planName, planDays, startDate?.toISOString());
+                }
+
+                // If it's an existing plan, sync to server in background
+                if (planId && !saving) {
+                    try {
+                        const mealPlan = planDays.map((d: any) => ({
+                            day: d.day,
+                            date: d.date,
+                            meals: Object.values(d.meals).flat()
+                        }));
+                        const workoutPlan = planDays.map((d: any) => ({
+                            day: d.day,
+                            date: d.date,
+                            workouts: d.workouts
+                        }));
+
+                        console.log('🔄 Syncing plan to server...');
+                        await planService.updatePlan(planId, {
+                            name: planName,
+                            mealPlan,
+                            workoutPlan
+                        });
+                        setHasChanges(false); // Sync complete
+                        console.log('✅ Auto-sync success');
+
+                        // Update allPlans locally so My Plans modal shows the new name
+                        setAllPlans((prev: any[]) => prev.map(p =>
+                            p._id === planId ? { ...p, name: planName } : p
+                        ));
+                    } catch (err) {
+                        console.warn('❌ Auto-sync failed:', err);
+                    }
+                }
+            }, 2000); // 2s debounce for better performance, especially on Android
+            return () => clearTimeout(timeoutId);
+        }
+    }, [hasChanges, planName, planDays, planId, planStatus, saving, saveDraft]);
+
+
+
+
+
+
 
     const handleSavePlan = useCallback(async () => {
         try {

@@ -7,12 +7,29 @@ const Workout = require('../models/Workout');
 // Get all plans for user
 exports.getAllPlans = async (req, res) => {
   try {
-    const plans = await Plan.find({ userId: req.userId })
-      .sort({ createdAt: -1 })
-      .select('name startDate endDate duration status createdBy progress createdAt')
-      .lean(); // Optimize for read-only
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-    res.json(plans);
+    const [plans, total] = await Promise.all([
+      Plan.find({ userId: req.userId })
+        .sort({ createdAt: -1 })
+        .select('name startDate endDate duration status createdBy progress createdAt')
+        .skip(skip)
+        .limit(limit)
+        .lean(), // Optimize for read-only
+      Plan.countDocuments({ userId: req.userId })
+    ]);
+
+    res.json({
+      data: plans,
+      pagination: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit)
+      }
+    });
   } catch (error) {
     console.error('Get plans error:', error.message);
     res.status(500).json({ message: 'Server error', error: error.message });

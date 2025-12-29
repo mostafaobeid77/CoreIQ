@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
+// BlurView removed for performance
 import { statsService } from '../../../services/statsService';
 import { format, subDays, parseISO } from 'date-fns';
 
@@ -114,7 +114,7 @@ const ProgressAnalysisModal = ({ visible, onClose, onWeightUpdated }: ProgressAn
         <Modal visible={visible} animationType="none" transparent={true} onRequestClose={onClose}>
             <View style={styles.container}>
                 <TouchableOpacity style={StyleSheet.absoluteFill} onPress={onClose}>
-                    <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />
+                    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.85)' }]} />
                 </TouchableOpacity>
 
                 <Animated.View style={[styles.content, {

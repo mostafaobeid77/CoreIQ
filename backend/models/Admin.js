@@ -23,6 +23,20 @@ const AdminSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required'],
     minlength: [8, 'Password must be at least 8 characters']
+  },
+  role: {
+    type: String,
+    enum: ['superadmin', 'admin'],
+    default: 'admin'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Admin',
+    default: null
   }
 }, {
   timestamps: true // Adds createdAt and updatedAt automatically
@@ -33,7 +47,7 @@ AdminSchema.index({ username: 1 }, { unique: true });
 AdminSchema.index({ email: 1 }, { unique: true });
 
 // Hash password before saving
-AdminSchema.pre('save', async function(next) {
+AdminSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -47,12 +61,12 @@ AdminSchema.pre('save', async function(next) {
 });
 
 // Method to compare password
-AdminSchema.methods.comparePassword = async function(candidatePassword) {
+AdminSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
 // Remove password from JSON output
-AdminSchema.methods.toJSON = function() {
+AdminSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   return obj;

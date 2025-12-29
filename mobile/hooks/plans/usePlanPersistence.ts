@@ -74,11 +74,40 @@ export function usePlanPersistence() {
         }
     }, []);
 
+    // ACTIVE PLAN METHODS
+    const isActivePlanCached = useCallback(async () => {
+        try {
+            const cached = await AsyncStorage.getItem('@coreiq_active_plan');
+            return !!cached;
+        } catch { return false; }
+    }, []);
+
+    const saveActiveCache = useCallback(async (fullPlan: any) => {
+        try {
+            await AsyncStorage.setItem('@coreiq_active_plan', JSON.stringify({
+                ...fullPlan,
+                cachedAt: Date.now()
+            }));
+        } catch (e) {
+            console.warn('Failed to cache active plan', e);
+        }
+    }, []);
+
+    const loadActiveCache = useCallback(async () => {
+        try {
+            const json = await AsyncStorage.getItem('@coreiq_active_plan');
+            return json ? JSON.parse(json) : null;
+        } catch { return null; }
+    }, []);
+
     return {
         hasDraft,
         isLoadingDraft,
         saveDraft,
         loadDraft,
-        clearDraft
+        clearDraft,
+        isActivePlanCached,
+        saveActiveCache,
+        loadActiveCache
     };
 }

@@ -9,14 +9,34 @@ exports.getFoods = async (req, res) => {
     let query = {};
 
     if (searchTerm) {
-      query.$or = [
-        { name: { $regex: searchTerm, $options: 'i' } },
-        { description: { $regex: searchTerm, $options: 'i' } }
-      ];
+      // Use efficient Text Index search
+      query.$text = { $search: searchTerm };
+      // Sort by relevance
+      sort = { score: { $meta: 'textScore' } };
+      projection = { score: { $meta: 'textScore' } };
+    } else {
+      sort = { name: 1 };
+      projection = {};
     }
 
-    const foods = await Food.find(query).limit(50); // Limit to 50 for testing
-    res.json(foods);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20; // Reduced default to 20 for mobile
+    const skip = (page - 1) * limit;
+
+    const [foods, total] = await Promise.all([
+      Food.find(query, projection).sort(sort).skip(skip).limit(limit).lean(),
+      Food.countDocuments(query)
+    ]);
+
+    res.json({
+      data: foods,
+      pagination: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit)
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

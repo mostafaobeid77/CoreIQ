@@ -22,7 +22,16 @@ export type Plan = {
 
 export const planService = {
     getAllPlans: async (): Promise<Plan[]> => {
-        return api.get<Plan[]>('/plans');
+        const response: any = await api.get<any>('/plans');
+        // Handle paginated response { data: Plan[], pagination: ... }
+        if (response.data && Array.isArray(response.data)) {
+            return response.data;
+        }
+        // Handle legacy array response
+        if (Array.isArray(response)) {
+            return response;
+        }
+        return [];
     },
 
     getPlan: async (id: string): Promise<Plan> => {

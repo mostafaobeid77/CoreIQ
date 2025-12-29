@@ -154,9 +154,9 @@ Return your response in strict JSON format:
 }
 If the user indicates they want to start a completely new multi-day meal/workout plan, set intent to "generate_plan". Otherwise, keep it as "chat".`;
 
-                const chatHistory = conversation.messages.map(m => ({ role: m.role, content: m.content }));
+                const chatHistory = conversation.messages.slice(-5).map(m => ({ role: m.role, content: m.content })); // Reduce history to 5
 
-                const result = await groqProvider.generateJson(systemPrompt, JSON.stringify(chatHistory.slice(-8)));
+                const result = await groqProvider.generateJson(systemPrompt, JSON.stringify(chatHistory));
 
                 aiResponseContent = result.reply || "I'm here for you. Could you rephrase that? I want to make sure I give you the best advice.";
                 if (result.intent === 'generate_plan') action = 'generate_plan';
