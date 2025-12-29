@@ -186,7 +186,8 @@ const DashboardScreen = () => {
     handleSleepSave,
     handleSleepAdd,
     handleSleepSubtract,
-    errors
+    errors,
+    setErrors
   } = useStatsByDate(dateKey, stats, setIsEditingWater, updateStatsForDate, waterInput, weightInput, heightInput, sleepInput);
 
   const handleWeightGoalSelect = (goal: string, targetWeight: number) => {
@@ -222,6 +223,8 @@ const DashboardScreen = () => {
         setSelectedWeightGoal(stats.goalWeight);
       }
     }
+    // Clear any previous errors when opening
+    setErrors(prev => ({ ...prev, goalWeight: '' }));
     setIsGoalWeightModalVisible(true);
   };
 
@@ -262,14 +265,26 @@ const DashboardScreen = () => {
         setSelectedWeightGoal('');
         setGoalWeightInput('');
       } else {
-        // Show error message (you could add a state for this)
-        alert(errorMessage);
+        // Show inline error message instead of alert
+        setErrors(prev => ({ ...prev, goalWeight: errorMessage }));
+        return; // Stop here so modal stays open
       }
     }
 
-    setIsGoalWeightModalVisible(false);
-    setSelectedWeightGoal('');
-    setGoalWeightInput('');
+    // Only close if we didn't return early (e.g. valid input or cancel)
+    if (targetWeight > 0) {
+      // If we got here, it was valid and handled above. 
+      // Or logic flow needs to be cleaner.
+      // Actually, let's restructure slightly to be safe.
+    } else {
+      // Empty/Zero input -> Close modal implies cancel/clear?
+      // Or if user just pressed save with 0? 
+      // Let's assume 0 means "haven't typed yet" which shouldn't happen if button disabled?
+      // But if they typed 0?
+      setIsGoalWeightModalVisible(false);
+      setSelectedWeightGoal('');
+      setGoalWeightInput('');
+    }
   };
 
 
@@ -373,6 +388,7 @@ const DashboardScreen = () => {
             userName={userName}
             greetingEmoji={greetingEmoji}
             avatarSource={avatarSource}
+            isDefaultAvatar={!user?.profilePhoto || user.profilePhoto === 'undefined' || user.profilePhoto === 'null' || user.profilePhoto.trim() === ''}
             selectedDate={selectedDate}
             showDatePicker={showDatePicker}
             changeDay={changeDay}
@@ -533,7 +549,12 @@ const DashboardScreen = () => {
           }
         }}
         goalWeightInput={goalWeightInput}
-        setGoalWeightInput={setGoalWeightInput}
+        setGoalWeightInput={(text) => {
+          setGoalWeightInput(text);
+          if (errors.goalWeight) {
+            setErrors(prev => ({ ...prev, goalWeight: '' }));
+          }
+        }}
         handleWeightGoalSelect={(goal, targetWeight) => {
           handleWeightGoalSelect(goal, targetWeight);
           if (!errors.goalWeight) {

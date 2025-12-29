@@ -191,46 +191,47 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
               </TouchableOpacity>
             </View>
 
+            {/* FIXED: Identification & Macros (Pinned outside ScrollView) */}
+            <View style={{ paddingHorizontal: 20, paddingBottom: 16 }}>
+              <Text style={{ fontSize: 22, fontWeight: '800', color: '#fff', marginBottom: 2, textAlign: 'center' }} numberOfLines={1}>{food.name}</Text>
+              <Text style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12, textAlign: 'center' }}>{food.brand || 'Generic Food'}</Text>
+
+              {/* Prominent Macro Grid */}
+              <View style={mealsStyles.premiumMacroGrid}>
+                <View style={mealsStyles.premiumMacroCard}>
+                  <Ionicons name="flame" size={14} color="#f59e42" style={mealsStyles.premiumMacroIcon} />
+                  <Text style={mealsStyles.premiumMacroValue}>{currentCalories}</Text>
+                  <Text style={mealsStyles.premiumMacroLabel}>CAL</Text>
+                </View>
+
+                <View style={mealsStyles.premiumMacroCard}>
+                  <Ionicons name="fitness" size={14} color="#38bdf8" style={mealsStyles.premiumMacroIcon} />
+                  <Text style={mealsStyles.premiumMacroValue}>{currentProtein}g</Text>
+                  <Text style={mealsStyles.premiumMacroLabel}>PRO</Text>
+                </View>
+
+                <View style={mealsStyles.premiumMacroCard}>
+                  <Ionicons name="leaf" size={14} color="#fbbf24" style={mealsStyles.premiumMacroIcon} />
+                  <Text style={mealsStyles.premiumMacroValue}>{currentCarbs}g</Text>
+                  <Text style={mealsStyles.premiumMacroLabel}>CARB</Text>
+                </View>
+
+                <View style={mealsStyles.premiumMacroCard}>
+                  <Ionicons name="water" size={14} color="#f472b6" style={mealsStyles.premiumMacroIcon} />
+                  <Text style={mealsStyles.premiumMacroValue}>{currentFats}g</Text>
+                  <Text style={mealsStyles.premiumMacroLabel}>FAT</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={{ height: 1, backgroundColor: '#333', marginHorizontal: 20, marginBottom: 0 }} />
+
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ flex: 1 }}
-              contentContainerStyle={{ paddingBottom: 30 }}
+              contentContainerStyle={{ paddingBottom: 30, paddingTop: 16 }}
               keyboardShouldPersistTaps="handled"
             >
-              {/* Streamlined Identity & Macros */}
-              <View style={{ alignItems: 'center', marginBottom: 24 }}>
-                <Text style={{ fontSize: 24, fontWeight: '800', color: '#fff', marginBottom: 4, textAlign: 'center' }}>{food.name}</Text>
-                <Text style={{ fontSize: 14, color: '#94a3b8', marginBottom: 12 }}>{food.brand || 'Generic Food'}</Text>
-
-                {/* Prominent Macro Grid */}
-                <View style={mealsStyles.premiumMacroGrid}>
-                  <View style={mealsStyles.premiumMacroCard}>
-                    <Ionicons name="flame" size={14} color="#f59e42" style={mealsStyles.premiumMacroIcon} />
-                    <Text style={mealsStyles.premiumMacroValue}>{currentCalories}</Text>
-                    <Text style={mealsStyles.premiumMacroLabel}>CAL</Text>
-                  </View>
-
-                  <View style={mealsStyles.premiumMacroCard}>
-                    <Ionicons name="fitness" size={14} color="#38bdf8" style={mealsStyles.premiumMacroIcon} />
-                    <Text style={mealsStyles.premiumMacroValue}>{currentProtein}g</Text>
-                    <Text style={mealsStyles.premiumMacroLabel}>PRO</Text>
-                  </View>
-
-                  <View style={mealsStyles.premiumMacroCard}>
-                    <Ionicons name="leaf" size={14} color="#fbbf24" style={mealsStyles.premiumMacroIcon} />
-                    <Text style={mealsStyles.premiumMacroValue}>{currentCarbs}g</Text>
-                    <Text style={mealsStyles.premiumMacroLabel}>CARB</Text>
-                  </View>
-
-                  <View style={mealsStyles.premiumMacroCard}>
-                    <Ionicons name="water" size={14} color="#f472b6" style={mealsStyles.premiumMacroIcon} />
-                    <Text style={mealsStyles.premiumMacroValue}>{currentFats}g</Text>
-                    <Text style={mealsStyles.premiumMacroLabel}>FAT</Text>
-                  </View>
-                </View>
-              </View>
-
-              <View style={mealsStyles.premiumSectionDivider} />
 
               {/* Dynamic Quantity Selector */}
               <View style={mealsStyles.premiumSection}>
@@ -244,7 +245,12 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
                       { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginRight: 8, borderWidth: 1 },
                       inputMode === 'grams' ? { backgroundColor: '#8b5cf6', borderColor: '#8b5cf6' } : { backgroundColor: 'transparent', borderColor: '#333' }
                     ]}
-                    onPress={() => { setInputMode('grams'); setQuantity('100'); }}
+                    onPress={() => {
+                      if (inputMode !== 'grams') {
+                        setInputMode('grams');
+                        setQuantity('100');
+                      }
+                    }}
                   >
                     <Text style={{ color: inputMode === 'grams' ? '#fff' : '#888', fontWeight: '600', fontSize: 13 }}>Grams / ML</Text>
                   </TouchableOpacity>
@@ -256,7 +262,14 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
                         { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginRight: 8, borderWidth: 1 },
                         (inputMode === 'servings' && selectedServingIndex === index) ? { backgroundColor: '#8b5cf6', borderColor: '#8b5cf6' } : { backgroundColor: 'transparent', borderColor: '#333' }
                       ]}
-                      onPress={() => { setInputMode('servings'); setSelectedServingIndex(index); setQuantity('1'); }}
+                      onPress={() => {
+                        // If already on this serving, don't reset. If switching serving size, reset to 1.
+                        if (inputMode !== 'servings' || selectedServingIndex !== index) {
+                          setInputMode('servings');
+                          setSelectedServingIndex(index);
+                          setQuantity('1');
+                        }
+                      }}
                     >
                       <Text style={{ color: (inputMode === 'servings' && selectedServingIndex === index) ? '#fff' : '#888', fontWeight: '600', fontSize: 13 }}>
                         {serving.size || `Serving ${index + 1}`}
@@ -279,8 +292,14 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
                       style={mealsStyles.premiumQuantityInput}
                       keyboardType="numeric"
                       value={quantity}
-                      onChangeText={setQuantity}
-                      selectTextOnFocus
+                      onChangeText={(text) => setQuantity(text)}
+                      onFocus={() => setQuantity('')} // Auto-clear on first tap for easier editing? Or maybe just select all?
+                      // Let's stick to valid selection behavior or no clear to avoid annoyance.
+                      // Actually, users prefer typing over '100' directly.
+                      selectTextOnFocus={true}
+                      editable={true}
+                      placeholder="0"
+                      placeholderTextColor="#555"
                     />
                     <Text style={mealsStyles.unitSubtext}>
                       {inputMode === 'grams' ? (isDrink ? 'ml' : 'grams') : 'units'}

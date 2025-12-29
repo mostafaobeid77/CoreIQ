@@ -6,6 +6,7 @@ const userCache = new Map();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 const User = require('../models/User');
+const WorkoutEntry = require('../models/WorkoutEntry'); // Import WorkoutEntry for calorie aggregation
 
 // Get stats for a specific date - OPTIMIZED VERSION
 exports.getStats = async (req, res) => {
@@ -51,6 +52,29 @@ exports.getStats = async (req, res) => {
 
     if (stats) {
       console.log(`[getStats] Found stats for ${date}`);
+
+      // FIX: Aggressive Aggregation of Workout Calories
+      // Even if stats exist, the workouts might have been updated separately.
+      // We re-calculate totalCaloriesBurned from the actual WorkoutEntries to be safe.
+      const startOfDay = new Date(requestedDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(requestedDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const workoutEntries = await WorkoutEntry.find({
+        userId: req.userId,
+        date: { $gte: startOfDay, $lte: endOfDay },
+        isCompleted: true
+      });
+
+      const workoutCalories = workoutEntries.reduce((sum, entry) => sum + (entry.caloriesBurned || 0), 0);
+
+      // Update values in memory (and optionally save if different? Let's just return correct data for now)
+      stats.caloriesBurnedWorkouts = workoutCalories;
+      stats.totalCaloriesBurned = (stats.caloriesBurnedSteps || 0) + workoutCalories;
+
+      console.log(`[getStats] Recalculated calories: Workouts=${workoutCalories}, Steps=${stats.caloriesBurnedSteps}, Total=${stats.totalCaloriesBurned}`);
+
       return res.json(stats);
     }
 
@@ -58,6 +82,22 @@ exports.getStats = async (req, res) => {
 
     // No stats for today - return defaults with carried over values
     const defaults = getDefaultStats(req.userId, date);
+
+    // FIX: Calculate workout calories even for defaults
+    const startOfDay = new Date(requestedDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(requestedDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const workoutEntries = await WorkoutEntry.find({
+      userId: req.userId,
+      date: { $gte: startOfDay, $lte: endOfDay },
+      isCompleted: true
+    });
+
+    const workoutCalories = workoutEntries.reduce((sum, entry) => sum + (entry.caloriesBurned || 0), 0);
+    defaults.caloriesBurnedWorkouts = workoutCalories;
+    defaults.totalCaloriesBurned = (defaults.caloriesBurnedSteps || 0) + workoutCalories;
 
     // Carry over from previous stats or user profile
     defaults.weight = previousStats?.weight || user.weight || defaults.weight;

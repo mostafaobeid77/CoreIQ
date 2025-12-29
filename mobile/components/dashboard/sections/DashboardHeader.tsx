@@ -8,6 +8,7 @@ interface DashboardHeaderProps {
   userName: string;
   greetingEmoji: string;
   avatarSource: any;
+  isDefaultAvatar: boolean;
   selectedDate: Date;
   showDatePicker: () => void;
   changeDay: (direction: 'prev' | 'next') => void;
@@ -22,6 +23,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   userName,
   greetingEmoji,
   avatarSource,
+  isDefaultAvatar,
   selectedDate,
   showDatePicker,
   changeDay,
@@ -37,14 +39,33 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         <Text style={styles.welcome}>
           Welcome, <Text style={styles.userName}>{userName.split(' ')[0]}</Text> {greetingEmoji}
         </Text>
-        <Image
-          source={avatarSource}
-          style={[
-            styles.avatar,
-            // Apply white tint only if it's the default local asset (logo.png)
-            typeof avatarSource === 'number' && { tintColor: 'white' }
-          ]}
-        />
+        {(isDefaultAvatar || avatarSource === require('../../../assets/images/logo.png')) ? (
+          // Branch A: Default Logo (Hardcoded White Circle + Contain)
+          <View style={{
+            width: 40,
+            height: 40,
+            borderRadius: 14,
+            backgroundColor: 'white', // Explicit White
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderWidth: 1,
+            borderColor: '#eee',
+            overflow: 'hidden'
+          }}>
+            <Image
+              source={require('../../../assets/images/logo.png')}
+              style={{ width: '65%', height: '65%', resizeMode: 'contain' }}
+            />
+          </View>
+        ) : (
+          // Branch B: User Photo (Theme Styles + Cover)
+          <View style={styles.avatar}>
+            <Image
+              source={avatarSource}
+              style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+            />
+          </View>
+        )}
       </View>
     )}
     <View style={styles.dateBar}>

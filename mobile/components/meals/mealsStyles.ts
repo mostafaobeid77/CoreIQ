@@ -413,12 +413,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#111',
+    backgroundColor: '#111', // Dark bg
     borderRadius: 24,
     padding: 12,
-    borderWidth: 1,
-    borderColor: '#262626',
-    marginTop: 8,
+    borderWidth: 2,
+    borderColor: '#333', // Thicker border
+    marginTop: 12,
+    marginBottom: 12,
+    minHeight: 70, // Force height
   },
   adjustButton: {
     backgroundColor: '#8b5cf6',
@@ -442,8 +444,12 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     textAlign: 'center',
     width: '100%',
-    paddingVertical: 0,
+    paddingVertical: 4,
     letterSpacing: -1,
+    borderBottomWidth: 2,
+    borderBottomColor: '#333', // Subtle underline to show it is editable
+    backgroundColor: '#1a1a1a', // Slight contrast
+    borderRadius: 8,
   },
   unitSubtext: {
     color: '#64748b',
