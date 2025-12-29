@@ -13,6 +13,8 @@ import { useMeals } from '../context/MealsContext';
 import { useMealSearch } from '../hooks/meals/useMealSearch';
 import { useMealModals } from '../hooks/meals/useMealModals';
 import { useDebounce } from '../hooks/meals/useDebounce';
+import FoodSuggestions from '../components/common/FoodSuggestions';
+import FoodListItem from '../components/common/FoodListItem';
 import { format } from 'date-fns';
 
 import FoodDetailsModal from '../components/meals/modals/FoodDetailsModal';
@@ -50,7 +52,7 @@ const MealsScreen = () => {
     const router = useRouter();
     const { theme } = useTheme();
     const { selectedDate, isDatePickerVisible, showDatePicker, hideDatePicker, handleConfirm, changeDay } = useDatePicker();
-    const { searchMeals } = useMealSearch();
+    const { searchMeals, getSuggestions } = useMealSearch();
     const {
         addMealItem,
         getMealsForDate,
@@ -65,6 +67,7 @@ const MealsScreen = () => {
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState<any[]>([]);
+    const [suggestions, setSuggestions] = useState<{ favorites: any[], recent: any[] }>({ favorites: [], recent: [] });
     const debouncedSearch = useDebounce(search, 500);
 
     const {
@@ -109,6 +112,14 @@ const MealsScreen = () => {
 
         performSearch();
     }, [debouncedSearch, searchMeals]);
+
+    useEffect(() => {
+        const loadSuggestions = async () => {
+            const data = await getSuggestions();
+            setSuggestions(data);
+        };
+        loadSuggestions();
+    }, [getSuggestions]);
 
     const { statsByDate, loadStatsForDate } = useStats();
     const mostRecent = getMostRecentValues(statsByDate);
@@ -177,7 +188,7 @@ const MealsScreen = () => {
         try {
             // Fetch fresh food data to ensure we have servings (which aren't stored in meal item)
             const results = await searchMeals(item.name);
-            const exactMatch = results.find(r => r.name.toLowerCase() === item.name.toLowerCase() || r.id === item.foodId);
+            const exactMatch = results.find((r: any) => r.name.toLowerCase() === item.name.toLowerCase() || r.id === item.foodId);
             if (exactMatch) {
                 fullFoodData = {
                     ...exactMatch,
@@ -230,58 +241,71 @@ const MealsScreen = () => {
                     style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        backgroundColor: theme === 'light' ? '#f8fafc' : '#222',
-                        borderRadius: 8,
-                        paddingHorizontal: 12,
+                        backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', // Lighter bg for premium feel
+                        borderRadius: 16,
+                        paddingHorizontal: 16,
+                        paddingVertical: 4, // More breathing room
                         borderWidth: 1,
-                        borderColor: theme === 'light' ? '#e5e7eb' : '#333',
+                        borderColor: theme === 'light' ? '#e2e8f0' : '#333',
+                        // Add shadow
+                        shadowColor: '#000',
+                        shadowOpacity: 0.05,
+                        shadowRadius: 10,
+                        shadowOffset: { width: 0, height: 4 },
+                        elevation: 3,
                     }}
                 >
-                    <Ionicons name="search" size={20} color={theme === 'light' ? '#667085' : '#888'} style={{ marginRight: 8 }} />
+                    <Ionicons name="search" size={20} color="#8b5cf6" style={{ marginRight: 12 }} />
                     <TextInput
                         ref={searchInputRef}
-                        style={{ flex: 1, color: theme === 'light' ? '#111' : '#fff', height: 40 }}
+                        style={{ flex: 1, color: theme === 'light' ? '#0f172a' : '#fff', height: 48, fontSize: 16, fontWeight: '500' }}
                         placeholder="Search for foods..."
-                        placeholderTextColor={theme === 'light' ? '#98a2b3' : '#888'}
+                        placeholderTextColor={theme === 'light' ? '#94a3b8' : '#888'}
                         value={search}
                         onChangeText={handleSearchInput}
                     />
                     {search.length > 0 && (
                         <TouchableOpacity onPress={handleClearSearch} style={{ marginLeft: 8 }}>
-                            <Ionicons name="close-circle" size={20} color={theme === 'light' ? '#98a2b3' : '#888'} />
+                            <Ionicons name="close-circle" size={20} color={theme === 'light' ? '#94a3b8' : '#888'} />
                         </TouchableOpacity>
                     )}
                 </View>
             </View>
 
-            {/* SEARCH RESULTS */}
-            {loading && <ActivityIndicator size="small" color={theme === 'light' ? '#667085' : '#888'} style={{ marginTop: 8 }} />}
+            {/* SEARCH RESULTS or SUGGESTIONS */}
+            {loading && <ActivityIndicator size="small" color="#8b5cf6" style={{ marginTop: 20 }} />}
+
+            {/* Suggestions when not searching */}
+            {!loading && search.length === 0 && (suggestions.favorites.length > 0 || suggestions.recent.length > 0) && (
+                <View style={{ maxHeight: 400, paddingHorizontal: 16, marginTop: 8 }}>
+                    <FoodSuggestions
+                        favorites={suggestions.favorites}
+                        recent={suggestions.recent}
+                        onSelect={item => openFoodDetailsModal(item)}
+                    />
+                </View>
+            )}
+
+            {/* Search Results */}
             {results.length > 0 && (
-                <ScrollView
-                    style={{
-                        maxHeight: 250,
-                        marginHorizontal: 16,
-                        backgroundColor: theme === 'light' ? '#ffffff' : '#222',
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        borderColor: theme === 'light' ? '#e5e7eb' : '#333',
-                    }}
-                >
-                    {results.map((item) => (
-                        <TouchableOpacity
-                            key={item.id}
-                            style={{ padding: 12, borderBottomWidth: 1, borderBottomColor: theme === 'light' ? '#e5e7eb' : '#333' }}
-                            onPress={() => openFoodDetailsModal(item)}
-                        >
-                            <Text style={{ color: theme === 'light' ? '#111' : '#fff', fontWeight: '600' }}>{item.name}</Text>
-                            <Text style={{ color: theme === 'light' ? '#475467' : '#aaa', fontSize: 12, marginTop: 2 }}>{item.description}</Text>
-                            <Text style={{ color: theme === 'light' ? '#667085' : '#888', fontSize: 11, marginTop: 2 }}>Category: {item.category}</Text>
-                            <Text style={{ color: theme === 'light' ? '#475467' : '#aaa', fontSize: 12, marginTop: 4 }}>
-                                {item.calories} kcal | Protein: {item.protein}g Carbs: {item.carbs}g Fats: {item.fats}g
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
+                <View style={{ paddingHorizontal: 16 }}>
+                    <ScrollView
+                        style={{
+                            maxHeight: 400,
+                            marginTop: 8,
+                            marginBottom: 12,
+                        }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {results.map((item) => (
+                            <FoodListItem
+                                key={item.id}
+                                item={item}
+                                onPress={(item) => openFoodDetailsModal(item)}
+                            />
+                        ))}
+                    </ScrollView>
+                </View>
             )}
 
             {/* MEALS LIST */}

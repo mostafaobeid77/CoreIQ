@@ -97,6 +97,13 @@ const PlanDayView = React.memo(function PlanDayView({
                         <Ionicons name="restaurant" size={20} color="#8b5cf6" />
                         <Text style={[styles.sectionTitle, { color: colors.text }]}>{section}</Text>
                     </View>
+                    <TouchableOpacity
+                        onPress={() => onAddMeal(section)}
+                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                        style={[styles.addButton, { backgroundColor: '#8b5cf6' }]}
+                    >
+                        <Ionicons name="add" size={20} color="#FFF" />
+                    </TouchableOpacity>
                 </View>
 
                 {sectionMeals.length === 0 ? (

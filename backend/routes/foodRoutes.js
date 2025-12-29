@@ -2,9 +2,14 @@ const express = require('express');
 const router = express.Router();
 const foodController = require('../controllers/foodController');
 const { cache } = require('../middleware/cacheMiddleware');
+const auth = require('../middleware/auth');
 
 // GET /api/foods - Search/List with Caching (5 mins)
 router.get('/', cache(300000), foodController.getFoods);
+
+// GET /api/foods/suggestions - Get smart suggestions (Favorites + Recent)
+// Must be defined BEFORE /:id route
+router.get('/suggestions', auth, cache(60000), foodController.getSuggestions);
 
 // GET /api/foods/categories - Get categories (Cached 1 hour)
 router.get('/categories', cache(3600000), async (req, res) => {

@@ -1,6 +1,7 @@
 // hooks/meals/useMealSearch.ts
 import { useCallback } from 'react';
 import { API_URLS } from '../../constants/api';
+import { api } from '../../services/api';
 
 export function useMealSearch() {
   const searchMeals = useCallback(async (query: string) => {
@@ -30,16 +31,20 @@ export function useMealSearch() {
           continue; // Try next URL
         }
 
-        const data = await response.json();
-        if (!Array.isArray(data)) {
-          console.error('Invalid data format:', data);
+        const rawData = await response.json();
+
+        // Handle both simple array and paginated { data: [] } response
+        const foodsList = Array.isArray(rawData) ? rawData : (Array.isArray(rawData.data) ? rawData.data : null);
+
+        if (!foodsList) {
+          console.error('Invalid data format:', rawData);
           continue;
         }
 
-        console.log(`✅ Found ${data.length} foods from ${baseUrl}`);
+        console.log(`✅ Found ${foodsList.length} foods from ${baseUrl}`);
 
         // Map backend response to frontend structure
-        const mapped = data.map((food: any) => {
+        const mapped = foodsList.map((food: any) => {
           const result = {
             id: food._id,
             name: food.name,
@@ -67,5 +72,40 @@ export function useMealSearch() {
     return [];
   }, []); // Empty dependency array since API_URLS is constant
 
-  return { searchMeals };
+  const getSuggestions = useCallback(async () => {
+    for (const baseUrl of API_URLS) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+        const apiUrl = `${baseUrl}/api/foods/suggestions`;
+        console.log('💡 Fetching suggestions from:', apiUrl);
+
+        const token = await api.getToken();
+
+        const response = await fetch(apiUrl, {
+          signal: controller.signal,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          },
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) continue;
+
+        const data = await response.json();
+        return {
+          favorites: data.favorites || [],
+          recent: data.recent || []
+        };
+      } catch (error) {
+        console.error(`❌ Suggestion error with ${baseUrl}:`, error);
+      }
+    }
+    return { favorites: [], recent: [] };
+  }, []);
+
+  return { searchMeals, getSuggestions };
 }

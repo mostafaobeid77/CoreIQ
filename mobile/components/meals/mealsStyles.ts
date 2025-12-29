@@ -4,8 +4,8 @@ const styles = StyleSheet.create({
   // Meals-specific modal styles
   mealsModalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'flex-end', // Anchor to bottom
     alignItems: 'center',
   },
   mealsModalContent: {
@@ -265,13 +265,16 @@ const styles = StyleSheet.create({
   // --- PREMIUM UI ADDITIONS ---
   premiumModalContent: {
     backgroundColor: '#161616',
-    borderRadius: 28,
-    width: '95%',
-    maxHeight: '90%',
-    minHeight: 600,
+    borderTopLeftRadius: 32, // More rounded top
+    borderTopRightRadius: 32,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    width: '100%', // Full width
+    maxHeight: '85%', // Slightly less height
+    minHeight: 500,
     elevation: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
     overflow: 'hidden',

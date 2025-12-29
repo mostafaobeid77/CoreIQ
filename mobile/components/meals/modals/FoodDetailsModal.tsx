@@ -197,38 +197,36 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
               contentContainerStyle={{ paddingBottom: 30 }}
               keyboardShouldPersistTaps="handled"
             >
-              {/* Food Name Card */}
-              <View style={mealsStyles.foodIdentityCard}>
-                <Text style={mealsStyles.foodNameLarge}>{food.name}</Text>
-                <View style={mealsStyles.brandBadge}>
-                  <Text style={mealsStyles.foodBrandText}>{food.brand || 'Generic'}</Text>
-                </View>
-              </View>
+              {/* Streamlined Identity & Macros */}
+              <View style={{ alignItems: 'center', marginBottom: 24 }}>
+                <Text style={{ fontSize: 24, fontWeight: '800', color: '#fff', marginBottom: 4, textAlign: 'center' }}>{food.name}</Text>
+                <Text style={{ fontSize: 14, color: '#94a3b8', marginBottom: 12 }}>{food.brand || 'Generic Food'}</Text>
 
-              {/* Streamlined Macro Row - All beside each other */}
-              <View style={mealsStyles.premiumMacroGrid}>
-                <View style={mealsStyles.premiumMacroCard}>
-                  <Ionicons name="flame" size={14} color="#f59e42" style={mealsStyles.premiumMacroIcon} />
-                  <Text style={mealsStyles.premiumMacroValue}>{currentCalories}</Text>
-                  <Text style={mealsStyles.premiumMacroLabel}>CAL</Text>
-                </View>
+                {/* Prominent Macro Grid */}
+                <View style={mealsStyles.premiumMacroGrid}>
+                  <View style={mealsStyles.premiumMacroCard}>
+                    <Ionicons name="flame" size={14} color="#f59e42" style={mealsStyles.premiumMacroIcon} />
+                    <Text style={mealsStyles.premiumMacroValue}>{currentCalories}</Text>
+                    <Text style={mealsStyles.premiumMacroLabel}>CAL</Text>
+                  </View>
 
-                <View style={mealsStyles.premiumMacroCard}>
-                  <Ionicons name="fitness" size={14} color="#38bdf8" style={mealsStyles.premiumMacroIcon} />
-                  <Text style={mealsStyles.premiumMacroValue}>{currentProtein}g</Text>
-                  <Text style={mealsStyles.premiumMacroLabel}>PRO</Text>
-                </View>
+                  <View style={mealsStyles.premiumMacroCard}>
+                    <Ionicons name="fitness" size={14} color="#38bdf8" style={mealsStyles.premiumMacroIcon} />
+                    <Text style={mealsStyles.premiumMacroValue}>{currentProtein}g</Text>
+                    <Text style={mealsStyles.premiumMacroLabel}>PRO</Text>
+                  </View>
 
-                <View style={mealsStyles.premiumMacroCard}>
-                  <Ionicons name="leaf" size={14} color="#fbbf24" style={mealsStyles.premiumMacroIcon} />
-                  <Text style={mealsStyles.premiumMacroValue}>{currentCarbs}g</Text>
-                  <Text style={mealsStyles.premiumMacroLabel}>CARB</Text>
-                </View>
+                  <View style={mealsStyles.premiumMacroCard}>
+                    <Ionicons name="leaf" size={14} color="#fbbf24" style={mealsStyles.premiumMacroIcon} />
+                    <Text style={mealsStyles.premiumMacroValue}>{currentCarbs}g</Text>
+                    <Text style={mealsStyles.premiumMacroLabel}>CARB</Text>
+                  </View>
 
-                <View style={mealsStyles.premiumMacroCard}>
-                  <Ionicons name="water" size={14} color="#f472b6" style={mealsStyles.premiumMacroIcon} />
-                  <Text style={mealsStyles.premiumMacroValue}>{currentFats}g</Text>
-                  <Text style={mealsStyles.premiumMacroLabel}>FAT</Text>
+                  <View style={mealsStyles.premiumMacroCard}>
+                    <Ionicons name="water" size={14} color="#f472b6" style={mealsStyles.premiumMacroIcon} />
+                    <Text style={mealsStyles.premiumMacroValue}>{currentFats}g</Text>
+                    <Text style={mealsStyles.premiumMacroLabel}>FAT</Text>
+                  </View>
                 </View>
               </View>
 
@@ -239,30 +237,33 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
                 <Text style={mealsStyles.premiumSectionLabel}>HOW MUCH?</Text>
 
                 {/* Mode Selector */}
-                <View style={mealsStyles.modeSelector}>
+                {/* Simplified Mode Selector */}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
                   <TouchableOpacity
-                    style={[mealsStyles.modeTab, inputMode === 'grams' && mealsStyles.modeTabActive]}
+                    style={[
+                      { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginRight: 8, borderWidth: 1 },
+                      inputMode === 'grams' ? { backgroundColor: '#8b5cf6', borderColor: '#8b5cf6' } : { backgroundColor: 'transparent', borderColor: '#333' }
+                    ]}
                     onPress={() => { setInputMode('grams'); setQuantity('100'); }}
                   >
-                    <Ionicons name={isDrink ? "water-outline" : "scale-outline"} size={14} color={inputMode === 'grams' ? '#fff' : '#888'} />
-                    <Text style={[mealsStyles.modeTabText, inputMode === 'grams' && mealsStyles.modeTabTextActive]}>
-                      {isDrink ? 'ML' : 'Grams'}
-                    </Text>
+                    <Text style={{ color: inputMode === 'grams' ? '#fff' : '#888', fontWeight: '600', fontSize: 13 }}>Grams / ML</Text>
                   </TouchableOpacity>
 
-                  {food.servings && food.servings.length > 0 && food.servings.map((serving, index) => (
+                  {food.servings?.map((serving, index) => (
                     <TouchableOpacity
                       key={index}
-                      style={[mealsStyles.modeTab, (inputMode === 'servings' && selectedServingIndex === index) && mealsStyles.modeTabActive]}
+                      style={[
+                        { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginRight: 8, borderWidth: 1 },
+                        (inputMode === 'servings' && selectedServingIndex === index) ? { backgroundColor: '#8b5cf6', borderColor: '#8b5cf6' } : { backgroundColor: 'transparent', borderColor: '#333' }
+                      ]}
                       onPress={() => { setInputMode('servings'); setSelectedServingIndex(index); setQuantity('1'); }}
                     >
-                      <Ionicons name="apps-outline" size={14} color={(inputMode === 'servings' && selectedServingIndex === index) ? '#fff' : '#888'} />
-                      <Text style={[mealsStyles.modeTabText, (inputMode === 'servings' && selectedServingIndex === index) && mealsStyles.modeTabTextActive]}>
+                      <Text style={{ color: (inputMode === 'servings' && selectedServingIndex === index) ? '#fff' : '#888', fontWeight: '600', fontSize: 13 }}>
                         {serving.size || `Serving ${index + 1}`}
                       </Text>
                     </TouchableOpacity>
                   ))}
-                </View>
+                </ScrollView>
 
                 {/* Interactive Adjuster */}
                 <View style={mealsStyles.quantityAdjusterContainer}>

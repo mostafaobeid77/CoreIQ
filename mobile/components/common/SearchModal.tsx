@@ -6,6 +6,8 @@ import Colors from '../../constants/Colors';
 import { useMealSearch } from '../../hooks/meals/useMealSearch';
 import { useWorkoutSearch } from '../../hooks/workouts/useWorkoutSearch';
 import { useDebounce } from '../../hooks/meals/useDebounce';
+import FoodSuggestions from './FoodSuggestions';
+import FoodListItem from './FoodListItem';
 
 interface SearchModalProps {
     visible: boolean;
@@ -21,8 +23,9 @@ export default function SearchModal({ visible, onClose, type, onSelect }: Search
     const debouncedQuery = useDebounce(query, 500);
     const [results, setResults] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+    const [suggestions, setSuggestions] = useState<{ favorites: any[], recent: any[] }>({ favorites: [], recent: [] });
 
-    const { searchMeals } = useMealSearch();
+    const { searchMeals, getSuggestions } = useMealSearch();
     const { searchWorkouts } = useWorkoutSearch();
 
     useEffect(() => {
@@ -40,8 +43,12 @@ export default function SearchModal({ visible, onClose, type, onSelect }: Search
                     // Fetch some default suggestions based on type
                     // Ideally this would be "recent" or "popular" from backend
                     if (type === 'meal') {
-                        const data = await searchMeals('chicken'); // Mock suggestions
-                        setResults(data.slice(0, 5));
+                        // Load suggestions from backend
+                        const data = await getSuggestions();
+                        setSuggestions(data);
+                        // Mock data commented out in favor of real suggestions
+                        // const data = await searchMeals('chicken');
+                        // setResults(data.slice(0, 5));
                     } else {
                         const data = await searchWorkouts('press'); // Mock suggestions
                         setResults(data.slice(0, 5));
@@ -78,21 +85,11 @@ export default function SearchModal({ visible, onClose, type, onSelect }: Search
     }, [debouncedQuery, type, query]);
 
     const renderItem = ({ item }: { item: any }) => (
-        <TouchableOpacity
-            style={[styles.item, { borderBottomColor: colors.border }]}
-            onPress={() => onSelect(item)}
-        >
-            <View>
-                <Text style={[styles.itemName, { color: colors.text }]}>{item.name}</Text>
-                <Text style={[styles.itemSub, { color: colors.textSecondary }]}>
-                    {type === 'meal'
-                        ? `${item.calories} kcal • ${item.brand || 'Generic'}`
-                        : `${item.muscle_group || item.type}`
-                    }
-                </Text>
-            </View>
-            <Ionicons name="add" size={24} color={colors.primary} />
-        </TouchableOpacity>
+        <FoodListItem
+            item={item}
+            onPress={onSelect}
+        // For general search results, we don't know if it's a favorite, so defaults apply
+        />
     );
 
     return (
@@ -107,18 +104,18 @@ export default function SearchModal({ visible, onClose, type, onSelect }: Search
                     </TouchableOpacity>
                 </View>
 
-                <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
-                    <Ionicons name="search" size={20} color={colors.textSecondary} />
+                <View style={[styles.searchContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                    <Ionicons name="search" size={20} color={colors.primary} />
                     <TextInput
                         style={[styles.input, { color: colors.text }]}
-                        placeholder={`Search ${type}s...`}
+                        placeholder={`Search ${type === 'meal' ? 'foods via AI...' : 'workouts...'}`}
                         placeholderTextColor={colors.textSecondary}
                         value={query}
                         onChangeText={setQuery}
                         autoFocus
                     />
                     {query.length > 0 && (
-                        <TouchableOpacity onPress={() => setQuery('')}>
+                        <TouchableOpacity onPress={() => setQuery('')} style={styles.clearButton}>
                             <Ionicons name="close-circle" size={18} color={colors.textSecondary} />
                         </TouchableOpacity>
                     )}
@@ -135,23 +132,24 @@ export default function SearchModal({ visible, onClose, type, onSelect }: Search
                         keyExtractor={(item) => item._id || item.id}
                         contentContainerStyle={styles.list}
                         ListEmptyComponent={
-                            query.length > 1 ? (
+                            query.length === 0 && type === 'meal' ? (
+                                <FoodSuggestions
+                                    favorites={suggestions.favorites}
+                                    recent={suggestions.recent}
+                                    onSelect={onSelect}
+                                />
+                            ) : query.length > 1 ? (
                                 <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
                                     No results found
                                 </Text>
                             ) : null
                         }
-                        ListHeaderComponent={
-                            query.length === 0 && results.length > 0 ? (
-                                <Text style={{ color: colors.textSecondary, marginBottom: 10, fontWeight: '600' }}>
-                                    Suggested
-                                </Text>
-                            ) : null
-                        }
+                        ListHeaderComponent={null}
                     />
                 )}
             </View>
         </Modal>
+
     );
 }
 
@@ -177,32 +175,32 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 12,
-        borderRadius: 12,
-        marginBottom: 20,
-        gap: 10,
+        padding: 16,
+        borderRadius: 16,
+        marginBottom: 24,
+        gap: 12,
+        borderWidth: 1,
+        // Shadow for search bar
+        shadowColor: '#000',
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 2,
     },
     input: {
         flex: 1,
-        fontSize: 16,
+        fontSize: 17,
+        fontWeight: '500',
+    },
+    clearButton: {
+        padding: 4,
     },
     list: {
         paddingBottom: 40,
+        paddingHorizontal: 4, // Add breathing room for shadows
     },
     item: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 16,
-        borderBottomWidth: 1,
-    },
-    itemName: {
-        fontSize: 16,
-        fontWeight: '600',
-        marginBottom: 4,
-    },
-    itemSub: {
-        fontSize: 14,
+        marginBottom: 8
     },
     center: {
         padding: 40,
