@@ -32,61 +32,79 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   hideDatePicker,
   styles,
   hideWelcome = false
-}) => (
-  <View style={styles.header}>
-    {!hideWelcome && (
-      <View style={styles.headerTopRow}>
-        <Text style={styles.welcome}>
-          Welcome, <Text style={styles.userName}>{userName.split(' ')[0]}</Text> {greetingEmoji}
-        </Text>
-        {(isDefaultAvatar || avatarSource === require('../../../assets/images/logo.png')) ? (
-          // Branch A: Default Logo (Hardcoded White Circle + Contain)
-          <View style={{
-            width: 40,
-            height: 40,
-            borderRadius: 20, // Perfect circle
-            backgroundColor: 'white', // Explicit White
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderWidth: 1,
-            borderColor: '#eee',
-            overflow: 'hidden'
-          }}>
-            <Image
-              source={require('../../../assets/images/logo.png')}
-              style={{ width: '65%', height: '65%', resizeMode: 'contain' }}
-            />
-          </View>
-        ) : (
-          // Branch B: User Photo (Theme Styles + Cover)
-          <View style={styles.avatar}>
-            <Image
-              source={avatarSource}
-              style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
-            />
-          </View>
-        )}
+}) => {
+  const [imageLoadError, setImageLoadError] = React.useState(false);
+
+  // Reset error state if avatar source changes
+  React.useEffect(() => {
+    setImageLoadError(false);
+  }, [avatarSource]);
+
+  const showDefault = isDefaultAvatar ||
+    avatarSource === require('../../../assets/images/logo.png') ||
+    imageLoadError;
+
+  return (
+    <View style={styles.header}>
+      {!hideWelcome && (
+        <View style={styles.headerTopRow}>
+          <Text style={styles.welcome}>
+            Welcome, <Text style={styles.userName}>{userName.split(' ')[0]}</Text> {greetingEmoji}
+          </Text>
+          {showDefault ? (
+            // Branch A: Default Logo (Hardcoded White Circle + Contain)
+            <View style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20, // Perfect circle
+              backgroundColor: 'white', // Explicit White
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#eee',
+              overflow: 'hidden'
+            }}>
+              <Image
+                source={require('../../../assets/images/logo.png')}
+                style={{ width: '65%', height: '65%', resizeMode: 'contain' }}
+              />
+            </View>
+          ) : (
+            // Branch B: User Photo (Theme Styles + Cover)
+            <View style={styles.avatar}>
+              <Image
+                source={avatarSource}
+                style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+                onError={() => {
+                  console.log('[DashboardHeader] Avatar load failed, falling back to default');
+                  setImageLoadError(true);
+                }}
+              />
+            </View>
+          )}
+        </View>
+      )}
+      <View style={styles.dateBar}>
+        <TouchableOpacity onPress={() => changeDay('prev')}>
+          <Ionicons name="chevron-back" size={28} color={styles.dateText?.color || '#111'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={showDatePicker}>
+          <Text style={styles.dateText}>{format(selectedDate, 'EEEE, MMMM d, yyyy')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => changeDay('next')}>
+          <Ionicons name="chevron-forward" size={28} color={styles.dateText?.color || '#111'} />
+        </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          date={selectedDate}
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
       </View>
-    )}
-    <View style={styles.dateBar}>
-      <TouchableOpacity onPress={() => changeDay('prev')}>
-        <Ionicons name="chevron-back" size={28} color={styles.dateText?.color || '#111'} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={showDatePicker}>
-        <Text style={styles.dateText}>{format(selectedDate, 'EEEE, MMMM d, yyyy')}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => changeDay('next')}>
-        <Ionicons name="chevron-forward" size={28} color={styles.dateText?.color || '#111'} />
-      </TouchableOpacity>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        date={selectedDate}
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
     </View>
-  </View>
-);
+  );
+
+};
 
 export default DashboardHeader; 

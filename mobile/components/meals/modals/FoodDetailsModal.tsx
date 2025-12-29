@@ -13,7 +13,8 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import mealsStyles from '../mealsStyles';
+import { createMealsStyles } from '../mealsStyles';
+import { useTheme } from '../../../context/themeContext';
 
 interface Serving {
   size: string;
@@ -62,6 +63,10 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
   mealSections,
   defaultMealType
 }) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+  const mealsStyles = React.useMemo(() => createMealsStyles(isLight), [isLight]);
+
   const [quantity, setQuantity] = useState('100');
   const [selectedMeal, setSelectedMeal] = useState<string>('');
   const [inputMode, setInputMode] = useState<'grams' | 'servings'>('grams');

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 // BlurView removed for performance
 import { statsService } from '../../../services/statsService';
 import { format, subDays, parseISO } from 'date-fns';
+import { useTheme } from '../../../context/themeContext';
 
 interface ProgressAnalysisModalProps {
     visible: boolean;
@@ -11,20 +12,109 @@ interface ProgressAnalysisModalProps {
     onWeightUpdated?: () => void; // NEW: callback to refresh dashboard
 }
 
-// STRICT "BLACK AND PURPLE" THEME
-const THEME = {
-    bg: '#000000',
-    card: '#121212',
-    primary: '#8B5CF6',
-    text: '#FFFFFF',
-    textSec: '#A0A0A0',
-    border: '#2A2A2A',
-    success: '#4ADE80',
-    error: '#F87171',
-    warning: '#FBBF24'
-};
-
 const ProgressAnalysisModal = ({ visible, onClose, onWeightUpdated }: ProgressAnalysisModalProps) => {
+    const { theme } = useTheme();
+    const isLight = theme === 'light';
+
+    // DYNAMIC THEME
+    const THEME = useMemo(() => ({
+        bg: isLight ? '#ffffff' : '#000000',
+        card: isLight ? '#f3f4f6' : '#121212',
+        primary: '#8B5CF6',
+        text: isLight ? '#1f2937' : '#FFFFFF',
+        textSec: isLight ? '#6b7280' : '#A0A0A0',
+        border: isLight ? '#e5e7eb' : '#2A2A2A',
+        success: isLight ? '#22c55e' : '#4ADE80',
+        error: '#F87171',
+        warning: '#FBBF24'
+    }), [isLight]);
+
+    // Dynamic Styles Generator
+    const styles = useMemo(() => StyleSheet.create({
+        container: {
+            flex: 1,
+            justifyContent: 'flex-end',
+        },
+        content: {
+            backgroundColor: THEME.bg,
+            borderTopLeftRadius: 32,
+            borderTopRightRadius: 32,
+            paddingHorizontal: 24,
+            paddingTop: 24,
+            paddingBottom: 0,
+            maxHeight: '85%',
+            borderWidth: 1,
+            borderColor: THEME.border
+        },
+        header: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 20
+        },
+        title: {
+            fontSize: 24,
+            fontWeight: '800',
+            color: THEME.text,
+            letterSpacing: -0.5
+        },
+        closeBtn: {
+            padding: 8,
+            backgroundColor: THEME.card,
+            borderRadius: 50
+        },
+        scoreCard: {
+            backgroundColor: THEME.card,
+            borderRadius: 24,
+            padding: 24,
+            alignItems: 'center',
+            borderWidth: 1,
+            marginBottom: 30
+        },
+        scoreStatus: { fontSize: 32, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1 },
+        scoreAdvice: { fontSize: 16, color: THEME.textSec, textAlign: 'center', lineHeight: 22, fontStyle: 'italic' },
+
+        section: { marginBottom: 30 },
+        sectionTitle: { color: THEME.textSec, fontSize: 13, fontWeight: '700', marginBottom: 15, textTransform: 'uppercase', letterSpacing: 1 },
+
+        statRow: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: THEME.card,
+            padding: 16,
+            borderRadius: 24,
+            marginBottom: 12,
+            borderWidth: 1,
+            borderColor: THEME.border
+        },
+        iconBox: { width: 48, height: 48, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+        statLabel: { fontSize: 16, fontWeight: '700', color: THEME.text },
+        statSub: { fontSize: 12, color: THEME.textSec, marginTop: 2, fontWeight: '600' },
+        statValue: { fontSize: 18, fontWeight: '800' },
+
+        noteCard: {
+            backgroundColor: isLight ? '#f9fafb' : '#111',
+            borderRadius: 24,
+            padding: 24,
+            borderWidth: 1,
+            borderColor: THEME.border,
+            borderStyle: 'dashed'
+        },
+        noteTitle: { color: THEME.primary, fontSize: 12, fontWeight: '800', marginBottom: 10, letterSpacing: 1 },
+        noteText: { color: THEME.text, fontSize: 15, lineHeight: 22 },
+
+        suggestionCard: {
+            backgroundColor: isLight ? '#f3f4f6' : '#1A1A1A',
+            borderRadius: 24,
+            padding: 24,
+            borderWidth: 1,
+            borderColor: THEME.primary,
+            marginBottom: 30
+        },
+
+        center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40 }
+    }), [THEME, isLight]);
+
     const [loading, setLoading] = useState(true);
     const [report, setReport] = useState<any>(null);
     const [fadeAnim] = useState(new Animated.Value(0));
@@ -206,89 +296,5 @@ const ProgressAnalysisModal = ({ visible, onClose, onWeightUpdated }: ProgressAn
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'flex-end',
-    },
-    content: {
-        backgroundColor: THEME.bg,
-        borderTopLeftRadius: 32,
-        borderTopRightRadius: 32,
-        paddingHorizontal: 24,
-        paddingTop: 24,
-        paddingBottom: 0,
-        maxHeight: '85%',
-        borderWidth: 1,
-        borderColor: THEME.border
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 20
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: '800',
-        color: THEME.text,
-        letterSpacing: -0.5
-    },
-    closeBtn: {
-        padding: 8,
-        backgroundColor: THEME.card,
-        borderRadius: 50
-    },
-    scoreCard: {
-        backgroundColor: THEME.card,
-        borderRadius: 24,
-        padding: 24,
-        alignItems: 'center',
-        borderWidth: 1,
-        marginBottom: 30
-    },
-    scoreStatus: { fontSize: 32, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1 },
-    scoreAdvice: { fontSize: 16, color: THEME.textSec, textAlign: 'center', lineHeight: 22, fontStyle: 'italic' },
-
-    section: { marginBottom: 30 },
-    sectionTitle: { color: THEME.textSec, fontSize: 13, fontWeight: '700', marginBottom: 15, textTransform: 'uppercase', letterSpacing: 1 },
-
-    statRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: THEME.card,
-        padding: 16,
-        borderRadius: 24,
-        marginBottom: 12,
-        borderWidth: 1,
-        borderColor: THEME.border
-    },
-    iconBox: { width: 48, height: 48, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-    statLabel: { fontSize: 16, fontWeight: '700', color: THEME.text },
-    statSub: { fontSize: 12, color: THEME.textSec, marginTop: 2, fontWeight: '600' },
-    statValue: { fontSize: 18, fontWeight: '800' },
-
-    noteCard: {
-        backgroundColor: '#111',
-        borderRadius: 24,
-        padding: 24,
-        borderWidth: 1,
-        borderColor: THEME.border,
-        borderStyle: 'dashed'
-    },
-    noteTitle: { color: THEME.primary, fontSize: 12, fontWeight: '800', marginBottom: 10, letterSpacing: 1 },
-    noteText: { color: THEME.text, fontSize: 15, lineHeight: 22 },
-
-    suggestionCard: {
-        backgroundColor: '#1A1A1A',
-        borderRadius: 24,
-        padding: 24,
-        borderWidth: 1,
-        borderColor: THEME.primary,
-        marginBottom: 30
-    },
-
-    center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40 }
-});
-
+// styles moved inside component for dynamic theming
 export default ProgressAnalysisModal;

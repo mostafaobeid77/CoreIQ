@@ -92,6 +92,12 @@ const DashboardScreen = () => {
     user.profilePhoto === 'null' ||
     user.profilePhoto.trim() === '';
 
+  console.log('[DashboardScreen] Avatar Debug:', {
+    photo: user?.profilePhoto,
+    type: typeof user?.profilePhoto,
+    isDefault: isDefaultAvatar
+  });
+
   const avatarSource = isDefaultAvatar
     ? require('../assets/images/logo.png')
     : { uri: fixProfilePhotoUrl(user!.profilePhoto!) };

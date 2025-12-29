@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-const styles = StyleSheet.create({
+export const createMealsStyles = (isLight: boolean) => StyleSheet.create({
   // Meals-specific modal styles
   mealsModalOverlay: {
     flex: 1,
@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mealsModalContent: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: isLight ? '#ffffff' : '#1a1a1a',
     borderRadius: 20,
     padding: 24,
     width: '95%',
@@ -22,28 +22,28 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
   },
   mealsModalTitle: {
-    color: '#fff',
+    color: isLight ? '#1f2937' : '#fff',
     fontSize: 22,
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 16,
   },
   mealsModalSubtitle: {
-    color: '#aaa',
+    color: isLight ? '#6b7280' : '#aaa',
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 24,
   },
   mealsWaterInput: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
     borderRadius: 12,
     padding: 16,
-    color: '#fff',
+    color: isLight ? '#111' : '#fff',
     fontSize: 18,
     marginBottom: 16,
     textAlign: 'center',
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: isLight ? '#e5e7eb' : '#444',
   },
   mealsClearButton: {
     position: 'absolute',
@@ -59,15 +59,15 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   mealsQuickButton: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: isLight ? '#e5e7eb' : '#444',
   },
   mealsQuickButtonText: {
-    color: '#a78bfa',
+    color: '#8b5cf6',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -92,9 +92,9 @@ const styles = StyleSheet.create({
     minHeight: 56,
   },
   mealsCancelButton: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: isLight ? '#e5e7eb' : '#444',
   },
   mealsConfirmButton: {
     backgroundColor: '#8b5cf6',
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     borderColor: '#7c3aed',
   },
   mealsCancelButtonText: {
-    color: '#aaa',
+    color: isLight ? '#6b7280' : '#aaa',
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',
@@ -120,21 +120,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   quantityLabel: {
-    color: '#fff',
+    color: isLight ? '#374151' : '#fff',
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
   },
   quantityInput: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
     borderRadius: 12,
     padding: 16,
-    color: '#fff',
+    color: isLight ? '#111' : '#fff',
     fontSize: 18,
     marginBottom: 16,
     textAlign: 'center',
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: isLight ? '#e5e7eb' : '#444',
   },
   quantityButtons: {
     flexDirection: 'row',
@@ -144,35 +144,35 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   quantityButton: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: isLight ? '#e5e7eb' : '#444',
     minWidth: 80,
     alignItems: 'center',
   },
   quantityButtonText: {
-    color: '#a78bfa',
+    color: '#8b5cf6',
     fontSize: 16,
     fontWeight: '600',
   },
   // Food info styles
   foodInfoSection: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
   },
   foodName: {
-    color: '#fff',
+    color: isLight ? '#1f2937' : '#fff',
     fontSize: 20,
     fontWeight: '700',
     marginBottom: 8,
   },
   foodBrand: {
-    color: '#888',
+    color: isLight ? '#6b7280' : '#888',
     fontSize: 16,
     marginBottom: 16,
   },
@@ -187,12 +187,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   macroValue: {
-    color: '#fff',
+    color: isLight ? '#1f2937' : '#fff',
     fontSize: 18,
     fontWeight: '700',
   },
   macroLabel: {
-    color: '#888',
+    color: isLight ? '#6b7280' : '#888',
     fontSize: 12,
     marginTop: 4,
   },
@@ -204,19 +204,19 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   servingButton: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: isLight ? '#e5e7eb' : '#444',
   },
   servingButtonSelected: {
     backgroundColor: '#8b5cf6',
     borderColor: '#8b5cf6',
   },
   servingButtonText: {
-    color: '#aaa',
+    color: isLight ? '#6b7280' : '#aaa',
     fontSize: 16,
     fontWeight: '500',
   },
@@ -225,12 +225,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   servingCalories: {
-    color: '#666',
+    color: isLight ? '#9ca3af' : '#666',
     fontSize: 14,
     marginTop: 4,
   },
   servingCaloriesSelected: {
-    color: '#ccc',
+    color: '#e5e7eb',
   },
   // Meal selection
   mealSection: {
@@ -242,19 +242,19 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   mealButton: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: isLight ? '#e5e7eb' : '#444',
   },
   mealButtonSelected: {
     backgroundColor: '#8b5cf6',
     borderColor: '#8b5cf6',
   },
   mealButtonText: {
-    color: '#aaa',
+    color: isLight ? '#6b7280' : '#aaa',
     fontSize: 16,
     fontWeight: '500',
   },
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   },
   // --- PREMIUM UI ADDITIONS ---
   premiumModalContent: {
-    backgroundColor: '#161616',
+    backgroundColor: isLight ? '#ffffff' : '#161616',
     borderTopLeftRadius: 32, // More rounded top
     borderTopRightRadius: 32,
     borderBottomLeftRadius: 0,
@@ -286,16 +286,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 24,
     paddingBottom: 16,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: isLight ? '#f9fafb' : '#1a1a1a',
   },
   premiumModalTitle: {
-    color: '#fff',
+    color: isLight ? '#111827' : '#fff',
     fontSize: 24,
     fontWeight: '800',
     letterSpacing: 0.5,
   },
   closeButtonCircle: {
-    backgroundColor: '#333',
+    backgroundColor: isLight ? '#e5e7eb' : '#333',
     width: 36,
     height: 36,
     borderRadius: 18,
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   foodNameLarge: {
-    color: '#fff',
+    color: isLight ? '#111827' : '#fff',
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     borderColor: '#8b5cf640',
   },
   foodBrandText: {
-    color: '#a78bfa',
+    color: '#8b5cf6',
     fontSize: 14,
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -334,13 +334,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     justifyContent: 'space-between',
-    backgroundColor: '#1a1a1a',
+    backgroundColor: isLight ? '#f3f4f6' : '#1a1a1a',
     paddingVertical: 18,
     borderRadius: 20,
     marginHorizontal: 16,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: '#262626',
+    borderColor: isLight ? '#e5e7eb' : '#262626',
   },
   premiumMacroCard: {
     alignItems: 'center',
@@ -350,13 +350,13 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   premiumMacroValue: {
-    color: '#fff',
+    color: isLight ? '#1f2937' : '#fff',
     fontSize: 16,
     fontWeight: '800',
     letterSpacing: -0.5,
   },
   premiumMacroLabel: {
-    color: '#64748b',
+    color: isLight ? '#6b7280' : '#64748b',
     fontSize: 10,
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   },
   premiumSectionDivider: {
     height: 1,
-    backgroundColor: '#333',
+    backgroundColor: isLight ? '#e5e7eb' : '#333',
     marginHorizontal: 24,
     marginVertical: 10,
   },
@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   premiumSectionLabel: {
-    color: '#666',
+    color: isLight ? '#6b7280' : '#666',
     fontSize: 12,
     fontWeight: '800',
     letterSpacing: 1,
@@ -389,12 +389,12 @@ const styles = StyleSheet.create({
   modeTab: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#222',
+    backgroundColor: isLight ? '#f3f4f6' : '#222',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: isLight ? '#e5e7eb' : '#333',
     gap: 8,
   },
   modeTabActive: {
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     borderColor: '#7c3aed',
   },
   modeTabText: {
-    color: '#888',
+    color: isLight ? '#6b7280' : '#888',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -413,14 +413,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#111', // Dark bg
+    backgroundColor: isLight ? '#f9fafb' : '#111',
     borderRadius: 24,
     padding: 12,
     borderWidth: 2,
-    borderColor: '#333', // Thicker border
+    borderColor: isLight ? '#e5e7eb' : '#333',
     marginTop: 12,
     marginBottom: 12,
-    minHeight: 70, // Force height
+    minHeight: 70,
   },
   adjustButton: {
     backgroundColor: '#8b5cf6',
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   premiumQuantityInput: {
-    color: '#fff',
+    color: isLight ? '#111827' : '#fff',
     fontSize: 34,
     fontWeight: '900',
     textAlign: 'center',
@@ -447,12 +447,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     letterSpacing: -1,
     borderBottomWidth: 2,
-    borderBottomColor: '#333', // Subtle underline to show it is editable
-    backgroundColor: '#1a1a1a', // Slight contrast
+    borderBottomColor: isLight ? '#e5e7eb' : '#333',
+    backgroundColor: isLight ? '#f9fafb' : '#1a1a1a',
     borderRadius: 8,
   },
   unitSubtext: {
-    color: '#64748b',
+    color: isLight ? '#6b7280' : '#64748b',
     fontSize: 12,
     fontWeight: '700',
     marginTop: -2,
@@ -464,12 +464,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   premiumMealBtn: {
-    backgroundColor: '#222',
+    backgroundColor: isLight ? '#f3f4f6' : '#222',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: isLight ? '#e5e7eb' : '#333',
     minWidth: '30%',
     alignItems: 'center',
   },
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     borderColor: '#a78bfa',
   },
   premiumMealBtnText: {
-    color: '#888',
+    color: isLight ? '#6b7280' : '#888',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -488,10 +488,10 @@ const styles = StyleSheet.create({
   premiumFooter: {
     flexDirection: 'row',
     padding: 24,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: isLight ? '#f9fafb' : '#1a1a1a',
     gap: 16,
     borderTopWidth: 1,
-    borderTopColor: '#333',
+    borderTopColor: isLight ? '#e5e7eb' : '#333',
   },
   actionBtn: {
     flex: 1,
@@ -510,9 +510,9 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
   },
   secondaryActionBtn: {
-    backgroundColor: '#252525',
+    backgroundColor: isLight ? '#f3f4f6' : '#252525',
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: isLight ? '#e5e7eb' : '#333',
   },
   primaryActionText: {
     color: '#fff',
@@ -520,10 +520,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   secondaryActionText: {
-    color: '#fff',
+    color: isLight ? '#1f2937' : '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
 });
-
-export default styles; 
