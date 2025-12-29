@@ -42,6 +42,7 @@ import { useDashboardModals } from '../hooks/dashboard/useDashboardModals';
 import { useStats } from '../context/StatsContext';
 import { useMeals } from '../context/MealsContext';
 import { useAuth } from '../context/AuthContext';
+import { fixProfilePhotoUrl } from '../services/api';
 
 const sheetHeight = 500; // Increased height for better scrolling
 
@@ -60,14 +61,8 @@ const DashboardScreen = () => {
   const userName = user?.fullName?.split(' ')[0] || 'there';
   const greetingEmoji = '👋';
   const { theme } = useTheme();
+  // Old avatar logic removed in favor of strict check below
 
-  // Get avatar source - user's profile photo or default logo
-  const avatarSource = React.useMemo(() => {
-    if (user?.profilePhoto) {
-      return { uri: user.profilePhoto };
-    }
-    return require('../assets/images/logo.png');
-  }, [user?.profilePhoto]);
   const styles = React.useMemo(() => createDashboardStyles(theme === 'light'), [theme]);
   const [autoOpenWizard, setAutoOpenWizard] = useState(false);
   const [waterInput, setWaterInput] = useState('');
@@ -89,7 +84,17 @@ const DashboardScreen = () => {
   const [sleepInput, setSleepInput] = useState('');
   const { currentStepCount, isPedometerAvailable } = useStepCounter(user?.id, user?.createdAt);
   const screenHeight = Dimensions.get('window').height;
-  // const sheetAnim = useState(new Animated.Value(screenHeight))[0]; // Removed
+
+  // --- Strict Avatar Logic ---
+  // Centralize the check to ensure consistency
+  const isDefaultAvatar = !user?.profilePhoto ||
+    user.profilePhoto === 'undefined' ||
+    user.profilePhoto === 'null' ||
+    user.profilePhoto.trim() === '';
+
+  const avatarSource = isDefaultAvatar
+    ? require('../assets/images/logo.png')
+    : { uri: fixProfilePhotoUrl(user!.profilePhoto!) };
 
   const {
     selectedDate,
@@ -271,16 +276,10 @@ const DashboardScreen = () => {
       }
     }
 
-    // Only close if we didn't return early (e.g. valid input or cancel)
     if (targetWeight > 0) {
-      // If we got here, it was valid and handled above. 
-      // Or logic flow needs to be cleaner.
-      // Actually, let's restructure slightly to be safe.
+
     } else {
-      // Empty/Zero input -> Close modal implies cancel/clear?
-      // Or if user just pressed save with 0? 
-      // Let's assume 0 means "haven't typed yet" which shouldn't happen if button disabled?
-      // But if they typed 0?
+
       setIsGoalWeightModalVisible(false);
       setSelectedWeightGoal('');
       setGoalWeightInput('');
@@ -388,7 +387,7 @@ const DashboardScreen = () => {
             userName={userName}
             greetingEmoji={greetingEmoji}
             avatarSource={avatarSource}
-            isDefaultAvatar={!user?.profilePhoto || user.profilePhoto === 'undefined' || user.profilePhoto === 'null' || user.profilePhoto.trim() === ''}
+            isDefaultAvatar={isDefaultAvatar}
             selectedDate={selectedDate}
             showDatePicker={showDatePicker}
             changeDay={changeDay}
