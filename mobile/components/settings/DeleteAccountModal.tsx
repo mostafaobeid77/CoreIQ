@@ -41,10 +41,10 @@ export default function DeleteAccountModal({
     // DYNAMIC THEME PALETTE
     const PALETTE = useMemo(() => ({
         backdrop: isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.8)',
-        sheetBg: isLight ? ['#ffffff', '#f8fafc'] : ['rgba(25, 25, 30, 0.95)', 'rgba(20, 20, 25, 0.97)'],
-        borderColor: isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)',
-        textMain: isLight ? '#0f172a' : '#ffffff',
-        textSub: isLight ? '#64748b' : 'rgba(255, 255, 255, 0.5)',
+        sheetBg: isLight ? ['#ffffff', '#f5f3ff'] : ['rgba(25, 25, 30, 0.95)', 'rgba(20, 20, 25, 0.97)'], // Violet Tint
+        borderColor: isLight ? 'rgba(124, 58, 237, 0.1)' : 'rgba(255, 255, 255, 0.08)',
+        textMain: isLight ? '#1e1b4b' : '#ffffff', // Deep Indigo
+        textSub: isLight ? '#5b21b6' : 'rgba(255, 255, 255, 0.5)',
         closeBtnBg: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255, 255, 255, 0.05)',
         closeBtnIcon: isLight ? '#000' : 'rgba(255,255,255,0.7)',
         inputBg: isLight ? '#f1f5f9' : 'rgba(255, 255, 255, 0.05)',

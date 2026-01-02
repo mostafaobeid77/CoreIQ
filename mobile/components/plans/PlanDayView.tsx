@@ -206,7 +206,14 @@ const PlanDayView = React.memo(function PlanDayView({
                             const close = () => swipeableRow?.close();
 
                             // Determine if cardio or strength
-                            const isCardio = (workout.sets?.length === 0 || !workout.sets) && (workout.minutes > 0);
+                            const cardioNames = ['run', 'jog', 'treadmill', 'cycle', 'cycling', 'bike', 'elliptical', 'rowing', 'swim', 'swimming', 'jump rope', 'walking', 'stair master', 'cardio'];
+                            const isCardio =
+                                (workout.workoutType === 'cardio') ||
+                                (workout.type === 'cardio') ||
+                                (workout.category?.toLowerCase() === 'cardio') ||
+                                (workout.muscle_group?.toLowerCase() === 'cardio') ||
+                                (!workout.sets && workout.minutes > 0) ||
+                                (workout.name && cardioNames.some(c => workout.name.toLowerCase().includes(c)));
 
                             // Check if bodyweight exercise (no weight needed)
                             const bodyweightExercises = ['burpees', 'mountain climbers', 'jump squats', 'high knees', 'crunches', 'push-ups', 'push ups', 'pull-ups', 'pull ups', 'sit-ups', 'sit ups', 'jumping jacks', 'lunges', 'bodyweight squats', 'glute bridges'];
@@ -260,12 +267,12 @@ const PlanDayView = React.memo(function PlanDayView({
                                             }}>
                                                 {displayedSets.map((s: any, idx: number) => (
                                                     <View key={idx} style={{
-                                                        backgroundColor: isLight ? '#f8fafc' : '#1a1a1a',
+                                                        backgroundColor: isLight ? '#F9FAFB' : '#1a1a1a', // Warm Neutral
                                                         borderRadius: 8,
                                                         paddingHorizontal: 10,
                                                         paddingVertical: 6,
                                                         borderWidth: 1,
-                                                        borderColor: isLight ? '#f1f5f9' : '#2d2d2d',
+                                                        borderColor: isLight ? '#e5e7eb' : '#2d2d2d',
                                                         flexDirection: 'row',
                                                         alignItems: 'center'
                                                     }}>

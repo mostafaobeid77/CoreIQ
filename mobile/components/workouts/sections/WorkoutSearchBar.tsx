@@ -19,19 +19,35 @@ const WorkoutSearchBar: React.FC<WorkoutSearchBarProps> = ({
   const { theme } = useTheme();
   const isLight = theme === 'light';
   return (
-    <View style={{ paddingHorizontal: 16, marginTop: 12, marginBottom: 8 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: isLight ? '#f8fafc' : '#222', borderRadius: 8, paddingHorizontal: 12, borderWidth: 1, borderColor: isLight ? '#e5e7eb' : '#333' }}>
-        <Ionicons name="search" size={20} color={isLight ? '#667085' : '#888'} style={{ marginRight: 8 }} />
+    <View style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: 12 }}>
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: isLight ? '#ffffff' : '#18181b', // Zinc 900
+        borderRadius: 20, // Future Squircle
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderWidth: 1,
+        borderColor: isLight ? '#e2e8f0' : 'rgba(139, 92, 246, 0.3)', // Subtle violet border
+        // Future Glow
+        shadowColor: '#8b5cf6',
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 8,
+      }}>
+        <Ionicons name="search" size={20} color={isLight ? '#64748b' : '#8b5cf6'} style={{ marginRight: 12 }} />
         <TextInput
-          style={{ flex: 1, color: isLight ? '#111' : '#fff', height: 40 }}
+          style={{ flex: 1, color: isLight ? '#0f172a' : '#fff', fontSize: 16, fontWeight: '600' }}
           placeholder="Search for workouts..."
-          placeholderTextColor={isLight ? '#98a2b3' : '#888'}
+          placeholderTextColor={isLight ? '#94a3b8' : '#71717a'}
           value={value}
           onChangeText={onChangeText}
+          selectionColor="#8b5cf6"
         />
         {value.length > 0 && (
           <TouchableOpacity onPress={onClear} style={{ marginLeft: 8 }}>
-            <Ionicons name="close-circle" size={20} color={isLight ? '#98a2b3' : '#888'} />
+            <Ionicons name="close" size={20} color={isLight ? '#94a3b8' : '#71717a'} />
           </TouchableOpacity>
         )}
       </View>

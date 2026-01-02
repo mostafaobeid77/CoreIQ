@@ -293,7 +293,7 @@ const WorkoutScreen = () => {
               <TouchableOpacity
                 key={index}
                 style={{
-                  backgroundColor: theme === 'light' ? '#fff' : '#1e1e1e',
+                  backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e',
                   padding: 16,
                   borderRadius: 16,
                   marginBottom: 12,
@@ -301,9 +301,11 @@ const WorkoutScreen = () => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   shadowColor: '#000',
-                  shadowOpacity: 0.05,
+                  shadowOpacity: theme === 'light' ? 0.08 : 0.05,
                   shadowRadius: 10,
                   elevation: 2,
+                  borderWidth: 1,
+                  borderColor: theme === 'light' ? '#e2e8f0' : 'transparent',
                 }}
                 onPress={() => handleWorkoutPress(item)}
               >
@@ -332,7 +334,7 @@ const WorkoutScreen = () => {
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 32 }}>
             <View style={{
               width: 80, height: 80, borderRadius: 40,
-              backgroundColor: theme === 'light' ? '#f3e8ff' : '#2e1065',
+              backgroundColor: theme === 'light' ? '#ede9fe' : '#2e1065',
               justifyContent: 'center', alignItems: 'center', marginBottom: 20
             }}>
               <Ionicons name="barbell" size={40} color="#8b5cf6" />
@@ -394,8 +396,8 @@ const WorkoutScreen = () => {
                             elevation: 2,
                             borderWidth: 1,
                             borderColor: entry.isCompleted
-                              ? theme === 'light' ? '#dcfce7' : '#14532d'
-                              : theme === 'light' ? '#f1f5f9' : '#2d2d2d',
+                              ? styles.colors.successBorder
+                              : styles.colors.border,
                           }}
                         >
                           <TouchableOpacity
@@ -449,7 +451,7 @@ const WorkoutScreen = () => {
                                       ? '#64748b'
                                       : '#94a3b8'
                                     : theme === 'light'
-                                      ? '#0f172a'
+                                      ? '#334155'
                                       : '#ffffff',
                                   fontSize: 16,
                                   fontWeight: '700',
@@ -462,7 +464,7 @@ const WorkoutScreen = () => {
                               <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
                                 <Text
                                   style={{
-                                    color: theme === 'light' ? '#94a3b8' : '#64748b',
+                                    color: theme === 'light' ? '#64748b' : '#64748b',
                                     fontSize: 12,
                                     fontWeight: '600',
                                   }}
@@ -499,16 +501,16 @@ const WorkoutScreen = () => {
                                       <>
                                         {displayedSets.map((s: any, idx: number) => (
                                           <View key={idx} style={{
-                                            backgroundColor: theme === 'light' ? '#f8fafc' : '#1a1a1a',
+                                            backgroundColor: theme === 'light' ? '#f1f5f9' : '#1a1a1a',
                                             borderRadius: 8,
                                             paddingHorizontal: 10,
                                             paddingVertical: 6,
                                             borderWidth: 1,
-                                            borderColor: theme === 'light' ? '#f1f5f9' : '#2d2d2d',
+                                            borderColor: theme === 'light' ? '#e2e8f0' : '#2d2d2d',
                                             flexDirection: 'row',
                                             alignItems: 'center'
                                           }}>
-                                            <Text style={{ color: theme === 'light' ? '#94a3b8' : '#64748b', fontSize: 10, fontWeight: '800', marginRight: 4 }}>
+                                            <Text style={{ color: theme === 'light' ? '#64748b' : '#64748b', fontSize: 10, fontWeight: '800', marginRight: 4 }}>
                                               {idx + 1}
                                             </Text>
                                             <Text style={{ color: theme === 'light' ? '#334155' : '#e2e8f0', fontSize: 12, fontWeight: '700' }}>
@@ -565,11 +567,11 @@ const WorkoutScreen = () => {
                   borderRadius: 20,
                   padding: 20,
                   shadowColor: '#000',
-                  shadowOpacity: theme === 'light' ? 0.03 : 0.2,
+                  shadowOpacity: theme === 'light' ? 0.08 : 0.2,
                   shadowRadius: 10,
                   elevation: 2,
                   borderWidth: 1,
-                  borderColor: theme === 'light' ? '#f1f5f9' : '#2d2d2d',
+                  borderColor: theme === 'light' ? '#e2e8f0' : '#2d2d2d',
                 }}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
@@ -611,7 +613,7 @@ const WorkoutScreen = () => {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         marginBottom: index === cardioEntries.length - 1 ? 0 : 16,
-                        backgroundColor: theme === 'light' ? '#fff' : '#1e1e1e', // Ensure bg for swipeable
+                        backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', // Ensure bg for swipeable
                       }}
                       onPress={() => handleEditWorkout(entry)}
                     >
@@ -690,7 +692,7 @@ const WorkoutScreen = () => {
           padding: 20,
           paddingBottom: 22,
           borderWidth: 1,
-          borderColor: theme === 'light' ? '#ede9fe' : '#2d2d2d',
+          borderColor: theme === 'light' ? '#e2e8f0' : '#2d2d2d',
           // Purple Shadow Glow
           shadowColor: '#8b5cf6',
           shadowOffset: { width: 0, height: 4 },

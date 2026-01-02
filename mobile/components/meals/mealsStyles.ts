@@ -1,527 +1,308 @@
 import { StyleSheet } from 'react-native';
 
 export const createMealsStyles = (isLight: boolean) => StyleSheet.create({
-  // Meals-specific modal styles
+  // --- FUTURE MODAL STYLES (Zero-Box, Glowing, Spacious) ---
+
+  // 1. The Canvas
   mealsModalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    justifyContent: 'flex-end', // Anchor to bottom
+    backgroundColor: 'rgba(0, 0, 0, 0.75)', // Darker overlay for focus
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   mealsModalContent: {
-    backgroundColor: isLight ? '#ffffff' : '#1a1a1a',
-    borderRadius: 20,
-    padding: 24,
-    width: '95%',
-    maxHeight: '95%',
-    minHeight: 500,
-    elevation: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
+    backgroundColor: isLight ? '#ffffff' : '#09090b', // Deepest dark
+    width: '96%',
+    height: '90%',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    padding: 0, // We control padding internally
+    overflow: 'hidden',
+    elevation: 50,
+    shadowColor: '#8b5cf6', // Violet shadow glow
+    shadowOffset: { width: 0, height: -10 },
+    shadowOpacity: isLight ? 0.2 : 0.4,
+    shadowRadius: 40,
   },
-  mealsModalTitle: {
-    color: isLight ? '#1f2937' : '#fff',
-    fontSize: 22,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  mealsModalSubtitle: {
-    color: isLight ? '#6b7280' : '#aaa',
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  mealsWaterInput: {
-    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
-    borderRadius: 12,
-    padding: 16,
-    color: isLight ? '#111' : '#fff',
-    fontSize: 18,
-    marginBottom: 16,
-    textAlign: 'center',
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#444',
-  },
-  mealsClearButton: {
-    position: 'absolute',
-    right: 16,
-    top: 16,
-    zIndex: 1,
-  },
-  mealsQuickButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 24,
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  mealsQuickButton: {
-    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#444',
-  },
-  mealsQuickButtonText: {
-    color: '#8b5cf6',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  mealsModalButtons: {
+
+  // 2. The Header (Minimal)
+  futureHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 16,
-    marginTop: 16,
+    alignItems: 'center',
+    paddingHorizontal: 28,
+    paddingTop: 28,
+    paddingBottom: 10,
+    zIndex: 10,
   },
-  mealsModalButton: {
-    flex: 1,
-    paddingVertical: 18,
-    paddingHorizontal: 24,
-    borderRadius: 14,
+  futureHeaderTitle: {
+    color: isLight ? '#0f172a' : '#fff',
+    fontSize: 16, // Smaller, understated
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    opacity: 0.8,
+  },
+  futureCloseBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: isLight ? '#f1f5f9' : '#18181b', // Subtle
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5,
+  },
+
+  // 3. HUD Macros (Head-Up Display - Top)
+  futureStickyHeader: {
+    backgroundColor: isLight ? '#ffffff' : '#09090b', // Match modal background
+    zIndex: 20,
+    elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    minHeight: 56,
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
-  mealsCancelButton: {
-    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#444',
-  },
-  mealsConfirmButton: {
-    backgroundColor: '#8b5cf6',
-    borderWidth: 1,
-    borderColor: '#7c3aed',
-  },
-  mealsCancelButtonText: {
-    color: isLight ? '#6b7280' : '#aaa',
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-    includeFontPadding: false,
-  },
-  mealsConfirmButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-    includeFontPadding: false,
-  },
-  // Quantity input styles
-  quantitySection: {
-    marginBottom: 20,
-  },
-  quantityLabel: {
-    color: isLight ? '#374151' : '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
-  },
-  quantityInput: {
-    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
-    borderRadius: 12,
-    padding: 16,
-    color: isLight ? '#111' : '#fff',
-    fontSize: 18,
-    marginBottom: 16,
-    textAlign: 'center',
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#444',
-  },
-  quantityButtons: {
+  futureMacrosRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 16,
-    flexWrap: 'wrap',
-    gap: 8,
+    alignItems: 'center',
+    paddingVertical: 16, // Slightly reduced to save space
+    borderBottomWidth: 1,
+    borderBottomColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)',
   },
-  quantityButton: {
-    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#444',
-    minWidth: 80,
+  futureMacroItem: {
     alignItems: 'center',
   },
-  quantityButtonText: {
-    color: '#8b5cf6',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  // Food info styles
-  foodInfoSection: {
-    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 20,
-  },
-  foodName: {
-    color: isLight ? '#1f2937' : '#fff',
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-  foodBrand: {
-    color: isLight ? '#6b7280' : '#888',
-    fontSize: 16,
-    marginBottom: 16,
-  },
-  // Macros display
-  macrosGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  macroItem: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  macroValue: {
-    color: isLight ? '#1f2937' : '#fff',
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  macroLabel: {
-    color: isLight ? '#6b7280' : '#888',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  // Serving selection
-  servingSection: {
-    marginBottom: 20,
-  },
-  servingGrid: {
-    gap: 8,
-  },
-  servingButton: {
-    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#444',
-  },
-  servingButtonSelected: {
-    backgroundColor: '#8b5cf6',
-    borderColor: '#8b5cf6',
-  },
-  servingButtonText: {
-    color: isLight ? '#6b7280' : '#aaa',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  servingButtonTextSelected: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  servingCalories: {
-    color: isLight ? '#9ca3af' : '#666',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  servingCaloriesSelected: {
-    color: '#e5e7eb',
-  },
-  // Meal selection
-  mealSection: {
-    marginBottom: 20,
-  },
-  mealGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  mealButton: {
-    backgroundColor: isLight ? '#f3f4f6' : '#2a2a2a',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#444',
-  },
-  mealButtonSelected: {
-    backgroundColor: '#8b5cf6',
-    borderColor: '#8b5cf6',
-  },
-  mealButtonText: {
-    color: isLight ? '#6b7280' : '#aaa',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  mealButtonTextSelected: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  // --- PREMIUM UI ADDITIONS ---
-  premiumModalContent: {
-    backgroundColor: isLight ? '#ffffff' : '#161616',
-    borderTopLeftRadius: 32, // More rounded top
-    borderTopRightRadius: 32,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    width: '100%', // Full width
-    maxHeight: '85%', // Slightly less height
-    minHeight: 500,
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    overflow: 'hidden',
-  },
-  premiumModalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 16,
-    backgroundColor: isLight ? '#f9fafb' : '#1a1a1a',
-  },
-  premiumModalTitle: {
-    color: isLight ? '#111827' : '#fff',
-    fontSize: 24,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-  },
-  closeButtonCircle: {
-    backgroundColor: isLight ? '#e5e7eb' : '#333',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  foodIdentityCard: {
-    paddingHorizontal: 24,
-    marginTop: 12,
-    marginBottom: 20,
-  },
-  foodNameLarge: {
-    color: isLight ? '#111827' : '#fff',
-    fontSize: 28,
-    fontWeight: '800',
-    lineHeight: 34,
-    marginBottom: 10,
-  },
-  brandBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#8b5cf620',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#8b5cf640',
-  },
-  foodBrandText: {
-    color: '#8b5cf6',
-    fontSize: 14,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  premiumMacroGrid: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    justifyContent: 'space-between',
-    backgroundColor: isLight ? '#f3f4f6' : '#1a1a1a',
-    paddingVertical: 18,
-    borderRadius: 20,
-    marginHorizontal: 16,
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#262626',
-  },
-  premiumMacroCard: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  premiumMacroIcon: {
-    marginBottom: 6,
-  },
-  premiumMacroValue: {
-    color: isLight ? '#1f2937' : '#fff',
-    fontSize: 16,
-    fontWeight: '800',
+  futureMacroValue: {
+    fontSize: 20, // Slightly smaller to fit "Calories" text
+    fontWeight: '900',
+    color: isLight ? '#0f172a' : '#fff',
     letterSpacing: -0.5,
   },
-  premiumMacroLabel: {
-    color: isLight ? '#6b7280' : '#64748b',
+  futureMacroLabel: {
     fontSize: 10,
     fontWeight: '700',
+    color: isLight ? '#94a3b8' : '#71717a',
+    letterSpacing: 0.5,
     textTransform: 'uppercase',
-    letterSpacing: 0.8,
     marginTop: 2,
   },
-  premiumSectionDivider: {
-    height: 1,
-    backgroundColor: isLight ? '#e5e7eb' : '#333',
-    marginHorizontal: 24,
-    marginVertical: 10,
-  },
-  premiumSection: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-  },
-  premiumSectionLabel: {
-    color: isLight ? '#6b7280' : '#666',
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 1,
-    marginBottom: 16,
-  },
-  modeSelector: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-    marginBottom: 24,
-  },
-  modeTab: {
-    flexDirection: 'row',
+  // Color accents for macros
+  macroColorCal: { color: '#f59e0b' },
+  macroColorPro: { color: '#3b82f6' },
+  macroColorCarb: { color: '#10b981' },
+  macroColorFat: { color: '#8b5cf6' },
+
+  // 4. Food Identity (Floating in space)
+  futureFoodInfo: {
     alignItems: 'center',
-    backgroundColor: isLight ? '#f3f4f6' : '#222',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#333',
-    gap: 8,
+    paddingHorizontal: 24,
+    marginBottom: 32,
+    marginTop: 24, // Add space since macros are sticky
   },
-  modeTabActive: {
-    backgroundColor: '#8b5cf6',
-    borderColor: '#7c3aed',
+  futureFoodName: {
+    fontSize: 24, // Balanced size
+    fontWeight: '800',
+    color: isLight ? '#0f172a' : '#fff',
+    textAlign: 'center',
+    marginBottom: 6,
+    letterSpacing: -0.5,
   },
-  modeTabText: {
-    color: isLight ? '#6b7280' : '#888',
+  futureFoodBrand: {
     fontSize: 14,
     fontWeight: '600',
-  },
-  modeTabTextActive: {
-    color: '#fff',
-  },
-  quantityAdjusterContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: isLight ? '#f9fafb' : '#111',
-    borderRadius: 24,
-    padding: 12,
-    borderWidth: 2,
-    borderColor: isLight ? '#e5e7eb' : '#333',
-    marginTop: 12,
-    marginBottom: 12,
-    minHeight: 70,
-  },
-  adjustButton: {
-    backgroundColor: '#8b5cf6',
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 4,
-    shadowColor: '#8b5cf6',
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-  },
-  quantityInputWrapper: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  premiumQuantityInput: {
-    color: isLight ? '#111827' : '#fff',
-    fontSize: 34,
-    fontWeight: '900',
-    textAlign: 'center',
-    width: '100%',
-    paddingVertical: 4,
-    letterSpacing: -1,
-    borderBottomWidth: 2,
-    borderBottomColor: isLight ? '#e5e7eb' : '#333',
-    backgroundColor: isLight ? '#f9fafb' : '#1a1a1a',
-    borderRadius: 8,
-  },
-  unitSubtext: {
-    color: isLight ? '#6b7280' : '#64748b',
-    fontSize: 12,
-    fontWeight: '700',
-    marginTop: -2,
+    color: isLight ? '#64748b' : '#52525b',
+    letterSpacing: 1,
     textTransform: 'uppercase',
   },
-  premiumMealGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  premiumMealBtn: {
-    backgroundColor: isLight ? '#f3f4f6' : '#222',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#333',
-    minWidth: '30%',
+
+  // 5. The Reactor (Quantity Core)
+  futureReactor: {
     alignItems: 'center',
+    marginBottom: 40,
   },
-  premiumMealBtnActive: {
-    backgroundColor: '#8b5cf6',
-    borderColor: '#a78bfa',
-  },
-  premiumMealBtnText: {
-    color: isLight ? '#6b7280' : '#888',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  premiumMealBtnTextActive: {
-    color: '#fff',
-  },
-  premiumFooter: {
+  futureQuantityRow: {
     flexDirection: 'row',
-    padding: 24,
-    backgroundColor: isLight ? '#f9fafb' : '#1a1a1a',
-    gap: 16,
-    borderTopWidth: 1,
-    borderTopColor: isLight ? '#e5e7eb' : '#333',
-  },
-  actionBtn: {
-    flex: 1,
-    height: 56,
-    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
+    gap: 16, // Reduced from 32 to "hug" the number
+    width: '100%', // ensure standard width
   },
-  primaryActionBtn: {
-    backgroundColor: '#8b5cf6',
+  futureQtyBtn: {
+    width: 56, // Slightly smaller
+    height: 56,
+    borderRadius: 20, // Squircle
+    backgroundColor: '#8b5cf6', // Brand
+    alignItems: 'center',
+    justifyContent: 'center',
+    // The "Glow"
+    shadowColor: '#8b5cf6',
+    shadowOffset: { width: 0, height: 4 }, // Subtler offset
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
     elevation: 8,
+  },
+  futureQtyInputWrapper: {
+    minWidth: 120,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  futureQtyInput: {
+    fontSize: 56, // Balanced size
+    fontWeight: '900', // Black weight
+    color: isLight ? '#0f172a' : '#fff',
+    textAlign: 'right', // Align numbers to the right near the unit
+    includeFontPadding: false,
+    padding: 0,
+    height: 70,
+    minWidth: 40, // Ensure it has width to tap
+  },
+  futureUnitSuffix: {
+    fontSize: 24, // Smaller than numbers
+    fontWeight: '700',
+    color: isLight ? '#64748b' : '#52525b',
+    marginLeft: 4,
+    marginBottom: 8, // slight alignment with baseline
+  },
+  futureUnitToggle: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10, // Taller touch target
+    borderRadius: 20, // Pill Shape
+    backgroundColor: isLight ? '#f1f5f9' : '#27272a', // Obvious button bg
+    borderWidth: 1, // Subtle border
+    borderColor: isLight ? '#e2e8f0' : '#3f3f46',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    elevation: 2, // Slight lift
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+  },
+  futureUnitText: {
+    fontSize: 13,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: isLight ? '#475569' : '#e2e8f0', // High contrast text
+    textTransform: 'uppercase',
+  },
+
+  // 6. Serving Grid (Pills)
+  futureServingRow: {
+    flexGrow: 1, // Allow it to fill width
+    justifyContent: 'center', // Center content
+    flexDirection: 'row',
+    paddingHorizontal: 24,
+    gap: 8,
+    marginBottom: 32,
+  },
+  futureServingPill: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 100, // Pill shape
+    backgroundColor: isLight ? '#f8fafc' : '#18181b',
+    borderWidth: 1,
+    borderColor: isLight ? '#e2e8f0' : '#27272a',
+  },
+  futureServingPillActive: {
+    backgroundColor: '#8b5cf6',
+    borderColor: '#8b5cf6',
     shadowColor: '#8b5cf6',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
-    shadowRadius: 12,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  secondaryActionBtn: {
-    backgroundColor: isLight ? '#f3f4f6' : '#252525',
-    borderWidth: 1,
-    borderColor: isLight ? '#e5e7eb' : '#333',
-  },
-  primaryActionText: {
-    color: '#fff',
-    fontSize: 16,
+  futureServingText: {
+    fontSize: 13,
     fontWeight: '700',
+    color: isLight ? '#64748b' : '#71717a',
   },
-  secondaryActionText: {
-    color: isLight ? '#1f2937' : '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+  futureServingTextActive: {
+    color: '#fff',
+  },
+
+  // 7. Meal Select (Clean Grid)
+  futureMealSection: {
+    paddingHorizontal: 24,
+    marginBottom: 100, // Space for scrolling
+  },
+  futureSectionLabel: {
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 2,
+    color: isLight ? '#94a3b8' : '#52525b', // Very subtle
+    marginBottom: 20,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  futureMealGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'center',
+  },
+  futureMealBtn: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    backgroundColor: isLight ? '#f8fafc' : '#18181b',
+    borderWidth: 1,
+    borderColor: isLight ? '#e2e8f0' : '#27272a',
+    minWidth: '40%',
+    alignItems: 'center',
+  },
+  futureMealBtnActive: {
+    backgroundColor: isLight ? '#fff' : '#000', // Contrast active
+    borderColor: '#8b5cf6',
+    shadowColor: '#8b5cf6', // Glow active choice
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  futureMealText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: isLight ? '#64748b' : '#71717a',
+  },
+  futureMealTextActive: {
+    color: '#8b5cf6',
+  },
+
+  // 8. Action Footer (Floating)
+  futureFooter: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 24,
+    paddingBottom: 40,
+    // Gradient fade effect simulated by solid bg for now
+    backgroundColor: isLight ? 'rgba(255,255,255,0.95)' : 'rgba(9,9,11,0.95)',
+    borderTopWidth: 1,
+    borderTopColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)',
+  },
+  futureSaveBtn: {
+    height: 64,
+    borderRadius: 20,
+    backgroundColor: '#8b5cf6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#8b5cf6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  futureSaveText: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#fff',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
 });

@@ -10,7 +10,7 @@ const MealPlanItemSchema = new mongoose.Schema({
   foodId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Food',
-    required: true
+    required: false // Allow custom meals
   },
   name: {
     type: String,
@@ -72,7 +72,7 @@ const WorkoutPlanItemSchema = new mongoose.Schema({
   workoutId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Workout',
-    required: true
+    required: false // Allow custom workouts
   },
   name: {
     type: String,

@@ -92,7 +92,7 @@ export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
-        style={[styles.container, { backgroundColor: isLight ? '#ffffff' : '#121212' }]}
+        style={[styles.container, { backgroundColor: isLight ? '#f5f3ff' : '#121212' }]}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.select({ ios: 80, android: 0 })}
       >

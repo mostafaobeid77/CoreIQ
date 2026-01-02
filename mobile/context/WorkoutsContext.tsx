@@ -39,6 +39,7 @@ interface WorkoutsContextType {
   updateWorkoutEntry: (dateKey: string, id: string, updates: { sets?: { reps: number; weight: number }[]; minutes?: number }) => Promise<void>;
   getCompletedVsTotal: (dateKey: string) => { completed: number; total: number };
   clearDate: (dateKey: string) => Promise<void>;
+  resetWorkouts: () => void;
 }
 
 const WorkoutsContext = createContext<WorkoutsContextType | undefined>(undefined);
@@ -50,13 +51,17 @@ export const WorkoutsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const loadingDatesRef = useRef<Record<string, boolean>>({});
   const { user } = useAuth();
 
-  useEffect(() => {
-    // Reset when user changes
+  const resetWorkouts = useCallback(() => {
     setWorkoutsByDate({});
     setLoadingDates({});
     loadedDatesRef.current = {};
     loadingDatesRef.current = {};
-  }, [user?.id]);
+  }, []);
+
+  useEffect(() => {
+    // Reset when user changes
+    resetWorkouts();
+  }, [user?.id, resetWorkouts]);
 
   const normalizeStrength = useCallback((entry: any): StrengthWorkoutEntry => ({
     id: entry._id || entry.id,
@@ -258,6 +263,7 @@ export const WorkoutsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     updateWorkoutEntry,
     getCompletedVsTotal,
     clearDate,
+    resetWorkouts,
   }), [
     workoutsByDate,
     loadingDates,
@@ -272,6 +278,7 @@ export const WorkoutsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     updateWorkoutEntry,
     getCompletedVsTotal,
     clearDate,
+    resetWorkouts,
   ]);
 
   return (

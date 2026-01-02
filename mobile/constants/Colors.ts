@@ -3,17 +3,17 @@ const tintColorDark = '#fff';
 
 export default {
   light: {
-    text: '#0f172a',
-    textSecondary: '#64748b',
-    background: '#f8fafc',
-    tint: '#8b5cf6',
-    tabIconDefault: '#94a3b8',
-    tabIconSelected: '#8b5cf6',
-    primary: '#8b5cf6',
+    text: '#1e1b4b', // Deep Indigo: Much richer than slate grey "dead" text
+    textSecondary: '#4c1d95', // Rich Purple-Grey
+    background: '#f5f3ff', // "Lively" Violet Tint (instead of flat grey)
+    tint: '#7c3aed', // Vibrant Violet
+    tabIconDefault: '#a78bfa',
+    tabIconSelected: '#7c3aed',
+    primary: '#7c3aed', // Vibrant Purple
     secondary: '#10b981',
     accent: '#f59e0b',
-    card: '#ffffff',
-    border: '#f1f5f9',
+    card: '#ffffff', // Pure white pop
+    border: '#ddd6fe', // Light Violet Border
     error: '#ef4444',
   },
   dark: {

@@ -215,10 +215,10 @@ const AddFoodModal: React.FC<AddFoodModalProps> = ({ visible, onClose, onSuccess
     },
     addServingButton: { backgroundColor: isLight ? '#f5f3ff' : 'rgba(139, 92, 246, 0.1)' },
     addServingText: { color: '#8b5cf6' },
-    servingItem: { backgroundColor: isLight ? '#f8fafc' : '#1e293b' },
+    servingItem: { backgroundColor: isLight ? '#F9FAFB' : '#1e293b' },
     servingItemText: { color: colors.text },
     servingItemNutrients: { color: colors.icon },
-    cancelButton: { backgroundColor: isLight ? '#f1f5f9' : '#334155' },
+    cancelButton: { backgroundColor: isLight ? '#f3f4f6' : '#334155' },
     cancelButtonText: { color: colors.text },
     helperText: { color: colors.icon, fontSize: 13 },
   };

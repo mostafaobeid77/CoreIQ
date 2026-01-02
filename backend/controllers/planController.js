@@ -129,6 +129,12 @@ exports.updatePlan = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
+    console.log(`[UPDATE] Updating plan ${id} with keys:`, Object.keys(updateData));
+    if (updateData.workoutPlan) {
+      console.log(`[UPDATE] Received workoutPlan with ${updateData.workoutPlan.length} days`);
+      const day1 = updateData.workoutPlan.find(d => d.day === 1);
+      if (day1) console.log(`[UPDATE] Day 1 workouts:`, day1.workouts);
+    }
 
     // Don't allow updating status via this endpoint (use activate/deactivate)
     delete updateData.status;
@@ -147,12 +153,14 @@ exports.updatePlan = async (req, res) => {
     if (updateData.mealPlan || updateData.workoutPlan) {
       const existingPlan = await Plan.findById(id);
       if (existingPlan) {
-        const start = new Date(updateData.startDate || existingPlan.startDate);
+        // Use strict UTC date fro existing plan start date to ensure consistency
+        const rawStart = new Date(updateData.startDate || existingPlan.startDate);
+        const start = new Date(Date.UTC(rawStart.getUTCFullYear(), rawStart.getUTCMonth(), rawStart.getUTCDate()));
 
         if (updateData.mealPlan) {
           updateData.mealPlan = updateData.mealPlan.map((day, index) => {
             const dayDate = new Date(start);
-            dayDate.setDate(dayDate.getDate() + index);
+            dayDate.setDate(start.getDate() + index);
             return {
               ...day,
               day: index + 1,
@@ -168,25 +176,29 @@ exports.updatePlan = async (req, res) => {
         if (updateData.workoutPlan) {
           updateData.workoutPlan = updateData.workoutPlan.map((day, index) => {
             const dayDate = new Date(start);
-            dayDate.setDate(dayDate.getDate() + index);
+            dayDate.setDate(start.getDate() + index);
             return {
               ...day,
               day: index + 1,
               date: dayDate,
               workouts: (day.workouts || [])
-                .filter(w => w.workoutId || w.id || w._id) // Remove corrupt entries
+                .filter(w => w.workoutId || w.id || w._id || w.name) // Allow custom workouts with just name
                 .map(w => {
                   // Ensure workoutType is set (frontend often uses 'type')
                   let wType = w.workoutType || w.type || 'strength';
                   if (wType.toLowerCase() === 'cardio') wType = 'cardio';
                   else wType = 'strength';
 
+                  // Preserve sets if they exist, otherwise default
+                  const existingSets = w.sets && w.sets.length > 0 ? w.sets : null;
+                  const defaultSets = [{ reps: 10, weight: 0 }];
+
                   return {
                     ...w,
                     workoutId: w.workoutId || w.id || w._id,
                     workoutType: wType,
                     // Ensure sets exist for strength
-                    sets: (wType === 'strength' && (!w.sets || w.sets.length === 0)) ? [{ reps: 10, weight: 0 }] : (w.sets || [])
+                    sets: (wType === 'strength') ? (existingSets || defaultSets) : []
                   };
                 })
             };
@@ -262,7 +274,8 @@ exports.updatePlan = async (req, res) => {
             // Recreate workout entries from plan
             const workoutEntries = [];
             for (const workout of day.workouts) {
-              if (!workout.workoutId) continue;
+              // Allow name-only custom workouts
+              if (!workout.workoutId && !workout.name) continue;
 
               workoutEntries.push({
                 userId: req.userId,
@@ -316,6 +329,45 @@ exports.activatePlan = async (req, res) => {
     if (plan.status === 'active') {
       return res.status(400).json({ message: 'Plan is already active' });
     }
+
+    // 0. RESET START DATE TO TODAY (UTC)
+    // When activating, shift the entire plan to start TODAY (UTC) so matches strict string queries.
+    // Use client provided date if available (format YYYY-MM-DD) to respect user's timezone.
+    let today;
+    if (req.body && req.body.startDate) {
+      // Create UTC midnight from the client string "YYYY-MM-DD"
+      today = new Date(req.body.startDate);
+      // Ensure it is treated as UTC midnight
+      today = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+    } else {
+      const now = new Date();
+      today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    }
+
+    plan.startDate = today;
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + (plan.duration || 14) - 1);
+    plan.endDate = endDate;
+
+    // Recalculate dates for all days in mealPlan and workoutPlan
+    if (plan.mealPlan) {
+      plan.mealPlan.forEach((day, index) => {
+        const dayDate = new Date(today);
+        dayDate.setDate(today.getDate() + index);
+        day.date = dayDate;
+      });
+    }
+    if (plan.workoutPlan) {
+      plan.workoutPlan.forEach((day, index) => {
+        const dayDate = new Date(today);
+        dayDate.setDate(today.getDate() + index);
+        day.date = dayDate;
+      });
+    }
+
+    // Save the plan with new dates before generating entries
+    await plan.save();
+
 
     // 1. Collect all unique IDs for bulk lookup
     const foodIds = new Set();
@@ -376,7 +428,8 @@ exports.activatePlan = async (req, res) => {
         const food = idStr ? foodMap.get(idStr) : foodMap.get(mealItem.name);
         const resolvedId = mealItem.foodId || food?._id;
 
-        if (!resolvedId) {
+        // Allow custom meals with just a name
+        if (!resolvedId && !mealItem.name) {
           skippedMeals++;
           continue;
         }
@@ -385,7 +438,7 @@ exports.activatePlan = async (req, res) => {
           userId: req.userId,
           date: day.date,
           mealType: mealItem.mealType,
-          foodId: resolvedId,
+          foodId: resolvedId || null, // Allow null if using name-only custom meal
           name: mealItem.name,
           brand: food?.brand || mealItem.brand || 'Generic',
           quantity: mealItem.quantity,
@@ -410,7 +463,7 @@ exports.activatePlan = async (req, res) => {
         const workout = idStr ? workoutMap.get(idStr) : workoutMap.get(workoutItem.name);
         const resolvedId = workoutItem.workoutId || workout?._id;
 
-        if (!resolvedId) {
+        if (!resolvedId && !workoutItem.name) {
           skippedWorkouts++;
           continue;
         }
@@ -430,7 +483,7 @@ exports.activatePlan = async (req, res) => {
         workoutEntries.push(new WorkoutEntry({
           userId: req.userId,
           date: day.date,
-          workoutId: resolvedId,
+          workoutId: resolvedId || null, // Allow name-only
           workoutType: type === 'cardio' ? 'cardio' : 'strength',
           name: workoutItem.name,
           description: workout?.description || '',

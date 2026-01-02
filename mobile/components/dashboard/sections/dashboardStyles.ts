@@ -2,16 +2,19 @@ import { StyleSheet } from 'react-native';
 
 export function createDashboardStyles(isLight: boolean) {
   const palette = {
-    bg: isLight ? '#f9fafb' : '#000000', // Was #f8fafc (blueish), now softer grey
-    bg2: isLight ? '#ffffff' : '#121212', // Cards remain white
-    text: isLight ? '#334155' : '#ffffff', // Was #0f172a (very dark), now slate-700 (softer)
-    textMuted: isLight ? '#94a3b8' : '#A0A0A0', // Softer muted
-    border: isLight ? '#e2e8f0' : '#333333', // More visible but soft border
-    border2: isLight ? '#f1f5f9' : '#222222',
+    bg: isLight ? '#f5f3ff' : '#000000', // Lively Violet Tint
+    bg2: isLight ? '#ffffff' : '#121212', // White cards
+    text: isLight ? '#1e1b4b' : '#ffffff', // Deep Indigo
+    textMuted: isLight ? '#5b21b6' : '#A0A0A0', // Violet-Grey
+    border: isLight ? '#ddd6fe' : '#333333', // Soft Purple border
+    border2: isLight ? '#ede9fe' : '#222222',
     navBg: isLight ? '#ffffff' : '#000000',
-    inputBg: isLight ? '#f1f5f9' : '#1A1A1A', // Softer input bg
-    primary: '#8b5cf6', // Violet
-    overlay: 'rgba(0, 0, 0, 0.7)'
+    inputBg: isLight ? '#ede9fe' : '#1A1A1A', // Light purple input bg
+    primary: '#7c3aed', // Vibrant Violet
+    overlay: 'rgba(0, 0, 0, 0.7)',
+    successBg: isLight ? '#dcfce7' : '#14532d',
+    successBorder: isLight ? '#22c55e' : '#22c55e',
+    borderStrong: isLight ? '#8b5cf6' : '#525252',
   };
   const styles = StyleSheet.create({
     container: { flex: 1 },
@@ -40,10 +43,11 @@ export function createDashboardStyles(isLight: boolean) {
     avatar: {
       width: 40,
       height: 40,
-      borderRadius: 14,
+      borderRadius: 50,
       backgroundColor: palette.bg2,
       borderWidth: 1,
       borderColor: palette.border,
+      overflow: 'hidden',
     },
     sectionHeader: {
       color: palette.text,

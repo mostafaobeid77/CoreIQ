@@ -219,7 +219,7 @@ const SettingScreen = () => {
   const styles = React.useMemo(() => createSettingsStyles(theme === 'light'), [theme]);
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#0f0f0f' }} edges={['top']} />
+      <SafeAreaView style={{ backgroundColor: theme === 'light' ? '#f5f3ff' : '#0f0f0f' }} edges={['top']} />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Settings</Text>
       </View>

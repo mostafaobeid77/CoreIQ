@@ -84,46 +84,113 @@ export default function SearchModal({ visible, onClose, type, onSelect }: Search
         fetchSuggestions();
     }, [debouncedQuery, type, query]);
 
-    const renderItem = ({ item }: { item: any }) => (
-        <FoodListItem
-            item={item}
-            onPress={onSelect}
-        // For general search results, we don't know if it's a favorite, so defaults apply
-        />
-    );
+    const renderItem = ({ item }: { item: any }) => {
+        if (type === 'workout') {
+            return (
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: theme === 'light' ? '#ffffff' : '#18181b', // Match SearchContainer bg
+                        padding: 16,
+                        borderRadius: 16,
+                        marginBottom: 12,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(139, 92, 246, 0.15)',
+                    }}
+                    onPress={() => onSelect(item)}
+                >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                        {/* Workout Icon */}
+                        <View style={{
+                            width: 44,
+                            height: 44,
+                            borderRadius: 12,
+                            backgroundColor: theme === 'light' ? '#f3e8ff' : 'rgba(139, 92, 246, 0.15)',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginRight: 14
+                        }}>
+                            {/* Distinguish Cardio vs Strength Icon */}
+                            {(item.category?.toLowerCase() === 'cardio' || item.type === 'cardio' || item.muscle_group?.toLowerCase() === 'cardio')
+                                ? <Ionicons name="speedometer" size={22} color="#8b5cf6" />
+                                : <Ionicons name="barbell" size={22} color="#8b5cf6" />
+                            }
+                        </View>
+
+                        <View style={{ flex: 1 }}>
+                            <Text style={{
+                                fontSize: 16,
+                                fontWeight: '700',
+                                color: theme === 'light' ? '#0f172a' : '#fff',
+                                marginBottom: 4
+                            }}>
+                                {item.name}
+                            </Text>
+                            <Text style={{
+                                fontSize: 13,
+                                color: theme === 'light' ? '#64748b' : '#a1a1aa',
+                                fontWeight: '500'
+                            }}>
+                                {item.muscle_group || 'General'} • {item.category || item.equipment || 'No Eq'}
+                            </Text>
+                        </View>
+                    </View>
+                    <Ionicons name="add-circle" size={28} color="#8b5cf6" />
+                </TouchableOpacity>
+            );
+        }
+
+        return (
+            <FoodListItem
+                item={item}
+                onPress={onSelect}
+            // For general search results, we don't know if it's a favorite, so defaults apply
+            />
+        );
+    };
+
 
     return (
-        <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-            <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <Modal visible={visible} animationType="fade" presentationStyle="pageSheet">
+            <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f8fafc' : '#09090b' }]}>
                 <View style={styles.header}>
-                    <Text style={[styles.title, { color: colors.text }]}>
+                    <Text style={[styles.title, { color: theme === 'light' ? '#0f172a' : '#fff' }]}>
                         Add {type === 'meal' ? 'Food' : 'Workout'}
                     </Text>
                     <TouchableOpacity onPress={onClose}>
-                        <Text style={[styles.closeText, { color: colors.primary }]}>Close</Text>
+                        <Ionicons name="close-circle" size={32} color={theme === 'light' ? '#cbd5e1' : '#27272a'} />
                     </TouchableOpacity>
                 </View>
 
-                <View style={[styles.searchContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                    <Ionicons name="search" size={20} color={colors.primary} />
+                <View style={[
+                    styles.searchContainer,
+                    {
+                        backgroundColor: theme === 'light' ? '#ffffff' : '#18181b', // Zinc 900
+                        borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(139, 92, 246, 0.3)' // Subtle violet border
+                    }
+                ]}>
+                    <Ionicons name="search" size={24} color="#8b5cf6" />
                     <TextInput
-                        style={[styles.input, { color: colors.text }]}
-                        placeholder={`Search ${type === 'meal' ? 'foods via AI...' : 'workouts...'}`}
-                        placeholderTextColor={colors.textSecondary}
+                        style={[styles.input, { color: theme === 'light' ? '#0f172a' : '#fff' }]}
+                        placeholder={`Search ${type === 'meal' ? 'foods...' : 'workouts...'}`}
+                        placeholderTextColor={theme === 'light' ? '#94a3b8' : '#71717a'}
                         value={query}
                         onChangeText={setQuery}
                         autoFocus
+                        selectionColor="#8b5cf6"
                     />
                     {query.length > 0 && (
                         <TouchableOpacity onPress={() => setQuery('')} style={styles.clearButton}>
-                            <Ionicons name="close-circle" size={18} color={colors.textSecondary} />
+                            <Ionicons name="close" size={20} color={theme === 'light' ? '#94a3b8' : '#71717a'} />
                         </TouchableOpacity>
                     )}
                 </View>
 
                 {loading ? (
                     <View style={styles.center}>
-                        <ActivityIndicator color={colors.primary} />
+                        <ActivityIndicator size="large" color="#8b5cf6" />
                     </View>
                 ) : (
                     <FlatList
@@ -139,7 +206,7 @@ export default function SearchModal({ visible, onClose, type, onSelect }: Search
                                     onSelect={onSelect}
                                 />
                             ) : query.length > 1 ? (
-                                <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+                                <Text style={[styles.emptyText, { color: theme === 'light' ? '#64748b' : '#52525b' }]}>
                                     No results found
                                 </Text>
                             ) : null
@@ -156,51 +223,53 @@ export default function SearchModal({ visible, onClose, type, onSelect }: Search
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        paddingTop: 20, // Modal handle spacing
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 20,
+        paddingHorizontal: 20,
+        marginBottom: 24,
     },
     title: {
-        fontSize: 20,
-        fontWeight: '700',
+        fontSize: 24,
+        fontWeight: '900',
+        letterSpacing: -0.5,
     },
     closeText: {
         fontSize: 16,
-        fontWeight: '600',
+        fontWeight: '700',
+        letterSpacing: 0.5,
     },
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
-        borderRadius: 16,
-        marginBottom: 24,
+        paddingHorizontal: 16,
+        paddingVertical: 14,
+        marginHorizontal: 20,
+        borderRadius: 20,
+        marginBottom: 32,
         gap: 12,
         borderWidth: 1,
-        // Shadow for search bar
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: 2,
+        // The Search Glow
+        shadowColor: '#8b5cf6',
+        shadowOpacity: 0.15,
+        shadowRadius: 20,
+        shadowOffset: { width: 0, height: 8 },
+        elevation: 10,
     },
     input: {
         flex: 1,
-        fontSize: 17,
-        fontWeight: '500',
+        fontSize: 18,
+        fontWeight: '600',
     },
     clearButton: {
         padding: 4,
     },
     list: {
         paddingBottom: 40,
-        paddingHorizontal: 4, // Add breathing room for shadows
-    },
-    item: {
-        marginBottom: 8
+        paddingHorizontal: 20,
     },
     center: {
         padding: 40,
@@ -210,5 +279,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 40,
         fontSize: 16,
+        fontWeight: '500',
     },
 });

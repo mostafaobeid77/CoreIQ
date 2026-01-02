@@ -9,10 +9,16 @@ import { getMealSections } from '../../utils/mealUtils';
 // Helper to generate day numbers array
 const generateDays = (count: number) => Array.from({ length: count }, (_, i) => i + 1);
 
+import { useMeals } from '../../context/MealsContext';
+import { useWorkouts } from '../../context/WorkoutsContext';
+
 export const usePlanState = (goalWeight: string) => {
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [generating, setGenerating] = useState(false);
+
+    const { resetMeals } = useMeals();
+    const { resetWorkouts } = useWorkouts();
 
     const mealSections = useMemo(() => getMealSections(goalWeight), [goalWeight]);
 
@@ -31,6 +37,14 @@ export const usePlanState = (goalWeight: string) => {
 
     // List Data
     const [allPlans, setAllPlans] = useState<any[]>([]);
+
+    const currentPlan = useMemo(() => {
+        return allPlans.find(p => p._id === planId) || {
+            name: planName,
+            status: planStatus,
+            metadata: {} // Default empty metadata for draft
+        };
+    }, [allPlans, planId, planName, planStatus]);
 
     const { hasDraft, saveDraft, loadDraft, clearDraft, isActivePlanCached, loadActiveCache, saveActiveCache } = usePlanPersistence();
 
@@ -110,8 +124,9 @@ export const usePlanState = (goalWeight: string) => {
         }
 
         try {
-            // CACHE-FIRST STRATEGY:
+            // CACHE-FIRST STRATEGY DISABLED (Fixing Persistence Issues)
             // 1. If we have no data, try to load from cache immediately to show SOMETHING
+            /*
             const hasData = currentPlanDays.length > 0 && currentPlanDays[0].meals;
             let cacheLoaded = false;
 
@@ -147,6 +162,8 @@ export const usePlanState = (goalWeight: string) => {
                     cacheLoaded = true;
                 }
             }
+            */
+            const cacheLoaded = false; // Forced false to ensure fresh data
 
             // 2. Only show loading spinner if we didn't load cache and have no data
             const shouldLoading = showLoading && !cacheLoaded && currentPlanDays.length === 0;
@@ -180,14 +197,13 @@ export const usePlanState = (goalWeight: string) => {
                 // For now, we assume network is truth.
                 await loadFullPlan(targetPlan._id, shouldLoading);
 
-                // Update Cache for next time
+                // Update Cache (even if we didn't use it, keep it fresh)
+                /*
                 if (active && active._id === targetPlan._id) {
-                    // We need full plan details to cache, loadFullPlan handles state update, 
-                    // but we need to intercept the data to save it.
-                    // Refactoring loadFullPlan to return data would be cleaner, but for now:
                     const fullPlanData = await planService.getPlan(targetPlan._id);
                     saveActiveCache(fullPlanData);
                 }
+                */
             } else {
                 // No plans found from server
                 if (!cacheLoaded) {
@@ -205,10 +221,6 @@ export const usePlanState = (goalWeight: string) => {
             if (showLoading) setLoading(false);
         }
     }, [loadFullPlan, loadDraft, loadActiveCache, saveActiveCache]);
-
-
-
-
 
 
     // Auto-save: Draft (local) and Sync (server)
@@ -256,12 +268,6 @@ export const usePlanState = (goalWeight: string) => {
         }
     }, [hasChanges, planName, planDays, planId, planStatus, saving, saveDraft]);
 
-
-
-
-
-
-
     const handleSavePlan = useCallback(async () => {
         try {
             setSaving(true);
@@ -299,6 +305,13 @@ export const usePlanState = (goalWeight: string) => {
 
             if (planId) {
                 await planService.updatePlan(planId, planData);
+
+                // CRITIAL FIX: If plan is active, FORCE reset daily screens to show changes
+                if (planStatus === 'active') {
+                    console.log('🔄 Active plan updated, resetting daily contexts...');
+                    resetMeals();
+                    resetWorkouts();
+                }
             } else {
                 const res = await planService.createPlan(planData);
                 setPlanId(res.plan._id);
@@ -317,7 +330,7 @@ export const usePlanState = (goalWeight: string) => {
                 [{ text: 'Got it!' }]
             );
 
-            await loadPlan();
+            await loadPlan(false); // Reload strict from server
         } catch (error) {
             console.error('Save plan error:', error);
             Alert.alert('Error', 'Failed to save plan. Please try again.');
@@ -342,13 +355,19 @@ export const usePlanState = (goalWeight: string) => {
                     onPress: async () => {
                         try {
                             setSaving(true);
+                            // Pass LOCAL start date to ensure server aligns with user's timezone
+                            // e.g. "2024-01-01"
+                            const localDate = new Date();
+                            const offset = localDate.getTimezoneOffset();
+                            const localDateStr = new Date(localDate.getTime() - (offset * 60 * 1000)).toISOString().split('T')[0];
 
-                            // Activate the plan on the backend
-                            // The backend now handles creating all daily entries (Meals/Workouts) automatically
-                            // in a single optimized request.
-                            await planService.activatePlan(planId);
-
+                            await planService.activatePlan(planId, { startDate: localDateStr });
                             setPlanStatus('active');
+
+                            // FORCE REFRESH of Meals/Workouts screens
+                            resetMeals();
+                            resetWorkouts();
+
                             Alert.alert(
                                 'Plan Started! 🎉',
                                 `Your ${currentPlan?.duration || 14}-day plan is now active! Check your Meals and Workouts screens to see your daily plan.`,
@@ -365,7 +384,7 @@ export const usePlanState = (goalWeight: string) => {
                 }
             ]
         );
-    }, [planId, planDays, loadPlan]);
+    }, [planId, planDays, loadPlan, resetMeals, resetWorkouts, currentPlan]);
 
     const handleGenerateAI = useCallback(async () => {
         Alert.alert(
@@ -428,6 +447,15 @@ export const usePlanState = (goalWeight: string) => {
                         try {
                             setLoading(true);
                             await planService.deletePlan(targetId);
+
+                            // If we deleted the active plan (or any plan really to be safe), reset global context
+                            // Check if it was active or current
+                            const wasActive = allPlans.find(p => p._id === targetId)?.status === 'active';
+                            if (wasActive || targetId === planId) {
+                                resetMeals();
+                                resetWorkouts();
+                            }
+
                             if (targetId === planId) {
                                 await clearDraft();
                                 await loadPlan(); // Will load next available or create new
@@ -445,7 +473,7 @@ export const usePlanState = (goalWeight: string) => {
                 }
             ]
         );
-    }, [planId, loadPlan, handleCreateNewPlan]);
+    }, [planId, loadPlan, handleCreateNewPlan, allPlans, resetMeals, resetWorkouts]);
 
     const handleAddItem = useCallback((item: any, type: 'meal' | 'workout', details?: any, section?: string) => {
         setPlanDays(prev => prev.map(d => {
@@ -692,13 +720,7 @@ export const usePlanState = (goalWeight: string) => {
         setHasChanges(true);
     }, []);
 
-    const currentPlan = useMemo(() => {
-        return allPlans.find(p => p._id === planId) || {
-            name: planName,
-            status: planStatus,
-            metadata: {} // Default empty metadata for draft
-        };
-    }, [allPlans, planId, planName, planStatus]);
+
 
     return {
         loading,

@@ -106,7 +106,7 @@ const RegisterScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.container, { backgroundColor: isLight ? "#f8fafc" : "#0f0f0f" }]}>
+      <View style={[styles.container, { backgroundColor: isLight ? "#f5f3ff" : "#0f0f0f" }]}>
         <Animated.ScrollView
           contentContainerStyle={[styles.scrollContent, { paddingBottom: animatedPadding }]}
           keyboardShouldPersistTaps="handled"
@@ -145,7 +145,7 @@ const RegisterScreen = () => {
               style={[
                 styles.input,
                 {
-                  backgroundColor: isLight ? "#f8fafc" : "#1f1f1f",
+                  backgroundColor: isLight ? "#ffffff" : "#1f1f1f",
                   color: isLight ? "#111" : "#fff",
                   borderWidth: 1,
                   borderColor: isLight ? "#e5e7eb" : "transparent",
@@ -164,7 +164,7 @@ const RegisterScreen = () => {
               style={[
                 styles.input,
                 {
-                  backgroundColor: isLight ? "#f8fafc" : "#1f1f1f",
+                  backgroundColor: isLight ? "#ffffff" : "#1f1f1f",
                   color: isLight ? "#111" : "#fff",
                   borderWidth: 1,
                   borderColor: isLight ? "#e5e7eb" : "transparent",
@@ -258,7 +258,7 @@ const RegisterScreen = () => {
             <TouchableOpacity
               style={[
                 styles.genderOption,
-                { backgroundColor: isLight ? "#f8fafc" : "#1f1f1f" },
+                { backgroundColor: isLight ? "#ffffff" : "#1f1f1f" },
                 gender === "male" && { backgroundColor: "#8b5cf6" },
               ]}
               onPress={() => setGender("male")}
@@ -297,7 +297,7 @@ const RegisterScreen = () => {
               style={[
                 styles.input,
                 {
-                  backgroundColor: isLight ? "#f8fafc" : "#1f1f1f",
+                  backgroundColor: isLight ? "#ffffff" : "#1f1f1f",
                   color: isLight ? "#111" : "#fff",
                   borderWidth: 1,
                   borderColor: isLight ? "#e5e7eb" : "transparent",
@@ -320,7 +320,7 @@ const RegisterScreen = () => {
               style={[
                 styles.input,
                 {
-                  backgroundColor: isLight ? "#f8fafc" : "#1f1f1f",
+                  backgroundColor: isLight ? "#ffffff" : "#1f1f1f",
                   color: isLight ? "#111" : "#fff",
                   borderWidth: 1,
                   borderColor: isLight ? "#e5e7eb" : "transparent",

@@ -169,7 +169,7 @@ const AddWorkoutModal: React.FC<AddWorkoutModalProps> = ({ visible, onClose, onS
           <TouchableOpacity activeOpacity={1} onPress={e => e.stopPropagation()} style={[styles.card, { backgroundColor: colors.background }]}>
             <View style={styles.header}>
               <Text style={[styles.title, { color: colors.text }]}>Add New Workout</Text>
-              <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: isLight ? '#f1f5f9' : '#334155' }]}>
+              <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: isLight ? '#f3f4f6' : '#334155' }]}>
                 <Ionicons name="close" size={20} color={colors.text} />
               </TouchableOpacity>
             </View>

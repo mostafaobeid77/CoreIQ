@@ -241,7 +241,7 @@ const ProgressAnalysisModal = ({ visible, onClose, onWeightUpdated }: ProgressAn
                                         Based on your {suggestion.daysSince} days of tracking ({suggestion.netCalories > 0 ? '+' : ''}{suggestion.netCalories} kcal net), your weight should now be:
                                     </Text>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 15 }}>
-                                        <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF' }}>{suggestion.estimatedWeight} kg</Text>
+                                        <Text style={{ fontSize: 28, fontWeight: '900', color: THEME.text }}>{suggestion.estimatedWeight} kg</Text>
                                         <TouchableOpacity onPress={handleApplyEst} style={{ backgroundColor: THEME.primary, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20 }}>
                                             <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Update Now</Text>
                                         </TouchableOpacity>

@@ -27,46 +27,53 @@ export default function FoodListItem({
 
     return (
         <TouchableOpacity
-            style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}
+            style={[
+                styles.card,
+                {
+                    backgroundColor: theme === 'light' ? '#ffffff' : '#18181b', // Future Dark
+                    borderColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.05)'
+                }
+            ]}
             onPress={() => onPress(item)}
             activeOpacity={0.7}
         >
             {/* Icon Box */}
-            <View style={[styles.iconContainer, { backgroundColor: isFavorite ? '#fff1f2' : (theme === 'light' ? '#f8fafc' : '#2d2d2d') }]}>
+            <View style={[
+                styles.iconContainer,
+                { backgroundColor: isFavorite ? '#fff1f2' : (theme === 'light' ? '#f8fafc' : '#27272a') }
+            ]}>
                 <Ionicons
                     name={isFavorite ? 'heart' : icon}
-                    size={18}
-                    color={isFavorite ? '#f43f5e' : displayIconColor}
+                    size={20}
+                    color={isFavorite ? '#f43f5e' : (theme === 'light' ? colors.primary : '#a1a1aa')}
                 />
             </View>
 
             {/* Content */}
             <View style={styles.textContainer}>
-                <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>
+                <Text style={[styles.name, { color: theme === 'light' ? '#0f172a' : '#fff' }]} numberOfLines={1}>
                     {item.name}
                 </Text>
 
                 <View style={[styles.metaRow, { gap: 8 }]}>
-                    <Text style={[styles.brand, { color: colors.textSecondary }]}>
-                        {item.brand || 'Generic'}
+                    <Text style={[styles.brand, { color: theme === 'light' ? '#64748b' : '#71717a' }]}>
+                        {item.brand || 'GENERIC'}
                     </Text>
                     {item.calories > 0 && (
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: colors.border, marginRight: 8 }} />
-                            <Text style={[styles.calorieText, { color: colors.textSecondary }]}>
-                                {item.calories} kcal
+                            <View style={{ width: 3, height: 3, borderRadius: 2, backgroundColor: theme === 'light' ? '#cbd5e1' : '#52525b', marginRight: 8 }} />
+                            <Text style={[styles.calorieText, { color: theme === 'light' ? '#64748b' : '#e4e4e7' }]}>
+                                {item.calories} KCAL
                             </Text>
                         </View>
                     )}
                 </View>
             </View>
 
-            {/* Removed detailed macro row to reduce visual clutter as per user request */}
-
-            {/* Add Action with Proper Radius */}
+            {/* Add Action (Glowing Button) */}
             {showAddButton && (
-                <View style={[styles.addAction, { backgroundColor: theme === 'light' ? '#f1f5f9' : '#333' }]}>
-                    <Ionicons name="add" size={20} color={colors.primary} />
+                <View style={[styles.addAction, { backgroundColor: '#8b5cf6' }]}>
+                    <Ionicons name="add" size={24} color="#fff" />
                 </View>
             )}
         </TouchableOpacity>
@@ -77,58 +84,49 @@ const styles = StyleSheet.create({
     card: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 12,
-        marginBottom: 8,
-        borderRadius: 12,
+        paddingVertical: 16, // More breathing room
+        paddingHorizontal: 16,
+        marginBottom: 12, // Spacing between cards
+        borderRadius: 24, // Future Squircle
         borderWidth: 1,
-        // Very subtle shadow
+        // Glossy reflection effect
         shadowColor: '#000',
-        shadowOpacity: 0.02,
-        shadowRadius: 4,
-        shadowOffset: { width: 0, height: 1 },
-        elevation: 1,
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 4,
     },
     iconContainer: {
-        width: 36,
-        height: 36,
-        borderRadius: 10,
+        width: 48,
+        height: 48,
+        borderRadius: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 10,
+        marginRight: 16,
     },
     textContainer: {
         flex: 1,
-        marginRight: 8,
-        gap: 2
+        justifyContent: 'center',
     },
     name: {
-        fontSize: 15, // Reduced from 16
-        fontWeight: '600',
-        letterSpacing: 0.1,
+        fontSize: 16,
+        fontWeight: '700',
+        letterSpacing: -0.3,
+        marginBottom: 4,
     },
     metaRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
     },
     brand: {
         fontSize: 12,
-        fontWeight: '500',
+        fontWeight: '600',
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
     },
     calorieText: {
         fontSize: 12,
-        fontWeight: '600',
-    },
-    macrosRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        marginRight: 8
-    },
-    macro: {
-        fontSize: 11,
-        fontWeight: '600',
+        fontWeight: '700',
     },
     addAction: {
         width: 36,

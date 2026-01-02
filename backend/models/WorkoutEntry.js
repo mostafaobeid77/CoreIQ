@@ -28,7 +28,7 @@ const WorkoutEntrySchema = new mongoose.Schema({
   workoutId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Workout',
-    required: [true, 'Workout ID is required']
+    required: false
   },
   workoutType: {
     type: String,

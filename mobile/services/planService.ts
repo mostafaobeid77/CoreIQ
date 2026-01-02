@@ -38,8 +38,8 @@ export const planService = {
         return api.get<Plan>(`/plans/${id}`);
     },
 
-    activatePlan: async (id: string): Promise<{ message: string; plan: Plan }> => {
-        return api.post<{ message: string; plan: Plan }>(`/plans/${id}/activate`);
+    activatePlan: async (id: string, data?: { startDate: string }): Promise<{ message: string; plan: Plan }> => {
+        return api.post<{ message: string; plan: Plan }>(`/plans/${id}/activate`, data);
     },
 
     createPlan: async (data: any): Promise<{ message: string; plan: Plan }> => {

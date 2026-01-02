@@ -223,7 +223,7 @@ const MealsScreen = () => {
 
     return (
         <View style={[dashboardStyles.container, { backgroundColor: dashboardStyles.colors.bg }]}>
-            <SafeAreaView style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#181818' }} edges={['top']}>
+            <SafeAreaView style={{ backgroundColor: dashboardStyles.colors.bg }} edges={['top']}>
                 <MealsHeader
                     selectedDate={selectedDate}
                     showDatePicker={showDatePicker}
@@ -236,37 +236,38 @@ const MealsScreen = () => {
             </SafeAreaView>
 
             {/* SEARCH BAR */}
-            <View style={{ paddingHorizontal: 16, marginTop: 12, marginBottom: 8 }}>
+            <View style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: 12 }}>
                 <View
                     style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', // Lighter bg for premium feel
-                        borderRadius: 16,
+                        backgroundColor: theme === 'light' ? '#ffffff' : '#18181b', // Zinc 900
+                        borderRadius: 20, // Future Squircle
                         paddingHorizontal: 16,
-                        paddingVertical: 4, // More breathing room
+                        paddingVertical: 12, // Taller and cleaner
                         borderWidth: 1,
-                        borderColor: theme === 'light' ? '#e2e8f0' : '#333',
-                        // Add shadow
-                        shadowColor: '#000',
-                        shadowOpacity: 0.05,
-                        shadowRadius: 10,
+                        borderColor: theme === 'light' ? '#e2e8f0' : 'rgba(139, 92, 246, 0.3)', // Subtle violet border
+                        // Future Glow
+                        shadowColor: '#8b5cf6',
+                        shadowOpacity: 0.15,
+                        shadowRadius: 12,
                         shadowOffset: { width: 0, height: 4 },
-                        elevation: 3,
+                        elevation: 8,
                     }}
                 >
-                    <Ionicons name="search" size={20} color="#8b5cf6" style={{ marginRight: 12 }} />
+                    <Ionicons name="search" size={20} color={theme === 'light' ? '#64748b' : '#8b5cf6'} style={{ marginRight: 12 }} />
                     <TextInput
                         ref={searchInputRef}
-                        style={{ flex: 1, color: theme === 'light' ? '#0f172a' : '#fff', height: 48, fontSize: 16, fontWeight: '500' }}
+                        style={{ flex: 1, color: theme === 'light' ? '#0f172a' : '#fff', fontSize: 16, fontWeight: '600' }}
                         placeholder="Search for foods..."
-                        placeholderTextColor={theme === 'light' ? '#94a3b8' : '#888'}
+                        placeholderTextColor={theme === 'light' ? '#94a3b8' : '#71717a'}
                         value={search}
                         onChangeText={handleSearchInput}
+                        selectionColor="#8b5cf6"
                     />
                     {search.length > 0 && (
                         <TouchableOpacity onPress={handleClearSearch} style={{ marginLeft: 8 }}>
-                            <Ionicons name="close-circle" size={20} color={theme === 'light' ? '#94a3b8' : '#888'} />
+                            <Ionicons name="close" size={20} color={theme === 'light' ? '#94a3b8' : '#71717a'} />
                         </TouchableOpacity>
                     )}
                 </View>
@@ -458,7 +459,7 @@ const MealsScreen = () => {
                                         style={{
                                             padding: 16,
                                             borderWidth: 2,
-                                            borderColor: theme === 'light' ? '#f1f5f9' : '#262626',
+                                            borderColor: theme === 'light' ? '#a78bfa' : '#262626', // Visible soft purple
                                             borderStyle: 'dashed',
                                             borderRadius: 16,
                                             alignItems: 'center'

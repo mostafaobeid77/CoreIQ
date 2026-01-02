@@ -6,9 +6,15 @@ exports.getMealsByDate = async (req, res) => {
   try {
     const { date } = req.params;
 
+    // Use date RANGE to avoid timezone issues (same as workoutEntryController)
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
     const meals = await Meal.find({
       userId: req.userId,
-      date: new Date(date)
+      date: { $gte: startOfDay, $lte: endOfDay }
     }).sort({ mealType: 1, addedAt: 1 });
 
     // Group by mealType
@@ -158,9 +164,15 @@ exports.getTotalNutrients = async (req, res) => {
   try {
     const { date } = req.params;
 
+    // Use date RANGE to avoid timezone issues
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
     const meals = await Meal.find({
       userId: req.userId,
-      date: new Date(date),
+      date: { $gte: startOfDay, $lte: endOfDay },
       isCompleted: true
     });
 
@@ -188,9 +200,15 @@ exports.deleteMealsByDate = async (req, res) => {
   try {
     const { date } = req.params;
 
+    // Use date RANGE to avoid timezone issues
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
     await Meal.deleteMany({
       userId: req.userId,
-      date: new Date(date)
+      date: { $gte: startOfDay, $lte: endOfDay }
     });
 
     res.json({ message: 'All meals for the date deleted successfully' });

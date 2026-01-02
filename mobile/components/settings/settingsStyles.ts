@@ -2,12 +2,13 @@ import { StyleSheet } from 'react-native';
 
 export function createSettingsStyles(isLight: boolean) {
   const palette = {
-    bg: isLight ? '#f9fafb' : '#0f0f0f',
-    headerBg: isLight ? '#f9fafb' : '#0f0f0f',
-    border: isLight ? '#e2e8f0' : '#1d1d1d',
+    bg: isLight ? '#f5f3ff' : '#0f0f0f', // Lively Violet Tint
+    headerBg: isLight ? '#f5f3ff' : '#0f0f0f',
+    border: isLight ? '#ddd6fe' : '#1d1d1d', // Soft purple border
     cardBg: isLight ? '#ffffff' : '#151515',
-    text: isLight ? '#334155' : '#fff', // Softer text
-    textMuted: isLight ? '#94a3b8' : '#9aa0a6',
+    text: isLight ? '#1e1b4b' : '#fff', // Deep Indigo
+    textMuted: isLight ? '#5b21b6' : '#aaa',
+    iconBg: isLight ? '#ede9fe' : '#222',
   };
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: palette.bg },

@@ -29,9 +29,17 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
   const [durationMinutes, setDurationMinutes] = useState<string>('');
 
   // Check if this is a hold exercise (Plank, Wall Sit, etc.) or cardio
+  // Check if this is a hold exercise (Plank, Wall Sit, etc.) or cardio
   const holdExercises = ['plank', 'wall sit', 'dead hang', 'hollow hold', 'boat hold', 'static hold'];
+  const cardioNames = ['run', 'jog', 'treadmill', 'cycle', 'cycling', 'bike', 'elliptical', 'rowing', 'swim', 'swimming', 'jump rope', 'walking', 'stair master', 'cardio'];
+
   const isHoldExercise = holdExercises.some(hold => workout?.name?.toLowerCase().includes(hold));
-  const isCardio = (workout?.category?.toLowerCase() === 'cardio') || (workout?.muscle_group?.toLowerCase() === 'cardio');
+  const isCardio =
+    (workout?.category?.toLowerCase() === 'cardio') ||
+    (workout?.muscle_group?.toLowerCase() === 'cardio') ||
+    (workout?.workoutType?.toLowerCase() === 'cardio') ||
+    (workout?.name && cardioNames.some(c => workout.name.toLowerCase().includes(c)));
+
   const showDuration = isCardio || isHoldExercise;
 
   // Check if bodyweight exercise (no weight needed)
@@ -107,13 +115,14 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
   if (!workout) return null;
 
   return (
-    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
-      >
-        <Pressable style={styles.workoutModalOverlay} onPress={onClose}>
-          <Pressable style={styles.workoutModalContent} onPress={(e) => e.stopPropagation()}>
+    <Modal visible={visible} animationType="slide" presentationStyle="fullScreen" onRequestClose={onClose}>
+      <View style={styles.workoutModalOverlay}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{ flex: 1 }}
+        >
+          <View style={styles.workoutModalContent}>
+
             <View style={styles.modalHandle} />
 
             <Text style={styles.workoutModalTitle}>{workout.name}</Text>
@@ -124,50 +133,67 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
               <Text style={styles.targetBadgeText}>{workout.muscle_group || 'Target Area'}</Text>
             </View>
 
-            {showDuration ? (
-              <View style={styles.cardioContainer}>
-                <Text style={styles.inputLabel}>Session Duration</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TextInput
-                    style={styles.cardioInput}
-                    keyboardType="number-pad"
-                    value={durationMinutes}
-                    onChangeText={(text) => setDurationMinutes(text.replace(/[^0-9]/g, ''))}
-                    placeholder="00"
-                    placeholderTextColor="#64748b"
-                    autoFocus
-                    returnKeyType="done"
-                    onSubmitEditing={Keyboard.dismiss}
-                  />
-                  <Text style={styles.cardioUnit}>min</Text>
-                </View>
-              </View>
-            ) : (
-              <>
-                <View style={styles.setCounterContainer}>
-                  <Text style={styles.setCounterLabel}>Number of Sets</Text>
-                  <View style={styles.counterControls}>
-                    <TouchableOpacity
-                      style={styles.counterButton}
-                      onPress={() => setNumSets(Math.max(1, numSets - 1))}
-                    >
-                      <Ionicons name="remove" size={24} color={theme === 'light' ? '#64748b' : '#94a3b8'} />
-                    </TouchableOpacity>
-                    <Text style={styles.counterValue}>{numSets}</Text>
-                    <TouchableOpacity
-                      style={styles.counterButton}
-                      onPress={() => setNumSets(Math.min(10, numSets + 1))}
-                    >
-                      <Ionicons name="add" size={24} color={theme === 'light' ? '#64748b' : '#94a3b8'} />
-                    </TouchableOpacity>
+            <ScrollView
+              style={styles.setsList}
+              contentContainerStyle={{ paddingBottom: 200 }}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+            >
+              {showDuration ? (
+                <View style={styles.cardioContainer}>
+                  <Text style={styles.inputLabel}>Session Duration</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TextInput
+                      style={styles.cardioInput}
+                      keyboardType="number-pad"
+                      value={durationMinutes}
+                      onChangeText={(text) => setDurationMinutes(text.replace(/[^0-9]/g, ''))}
+                      placeholder="00"
+                      placeholderTextColor="#64748b"
+                      autoFocus
+                      returnKeyType="done"
+                      onSubmitEditing={Keyboard.dismiss}
+                    />
+                    <Text style={styles.cardioUnit}>min</Text>
                   </View>
                 </View>
+              ) : (
+                <>
+                  <View style={styles.setCounterContainer}>
+                    <Text style={styles.inputLabel}>Number of Sets</Text>
+                    <View style={styles.counterControls}>
+                      <TouchableOpacity
+                        style={styles.counterButton}
+                        onPress={() => setNumSets(Math.max(1, numSets - 1))}
+                      >
+                        <Ionicons name="remove" size={24} color={theme === 'light' ? '#64748b' : '#94a3b8'} />
+                      </TouchableOpacity>
+                      <Text style={styles.counterValue}>{numSets}</Text>
+                      <TouchableOpacity
+                        style={styles.counterButton}
+                        onPress={() => setNumSets(Math.min(10, numSets + 1))}
+                      >
+                        <Ionicons name="add" size={24} color={theme === 'light' ? '#64748b' : '#94a3b8'} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
 
-                <ScrollView
-                  style={styles.setsList}
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{ paddingBottom: 20 }}
-                >
+                  {/* SMART FILL BUTTON */}
+                  {numSets > 1 && (
+                    <TouchableOpacity
+                      style={styles.smartFillButton}
+                      onPress={() => {
+                        const firstSet = sets[0] || { reps: '0', weight: '0' };
+                        setSets(prev => prev.map((s, i) => i === 0 ? s : { ...firstSet }));
+                      }}
+                    >
+                      <Ionicons name="flash" size={12} color="#8b5cf6" />
+                      <Text style={styles.smartFillText}>Auto-Fill Sets</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  <View style={{ height: 16 }} />
+
                   {sets.map((set, idx) => (
                     <View key={idx} style={styles.setRow}>
                       <View style={styles.setIndexCircle}>
@@ -184,8 +210,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
                             onChangeText={text => handleSetChange(idx, 'reps', text.replace(/[^0-9]/g, ''))}
                             placeholder="10"
                             placeholderTextColor="#64748b"
-                            returnKeyType="done"
-                            onSubmitEditing={Keyboard.dismiss}
+                            returnKeyType="next"
                           />
                         </View>
 
@@ -203,7 +228,6 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
                                 placeholder="0.0"
                                 placeholderTextColor="#64748b"
                                 returnKeyType="done"
-                                onSubmitEditing={Keyboard.dismiss}
                               />
                             </View>
                           </>
@@ -211,22 +235,23 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
                       </View>
                     </View>
                   ))}
-                </ScrollView>
-              </>
-            )}
+                </>
+              )}
 
-            <View style={styles.actionButtons}>
-              <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onClose}>
-                <Text style={styles.cancelText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
-                <Text style={styles.saveText}>Save Progress</Text>
-                <Ionicons name="arrow-forward" size={18} color="#fff" />
-              </TouchableOpacity>
-            </View>
-          </Pressable>
-        </Pressable>
-      </KeyboardAvoidingView>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onClose}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
+                  <Text style={styles.saveText}>Save Progress</Text>
+                  <Ionicons name="arrow-forward" size={18} color="#fff" />
+                </TouchableOpacity>
+              </View>
+
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
     </Modal>
   );
 };

@@ -11,6 +11,7 @@ import {
   Keyboard,
   Pressable,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createMealsStyles } from '../mealsStyles';
@@ -182,193 +183,186 @@ const FoodDetailsModal: React.FC<FoodDetailsModalProps> = ({
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-        <Pressable style={mealsStyles.mealsModalOverlay} onPress={onClose}>
-          <Pressable style={mealsStyles.premiumModalContent} onPress={() => { }}>
-            {/* Header with Background Accent */}
-            <View style={mealsStyles.premiumModalHeader}>
-              <View>
-                <Text style={mealsStyles.premiumModalTitle}>{food.unit ? 'Edit Entry' : 'Add to Day'}</Text>
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
+        <View style={mealsStyles.mealsModalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+
+          <View style={mealsStyles.mealsModalContent}>
+            {/* 1. Sticky Header Container (Includes Title + Macros) */}
+            <View style={mealsStyles.futureStickyHeader}>
+              <View style={mealsStyles.futureHeader}>
+                <Text style={mealsStyles.futureHeaderTitle}>{food.unit ? 'Edit Food' : 'Add Food'}</Text>
+                <TouchableOpacity onPress={onClose} style={mealsStyles.futureCloseBtn}>
+                  <Ionicons name="close" size={24} color={isLight ? '#0f172a' : '#fff'} />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity style={mealsStyles.closeButtonCircle} onPress={onClose}>
-                <Ionicons name="close" size={20} color="#fff" />
-              </TouchableOpacity>
-            </View>
 
-            {/* FIXED: Identification & Macros (Pinned outside ScrollView) */}
-            <View style={{ paddingHorizontal: 20, paddingBottom: 16 }}>
-              <Text style={{ fontSize: 22, fontWeight: '800', color: '#fff', marginBottom: 2, textAlign: 'center' }} numberOfLines={1}>{food.name}</Text>
-              <Text style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12, textAlign: 'center' }}>{food.brand || 'Generic Food'}</Text>
-
-              {/* Prominent Macro Grid */}
-              <View style={mealsStyles.premiumMacroGrid}>
-                <View style={mealsStyles.premiumMacroCard}>
-                  <Ionicons name="flame" size={14} color="#f59e42" style={mealsStyles.premiumMacroIcon} />
-                  <Text style={mealsStyles.premiumMacroValue}>{currentCalories}</Text>
-                  <Text style={mealsStyles.premiumMacroLabel}>CAL</Text>
+              {/* 2. HUD Macros (Sticky) */}
+              <View style={mealsStyles.futureMacrosRow}>
+                <View style={mealsStyles.futureMacroItem}>
+                  <Text style={[mealsStyles.futureMacroValue, mealsStyles.macroColorCal]}>{currentCalories}</Text>
+                  <Text style={mealsStyles.futureMacroLabel}>Calories</Text>
                 </View>
-
-                <View style={mealsStyles.premiumMacroCard}>
-                  <Ionicons name="fitness" size={14} color="#38bdf8" style={mealsStyles.premiumMacroIcon} />
-                  <Text style={mealsStyles.premiumMacroValue}>{currentProtein}g</Text>
-                  <Text style={mealsStyles.premiumMacroLabel}>PRO</Text>
+                <View style={mealsStyles.futureMacroItem}>
+                  <Text style={[mealsStyles.futureMacroValue, mealsStyles.macroColorPro]}>{currentProtein}g</Text>
+                  <Text style={mealsStyles.futureMacroLabel}>Protein</Text>
                 </View>
-
-                <View style={mealsStyles.premiumMacroCard}>
-                  <Ionicons name="leaf" size={14} color="#fbbf24" style={mealsStyles.premiumMacroIcon} />
-                  <Text style={mealsStyles.premiumMacroValue}>{currentCarbs}g</Text>
-                  <Text style={mealsStyles.premiumMacroLabel}>CARB</Text>
+                <View style={mealsStyles.futureMacroItem}>
+                  <Text style={[mealsStyles.futureMacroValue, mealsStyles.macroColorCarb]}>{currentCarbs}g</Text>
+                  <Text style={mealsStyles.futureMacroLabel}>Carbs</Text>
                 </View>
-
-                <View style={mealsStyles.premiumMacroCard}>
-                  <Ionicons name="water" size={14} color="#f472b6" style={mealsStyles.premiumMacroIcon} />
-                  <Text style={mealsStyles.premiumMacroValue}>{currentFats}g</Text>
-                  <Text style={mealsStyles.premiumMacroLabel}>FAT</Text>
+                <View style={mealsStyles.futureMacroItem}>
+                  <Text style={[mealsStyles.futureMacroValue, mealsStyles.macroColorFat]}>{currentFats}g</Text>
+                  <Text style={mealsStyles.futureMacroLabel}>Fat</Text>
                 </View>
               </View>
             </View>
-
-            <View style={{ height: 1, backgroundColor: '#333', marginHorizontal: 20, marginBottom: 0 }} />
 
             <ScrollView
               showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 120 }}
               style={{ flex: 1 }}
-              contentContainerStyle={{ paddingBottom: 30, paddingTop: 16 }}
-              keyboardShouldPersistTaps="handled"
             >
 
-              {/* Dynamic Quantity Selector */}
-              <View style={mealsStyles.premiumSection}>
-                <Text style={mealsStyles.premiumSectionLabel}>HOW MUCH?</Text>
+              {/* 3. Food Identity */}
+              <View style={mealsStyles.futureFoodInfo}>
+                <Text style={mealsStyles.futureFoodName}>{food.name}</Text>
+                <Text style={mealsStyles.futureFoodBrand}>{food.brand || 'Generic Food'}</Text>
+              </View>
 
-                {/* Mode Selector */}
-                {/* Simplified Mode Selector */}
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
+              {/* 4. The Reactor (Quantity Core) */}
+              <View style={mealsStyles.futureReactor}>
+                <View style={mealsStyles.futureQuantityRow}>
+                  {/* Left Button */}
                   <TouchableOpacity
-                    style={[
-                      { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginRight: 8, borderWidth: 1 },
-                      inputMode === 'grams' ? { backgroundColor: '#8b5cf6', borderColor: '#8b5cf6' } : { backgroundColor: 'transparent', borderColor: '#333' }
-                    ]}
-                    onPress={() => {
-                      if (inputMode !== 'grams') {
-                        setInputMode('grams');
-                        setQuantity('100');
-                      }
-                    }}
-                  >
-                    <Text style={{ color: inputMode === 'grams' ? '#fff' : '#888', fontWeight: '600', fontSize: 13 }}>Grams / ML</Text>
-                  </TouchableOpacity>
-
-                  {food.servings?.map((serving, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={[
-                        { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginRight: 8, borderWidth: 1 },
-                        (inputMode === 'servings' && selectedServingIndex === index) ? { backgroundColor: '#8b5cf6', borderColor: '#8b5cf6' } : { backgroundColor: 'transparent', borderColor: '#333' }
-                      ]}
-                      onPress={() => {
-                        // If already on this serving, don't reset. If switching serving size, reset to 1.
-                        if (inputMode !== 'servings' || selectedServingIndex !== index) {
-                          setInputMode('servings');
-                          setSelectedServingIndex(index);
-                          setQuantity('1');
-                        }
-                      }}
-                    >
-                      <Text style={{ color: (inputMode === 'servings' && selectedServingIndex === index) ? '#fff' : '#888', fontWeight: '600', fontSize: 13 }}>
-                        {serving.size || `Serving ${index + 1}`}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-
-                {/* Interactive Adjuster */}
-                <View style={mealsStyles.quantityAdjusterContainer}>
-                  <TouchableOpacity
-                    style={mealsStyles.adjustButton}
+                    style={mealsStyles.futureQtyBtn}
                     onPress={() => adjustQuantity(inputMode === 'grams' ? -10 : -1)}
                   >
-                    <Ionicons name="remove" size={24} color="#fff" />
+                    <Ionicons name="remove" size={28} color="#fff" />
                   </TouchableOpacity>
 
-                  <View style={mealsStyles.quantityInputWrapper}>
+                  {/* Core Input */}
+                  <View style={mealsStyles.futureQtyInputWrapper}>
                     <TextInput
-                      style={mealsStyles.premiumQuantityInput}
+                      style={mealsStyles.futureQtyInput}
                       keyboardType="numeric"
                       value={quantity}
-                      onChangeText={(text) => setQuantity(text)}
-                      onFocus={() => setQuantity('')} // Auto-clear on first tap for easier editing? Or maybe just select all?
-                      // Let's stick to valid selection behavior or no clear to avoid annoyance.
-                      // Actually, users prefer typing over '100' directly.
-                      selectTextOnFocus={true}
-                      editable={true}
-                      placeholder="0"
-                      placeholderTextColor="#555"
+                      onChangeText={setQuantity}
+                      selectTextOnFocus
+                      selectionColor="#8b5cf6"
                     />
-                    <Text style={mealsStyles.unitSubtext}>
-                      {inputMode === 'grams' ? (isDrink ? 'ml' : 'grams') : 'units'}
-                    </Text>
+                    {inputMode === 'grams' && (
+                      <Text style={mealsStyles.futureUnitSuffix}>{isDrink ? 'ml' : 'g'}</Text>
+                    )}
                   </View>
 
+                  {/* Right Button */}
                   <TouchableOpacity
-                    style={mealsStyles.adjustButton}
+                    style={mealsStyles.futureQtyBtn}
                     onPress={() => adjustQuantity(inputMode === 'grams' ? 10 : 1)}
                   >
-                    <Ionicons name="add" size={24} color="#fff" />
+                    <Ionicons name="add" size={28} color="#fff" />
                   </TouchableOpacity>
                 </View>
               </View>
 
-              <View style={mealsStyles.premiumSectionDivider} />
+              {/* 5. Servings Pills (Always Visible for Quick Access, Centered) */}
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={mealsStyles.futureServingRow}
+              >
+                {/* OPTION 1: GRAMS/ML (The Base Unit) */}
+                <TouchableOpacity
+                  style={[
+                    mealsStyles.futureServingPill,
+                    inputMode === 'grams' && mealsStyles.futureServingPillActive
+                  ]}
+                  onPress={() => {
+                    setInputMode('grams');
+                    setQuantity('100');
+                  }}
+                >
+                  <Text style={[
+                    mealsStyles.futureServingText,
+                    inputMode === 'grams' && mealsStyles.futureServingTextActive
+                  ]}>
+                    {isDrink ? '100 ml' : '100 g'}
+                  </Text>
+                </TouchableOpacity>
 
-              {/* Meal Placement */}
-              <View style={mealsStyles.premiumSection}>
-                <Text style={mealsStyles.premiumSectionLabel}>FOR WHICH MEAL?</Text>
-                <View style={mealsStyles.premiumMealGrid}>
+                {/* OPTION 2+: ACTUAL SERVINGS */}
+                {food.servings?.map((s, i) => {
+                  const isActive = inputMode === 'servings' && selectedServingIndex === i;
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      style={[
+                        mealsStyles.futureServingPill,
+                        isActive && mealsStyles.futureServingPillActive
+                      ]}
+                      onPress={() => {
+                        setInputMode('servings');
+                        setSelectedServingIndex(i);
+                        setQuantity('1');
+                      }}
+                    >
+                      <Text style={[
+                        mealsStyles.futureServingText,
+                        isActive && mealsStyles.futureServingTextActive
+                      ]}>
+                        {s.size}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+
+              {/* 6. Meal Target (Grid) */}
+              <View style={mealsStyles.futureMealSection}>
+                <Text style={mealsStyles.futureSectionLabel}>Select Meal</Text>
+                <View style={mealsStyles.futureMealGrid}>
                   {mealSections.map((meal) => (
                     <TouchableOpacity
                       key={meal}
-                      style={[mealsStyles.premiumMealBtn, selectedMeal === meal && mealsStyles.premiumMealBtnActive]}
+                      style={[
+                        mealsStyles.futureMealBtn,
+                        selectedMeal === meal && mealsStyles.futureMealBtnActive
+                      ]}
                       onPress={() => setSelectedMeal(meal)}
                     >
-                      <Text style={[mealsStyles.premiumMealBtnText, selectedMeal === meal && mealsStyles.premiumMealBtnTextActive]}>{meal}</Text>
+                      <Text style={[
+                        mealsStyles.futureMealText,
+                        selectedMeal === meal && mealsStyles.futureMealTextActive
+                      ]}>
+                        {meal}
+                      </Text>
                     </TouchableOpacity>
                   ))}
                 </View>
               </View>
+
             </ScrollView>
 
-            {/* Action Footer */}
-            <View style={mealsStyles.premiumFooter}>
-              <TouchableOpacity
-                style={[mealsStyles.actionBtn, mealsStyles.secondaryActionBtn]}
-                onPress={onClose}
-              >
-                <Text style={mealsStyles.secondaryActionText}>Cancel</Text>
-              </TouchableOpacity>
-
+            {/* 7. Footer (Floating) */}
+            <View style={mealsStyles.futureFooter}>
               <TouchableOpacity
                 style={[
-                  mealsStyles.actionBtn,
-                  mealsStyles.primaryActionBtn,
-                  (!selectedMeal || submitting) && { opacity: 0.5 }
+                  mealsStyles.futureSaveBtn,
+                  (!selectedMeal || submitting) && { opacity: 0.5, shadowOpacity: 0.1 }
                 ]}
                 onPress={handleAddToMeal}
                 disabled={!selectedMeal || submitting}
               >
-                {submitting ? (
-                  <Text style={mealsStyles.primaryActionText}>Saving...</Text>
-                ) : (
-                  <>
-                    <Ionicons name={food.unit ? "save-outline" : "add-circle-outline"} size={20} color="#fff" style={{ marginRight: 8 }} />
-                    <Text style={mealsStyles.primaryActionText}>{food.unit ? 'Update' : 'Confirm Add'}</Text>
-                  </>
-                )}
+                <Text style={mealsStyles.futureSaveText}>
+                  {submitting ? 'SAVING...' : 'SAVE'}
+                </Text>
               </TouchableOpacity>
             </View>
-          </Pressable>
-        </Pressable>
+
+          </View>
+        </View>
       </KeyboardAvoidingView>
     </Modal>
   );

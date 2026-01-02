@@ -21,7 +21,7 @@ const MealSchema = new mongoose.Schema({
   foodId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Food',
-    required: [true, 'Food ID is required']
+    required: false
   },
   name: {
     type: String,
