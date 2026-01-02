@@ -3,6 +3,7 @@ const Meal = require('../models/Meal');
 const WorkoutEntry = require('../models/WorkoutEntry');
 const Food = require('../models/Food');
 const Workout = require('../models/Workout');
+const AuditLog = require('../models/AuditLog');
 
 // Get all plans for user
 exports.getAllPlans = async (req, res) => {
@@ -117,6 +118,19 @@ exports.createPlan = async (req, res) => {
 
 
     await plan.save();
+
+    // Log plan creation for admin activity feed
+    await AuditLog.log({
+      action: 'user.plan_created',
+      actorType: 'user',
+      actorId: req.userId,
+      actorName: req.userName || 'User',
+      targetType: 'plan',
+      targetId: plan._id,
+      details: `Created plan "${plan.name}" (${plan.duration} days)`,
+      metadata: { planName: plan.name, duration: plan.duration }
+    });
+
     res.status(201).json({ message: 'Plan created successfully', plan });
   } catch (error) {
     console.error('Create plan error:', error.message);
@@ -536,6 +550,18 @@ exports.activatePlan = async (req, res) => {
     plan.status = 'active';
     await plan.save();
     console.log(`[ACTIVATE] ✅ Plan ${plan._id} activated successfully`);
+
+    // Log plan activation for admin activity feed
+    await AuditLog.log({
+      action: 'user.plan_updated',
+      actorType: 'user',
+      actorId: req.userId,
+      actorName: req.userName || 'User',
+      targetType: 'plan',
+      targetId: plan._id,
+      details: `Activated plan "${plan.name}"`,
+      metadata: { planName: plan.name, status: 'active', meals: mealEntries.length, workouts: workoutEntries.length }
+    });
 
     res.json({
       message: 'Plan activated successfully',

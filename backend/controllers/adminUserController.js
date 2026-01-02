@@ -19,6 +19,16 @@ exports.listUsers = async (req, res) => {
       email: 1,
       createdAt: 1,
       gender: 1,
+      weight: 1,
+      height: 1,
+      age: 1,
+      activityLevel: 1,
+      goalType: 1,
+      goalWeight: 1,
+      targetCalories: 1,
+      targetProtein: 1,
+      targetCarbs: 1,
+      targetFat: 1,
     })
       .sort({ createdAt: -1 })
       .limit(parseInt(limit, 10))
@@ -35,5 +45,3 @@ exports.listUsers = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch users', error: error.message });
   }
 };
-
-
