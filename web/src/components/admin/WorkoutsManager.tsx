@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Search, CheckCircle, XCircle, AlertCircle, Plus, Trash2, ChevronDown, RefreshCw } from 'lucide-react'
+import { Search, CheckCircle, XCircle, AlertCircle, Plus, Trash2, ChevronDown, RefreshCw, X } from 'lucide-react'
 import { adminApi, type Workout } from '../../api/adminApi'
 
 // These match the actual values in the database
 const MUSCLE_GROUPS = ['All', 'Abs', 'Back', 'Biceps', 'Cardio', 'Chest', 'Forearms', 'Legs', 'Shoulders', 'Triceps']
+const CATEGORIES = ['strength', 'cardio', 'flexibility', 'balance']
 
 export function WorkoutsManager() {
-    const [subTab, setSubTab] = useState<'pending' | 'official'>('official') // Default to official - where workouts are
+    const [subTab, setSubTab] = useState<'pending' | 'official'>('official')
     const [muscleGroup, setMuscleGroup] = useState('All')
     const [searchTerm, setSearchTerm] = useState('')
     const [workouts, setWorkouts] = useState<Workout[]>([])
@@ -17,7 +18,11 @@ export function WorkoutsManager() {
     const [rejectingId, setRejectingId] = useState<string | null>(null)
     const [rejectionReason, setRejectionReason] = useState('')
 
-    // Load data when tab or filter changes
+    // Add Workout Modal
+    const [showAddModal, setShowAddModal] = useState(false)
+    const [newWorkout, setNewWorkout] = useState({ name: '', description: '', category: 'strength', muscle_group: 'Chest', equipment: '' })
+    const [saving, setSaving] = useState(false)
+
     useEffect(() => {
         loadData()
     }, [subTab, muscleGroup, refreshTrigger])
@@ -26,7 +31,6 @@ export function WorkoutsManager() {
         setLoading(true)
         try {
             const status = subTab === 'pending' ? 'pending' : 'official'
-            // Server-side filtering for better performance
             const data = await adminApi.getWorkouts({
                 status,
                 muscle_group: muscleGroup !== 'All' ? muscleGroup : undefined,
@@ -40,7 +44,6 @@ export function WorkoutsManager() {
         }
     }
 
-    // No client-side filtering needed - server handles it
     const filteredWorkouts = workouts
 
     const handleApprove = async (id: string) => {
@@ -69,6 +72,25 @@ export function WorkoutsManager() {
         } catch { alert('Failed') }
     }
 
+    const handleAddWorkout = async () => {
+        if (!newWorkout.name || !newWorkout.description) {
+            alert('Please fill in name and description')
+            return
+        }
+        setSaving(true)
+        try {
+            await adminApi.createWorkout(newWorkout)
+            setShowAddModal(false)
+            setNewWorkout({ name: '', description: '', category: 'strength', muscle_group: 'Chest', equipment: '' })
+            setRefreshTrigger(prev => prev + 1)
+        } catch (error) {
+            console.error(error)
+            alert('Failed to create workout')
+        } finally {
+            setSaving(false)
+        }
+    }
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -93,7 +115,7 @@ export function WorkoutsManager() {
                     <button onClick={() => setRefreshTrigger(p => p + 1)} className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-slate-400">
                         <RefreshCw className="w-4 h-4" />
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium rounded-xl">
+                    <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium rounded-xl">
                         <Plus className="w-4 h-4" /> Add
                     </button>
                 </div>
@@ -122,7 +144,7 @@ export function WorkoutsManager() {
                         onChange={(e) => setMuscleGroup(e.target.value)}
                         className="appearance-none bg-slate-900/50 border border-white/10 rounded-xl pl-4 pr-10 py-2 text-sm text-white focus:outline-none cursor-pointer"
                     >
-                        {MUSCLE_GROUPS.map((m: string) => <option key={m} value={m} className="bg-slate-900">{m}</option>)}
+                        {MUSCLE_GROUPS.map(m => <option key={m} value={m} className="bg-slate-900">{m}</option>)}
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                 </div>
@@ -196,6 +218,80 @@ export function WorkoutsManager() {
                         <div className="flex justify-end gap-3 mt-4">
                             <button onClick={() => setRejectingId(null)} className="px-4 py-2 text-slate-400 hover:text-white">Cancel</button>
                             <button onClick={handleReject} disabled={!rejectionReason.trim()} className="px-4 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white rounded-lg font-medium">Reject</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Add Workout Modal */}
+            {showAddModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="bg-slate-900 border border-white/10 p-6 rounded-2xl w-full max-w-lg">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-lg font-bold text-white">Add New Workout</h3>
+                            <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-white/10 rounded-lg text-slate-400">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Name *</label>
+                                <input
+                                    type="text"
+                                    value={newWorkout.name}
+                                    onChange={e => setNewWorkout({ ...newWorkout, name: e.target.value })}
+                                    placeholder="e.g. Barbell Bench Press"
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Description *</label>
+                                <textarea
+                                    value={newWorkout.description}
+                                    onChange={e => setNewWorkout({ ...newWorkout, description: e.target.value })}
+                                    placeholder="Describe the exercise..."
+                                    rows={3}
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none resize-none"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Category</label>
+                                    <select
+                                        value={newWorkout.category}
+                                        onChange={e => setNewWorkout({ ...newWorkout, category: e.target.value })}
+                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none cursor-pointer"
+                                    >
+                                        {CATEGORIES.map(c => <option key={c} value={c} className="bg-slate-900 capitalize">{c}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Target Muscle</label>
+                                    <select
+                                        value={newWorkout.muscle_group}
+                                        onChange={e => setNewWorkout({ ...newWorkout, muscle_group: e.target.value })}
+                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none cursor-pointer"
+                                    >
+                                        {MUSCLE_GROUPS.filter(m => m !== 'All').map(m => <option key={m} value={m} className="bg-slate-900">{m}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Equipment (optional)</label>
+                                <input
+                                    type="text"
+                                    value={newWorkout.equipment}
+                                    onChange={e => setNewWorkout({ ...newWorkout, equipment: e.target.value })}
+                                    placeholder="e.g. Barbell, Dumbbells"
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-3 mt-6">
+                            <button onClick={() => setShowAddModal(false)} className="px-4 py-2.5 text-slate-400 hover:text-white">Cancel</button>
+                            <button onClick={handleAddWorkout} disabled={saving} className="px-6 py-2.5 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white rounded-xl font-medium">
+                                {saving ? 'Creating...' : 'Create Workout'}
+                            </button>
                         </div>
                     </div>
                 </div>

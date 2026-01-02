@@ -12,7 +12,11 @@ export function MealsManager() {
     const [refreshTrigger, setRefreshTrigger] = useState(0)
     const [selectedFood, setSelectedFood] = useState<Food | null>(null)
 
-    // Load data when filter changes
+    // Add Meal Modal
+    const [showAddModal, setShowAddModal] = useState(false)
+    const [newMeal, setNewMeal] = useState({ name: '', description: '', category: 'Proteins', calories: 0, protein: 0, carbs: 0, fat: 0 })
+    const [saving, setSaving] = useState(false)
+
     useEffect(() => {
         loadData()
     }, [category, refreshTrigger])
@@ -20,7 +24,6 @@ export function MealsManager() {
     const loadData = async () => {
         setLoading(true)
         try {
-            // Server-side filtering for better performance
             const data = await adminApi.getFoods({
                 category: category !== 'All' ? category : undefined,
                 search: searchTerm || undefined
@@ -33,8 +36,6 @@ export function MealsManager() {
         }
     }
 
-    // No client-side filtering needed - server handles it
-    // Just apply instant search filter for responsiveness
     const filteredFoods = searchTerm
         ? foods.filter(f => f.name?.toLowerCase().includes(searchTerm.toLowerCase()))
         : foods
@@ -46,6 +47,25 @@ export function MealsManager() {
             setRefreshTrigger(prev => prev + 1)
             setSelectedFood(null)
         } catch { alert('Failed') }
+    }
+
+    const handleAddMeal = async () => {
+        if (!newMeal.name || !newMeal.description) {
+            alert('Please fill in name and description')
+            return
+        }
+        setSaving(true)
+        try {
+            await adminApi.createFood(newMeal)
+            setShowAddModal(false)
+            setNewMeal({ name: '', description: '', category: 'Proteins', calories: 0, protein: 0, carbs: 0, fat: 0 })
+            setRefreshTrigger(prev => prev + 1)
+        } catch (error) {
+            console.error(error)
+            alert('Failed to create meal')
+        } finally {
+            setSaving(false)
+        }
     }
 
     return (
@@ -73,7 +93,7 @@ export function MealsManager() {
                     <button onClick={() => setRefreshTrigger(p => p + 1)} className="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-slate-400">
                         <RefreshCw className="w-4 h-4" />
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl">
+                    <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl">
                         <Plus className="w-4 h-4" /> Add
                     </button>
                 </div>
@@ -115,11 +135,100 @@ export function MealsManager() {
                     onClose={() => setSelectedFood(null)}
                     onDelete={handleDelete}
                     onSave={(updated) => {
-                        // TODO: Call update API
                         console.log('Save:', updated)
                         setSelectedFood(null)
                     }}
                 />
+            )}
+
+            {/* Add Meal Modal */}
+            {showAddModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="bg-slate-900 border border-white/10 p-6 rounded-2xl w-full max-w-lg">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-lg font-bold text-white">Add New Meal</h3>
+                            <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-white/10 rounded-lg text-slate-400">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Name *</label>
+                                <input
+                                    type="text"
+                                    value={newMeal.name}
+                                    onChange={e => setNewMeal({ ...newMeal, name: e.target.value })}
+                                    placeholder="e.g. Grilled Chicken Breast"
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Description *</label>
+                                <textarea
+                                    value={newMeal.description}
+                                    onChange={e => setNewMeal({ ...newMeal, description: e.target.value })}
+                                    placeholder="Describe the food item..."
+                                    rows={2}
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500/50 outline-none resize-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Category</label>
+                                <select
+                                    value={newMeal.category}
+                                    onChange={e => setNewMeal({ ...newMeal, category: e.target.value })}
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-emerald-500/50 outline-none cursor-pointer"
+                                >
+                                    {MEAL_CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c} className="bg-slate-900">{c}</option>)}
+                                </select>
+                            </div>
+                            <div className="grid grid-cols-4 gap-3">
+                                <div>
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Calories</label>
+                                    <input
+                                        type="number"
+                                        value={newMeal.calories}
+                                        onChange={e => setNewMeal({ ...newMeal, calories: parseFloat(e.target.value) || 0 })}
+                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-3 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Protein (g)</label>
+                                    <input
+                                        type="number"
+                                        value={newMeal.protein}
+                                        onChange={e => setNewMeal({ ...newMeal, protein: parseFloat(e.target.value) || 0 })}
+                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-3 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Carbs (g)</label>
+                                    <input
+                                        type="number"
+                                        value={newMeal.carbs}
+                                        onChange={e => setNewMeal({ ...newMeal, carbs: parseFloat(e.target.value) || 0 })}
+                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-3 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Fat (g)</label>
+                                    <input
+                                        type="number"
+                                        value={newMeal.fat}
+                                        onChange={e => setNewMeal({ ...newMeal, fat: parseFloat(e.target.value) || 0 })}
+                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-3 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-3 mt-6">
+                            <button onClick={() => setShowAddModal(false)} className="px-4 py-2.5 text-slate-400 hover:text-white">Cancel</button>
+                            <button onClick={handleAddMeal} disabled={saving} className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl font-medium">
+                                {saving ? 'Creating...' : 'Create Meal'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     )
@@ -157,19 +266,14 @@ interface FoodDetailModalProps {
 function FoodDetailModal({ food, onClose, onDelete, onSave }: FoodDetailModalProps) {
     const servings = (food as any).servings || []
     const isDrink = food.category?.toLowerCase() === 'drinks'
-
-    // Mode: 'base' for per 100g/ml, or serving index
     const [mode, setMode] = useState<'base' | number>('base')
     const [isEditing, setIsEditing] = useState(false)
-
-    // Editable fields
     const [editName, setEditName] = useState(food.name || '')
     const [editCalories, setEditCalories] = useState(food.nutrients?.calories || 0)
     const [editProtein, setEditProtein] = useState(food.nutrients?.protein || 0)
     const [editCarbs, setEditCarbs] = useState(food.nutrients?.carbs || 0)
     const [editFat, setEditFat] = useState(food.nutrients?.fat || 0)
 
-    // Get macros based on selected mode
     const getCurrentMacros = () => {
         if (mode === 'base') {
             return {
@@ -208,7 +312,6 @@ function FoodDetailModal({ food, onClose, onDelete, onSave }: FoodDetailModalPro
                 className="bg-gradient-to-b from-slate-800 to-slate-900 border border-white/10 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
                 onClick={e => e.stopPropagation()}
             >
-                {/* Header */}
                 <div className="relative p-6 pb-4">
                     <div className="absolute top-4 right-4 flex gap-2">
                         <button
@@ -239,7 +342,6 @@ function FoodDetailModal({ food, onClose, onDelete, onSave }: FoodDetailModalPro
                     </div>
                 </div>
 
-                {/* Mode Selector */}
                 <div className="px-6 pb-4">
                     <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-2">View Nutrition</div>
                     <div className="flex flex-wrap gap-2">
@@ -268,7 +370,6 @@ function FoodDetailModal({ food, onClose, onDelete, onSave }: FoodDetailModalPro
                     </div>
                 </div>
 
-                {/* Macro Display */}
                 <div className="px-6 pb-6">
                     <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-2">{currentLabel}</div>
                     <div className="grid grid-cols-4 gap-2">
@@ -279,7 +380,6 @@ function FoodDetailModal({ food, onClose, onDelete, onSave }: FoodDetailModalPro
                     </div>
                 </div>
 
-                {/* Edit fields (when editing) */}
                 {isEditing && (
                     <div className="px-6 pb-6 space-y-3">
                         <div className="text-xs text-slate-400 uppercase tracking-wider mb-2">Edit Base Values (per 100{isDrink ? 'ml' : 'g'})</div>
@@ -292,7 +392,6 @@ function FoodDetailModal({ food, onClose, onDelete, onSave }: FoodDetailModalPro
                     </div>
                 )}
 
-                {/* Footer */}
                 <div className="p-4 border-t border-white/5 flex gap-3">
                     <button
                         onClick={() => onDelete(food._id!)}
