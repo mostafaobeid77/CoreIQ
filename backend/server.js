@@ -5,8 +5,21 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware - CORS configuration
+const corsOptions = {
+    origin: [
+        'http://localhost:5173',      // Vite dev server
+        'http://localhost:3000',      // Alternative dev port
+        'https://coreiq.netlify.app', // Production Netlify
+        'https://coreiq-admin.netlify.app', // Admin Netlify (if separate)
+        /\.netlify\.app$/,            // Any Netlify subdomain
+        /\.onrender\.com$/            // Any Render subdomain
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
+};
+app.use(cors(corsOptions));
 const compression = require('compression');
 app.use(compression());
 app.use(express.json({ limit: '50mb' }));
