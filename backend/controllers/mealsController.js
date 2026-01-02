@@ -115,6 +115,40 @@ exports.updateMeal = async (req, res) => {
       return res.status(404).json({ message: 'Meal not found' });
     }
 
+    // REVERSE SYNC: If meal is linked to a plan, update the plan too
+    if (meal.planId && meal.planDay) {
+      try {
+        const Plan = require('../models/Plan');
+        await Plan.updateOne(
+          { _id: meal.planId, 'mealPlan.day': meal.planDay },
+          {
+            $set: {
+              'mealPlan.$[dayFilter].meals.$[mealFilter]': {
+                foodId: meal.foodId,
+                name: meal.name,
+                mealType: meal.mealType,
+                quantity: meal.quantity,
+                unit: meal.unit,
+                calories: meal.calories,
+                protein: meal.protein,
+                carbs: meal.carbs,
+                fats: meal.fats
+              }
+            }
+          },
+          {
+            arrayFilters: [
+              { 'dayFilter.day': meal.planDay },
+              { 'mealFilter.name': meal.name } // Match by name since meals don't have unique IDs in plan
+            ]
+          }
+        );
+        console.log('[SYNC] Meal update synced back to plan');
+      } catch (syncErr) {
+        console.warn('[SYNC] Failed to sync meal update to plan:', syncErr.message);
+      }
+    }
+
     res.json({ message: 'Meal updated successfully', meal });
   } catch (error) {
     console.error('Update meal error:', error.message);
@@ -150,6 +184,27 @@ exports.deleteMeal = async (req, res) => {
     const meal = await Meal.findOneAndDelete({ _id: id, userId: req.userId });
     if (!meal) {
       return res.status(404).json({ message: 'Meal not found' });
+    }
+
+    // REVERSE SYNC: If meal was linked to a plan, remove from plan too
+    if (meal.planId && meal.planDay) {
+      try {
+        const Plan = require('../models/Plan');
+        await Plan.updateOne(
+          { _id: meal.planId },
+          {
+            $pull: {
+              'mealPlan.$[dayFilter].meals': { name: meal.name, mealType: meal.mealType }
+            }
+          },
+          {
+            arrayFilters: [{ 'dayFilter.day': meal.planDay }]
+          }
+        );
+        console.log('[SYNC] Meal deletion synced back to plan');
+      } catch (syncErr) {
+        console.warn('[SYNC] Failed to sync meal deletion to plan:', syncErr.message);
+      }
     }
 
     res.json({ message: 'Meal deleted successfully' });

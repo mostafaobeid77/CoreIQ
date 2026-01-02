@@ -178,6 +178,27 @@ exports.deleteWorkoutEntry = async (req, res) => {
       return res.status(404).json({ message: 'Workout entry not found' });
     }
 
+    // REVERSE SYNC: If workout was linked to a plan, remove from plan too
+    if (entry.planId && entry.planDay) {
+      try {
+        const Plan = require('../models/Plan');
+        await Plan.updateOne(
+          { _id: entry.planId },
+          {
+            $pull: {
+              'workoutPlan.$[dayFilter].workouts': { name: entry.name }
+            }
+          },
+          {
+            arrayFilters: [{ 'dayFilter.day': entry.planDay }]
+          }
+        );
+        console.log('[SYNC] Workout deletion synced back to plan');
+      } catch (syncErr) {
+        console.warn('[SYNC] Failed to sync workout deletion to plan:', syncErr.message);
+      }
+    }
+
     res.json({ message: 'Workout entry deleted successfully' });
   } catch (error) {
     console.error('Delete workout entry error:', error.message);
@@ -202,6 +223,31 @@ exports.updateWorkoutEntry = async (req, res) => {
     }
 
     await entry.save();
+
+    // REVERSE SYNC: If workout is linked to a plan, update the plan too
+    if (entry.planId && entry.planDay) {
+      try {
+        const Plan = require('../models/Plan');
+        const updateFields = entry.workoutType === 'strength'
+          ? { 'workoutPlan.$[dayFilter].workouts.$[workoutFilter].sets': entry.sets }
+          : { 'workoutPlan.$[dayFilter].workouts.$[workoutFilter].minutes': entry.minutes };
+
+        await Plan.updateOne(
+          { _id: entry.planId },
+          { $set: updateFields },
+          {
+            arrayFilters: [
+              { 'dayFilter.day': entry.planDay },
+              { 'workoutFilter.name': entry.name }
+            ]
+          }
+        );
+        console.log('[SYNC] Workout update synced back to plan');
+      } catch (syncErr) {
+        console.warn('[SYNC] Failed to sync workout update to plan:', syncErr.message);
+      }
+    }
+
     res.json({ message: 'Workout entry updated successfully', entry });
   } catch (error) {
     console.error('Update workout entry error:', error.message);
