@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert, LayoutAnimation, Platform, UIManager } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import WorkoutHeader from '../components/workouts/sections/WorkoutHeader';
@@ -120,6 +121,14 @@ const WorkoutScreen = () => {
     loadStatsForDate(dateKey);
     loadWorkoutsForDate(dateKey);
   }, [dateKey, loadStatsForDate, loadWorkoutsForDate]);
+
+  // Force refresh when screen comes into focus (e.g., after editing Plan)
+  useFocusEffect(
+    useCallback(() => {
+      // Force reload to pick up any changes from Plan edits
+      loadWorkoutsForDate(dateKey, true);
+    }, [dateKey, loadWorkoutsForDate])
+  );
 
   // Get current workouts for this date from context BEFORE effects that depend on them
   const strengthByGroup = getStrengthByGroupForDate(dateKey);

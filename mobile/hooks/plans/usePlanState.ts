@@ -271,7 +271,7 @@ export const usePlanState = (goalWeight: string) => {
                         console.warn('❌ Auto-sync failed:', err);
                     }
                 }
-            }, 2000); // 2s debounce for better performance, especially on Android
+            }, 800); // 800ms debounce for responsive sync
             return () => clearTimeout(timeoutId);
         }
     }, [hasChanges, planName, planDays, planId, planStatus, saving, saveDraft, resetMeals, resetWorkouts]);

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, Animated, Alert, Keyboard } from 'react-native';
 import { useRouter } from 'expo-router';
 import MealsHeader from '../components/meals/sections/MealsHeader';
@@ -131,6 +132,14 @@ const MealsScreen = () => {
         loadStatsForDate(dateKey);
         loadMealsForDate(dateKey);
     }, [dateKey, loadStatsForDate, loadMealsForDate]);
+
+    // Force refresh when screen comes into focus (e.g., after editing Plan)
+    useFocusEffect(
+        useCallback(() => {
+            // Force reload to pick up any changes from Plan edits
+            loadMealsForDate(dateKey, true);
+        }, [dateKey, loadMealsForDate])
+    );
 
     const goalWeight = stats.goalWeight;
     const mealSections = getMealSections(goalWeight);
