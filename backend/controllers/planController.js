@@ -184,21 +184,36 @@ exports.updatePlan = async (req, res) => {
               workouts: (day.workouts || [])
                 .filter(w => w.workoutId || w.id || w._id || w.name) // Allow custom workouts with just name
                 .map(w => {
-                  // Ensure workoutType is set (frontend often uses 'type')
-                  let wType = w.workoutType || w.type || 'strength';
-                  if (wType.toLowerCase() === 'cardio') wType = 'cardio';
-                  else wType = 'strength';
+                  // Robust cardio detection (matches frontend logic)
+                  const cardioKeywords = ['run', 'jog', 'cycle', 'cycling', 'bike', 'swim', 'walk', 'treadmill', 'elliptical', 'stair', 'rowing', 'cardio', 'hiit', 'sprint'];
+                  const nameLower = (w.name || '').toLowerCase();
+                  const categoryLower = (w.category || '').toLowerCase();
+                  const muscleGroupLower = (w.muscle_group || '').toLowerCase();
 
-                  // Preserve sets if they exist, otherwise default
+                  let isCardio = false;
+                  if (w.workoutType === 'cardio' || w.type === 'cardio') {
+                    isCardio = true;
+                  } else if (categoryLower === 'cardio' || muscleGroupLower === 'cardio') {
+                    isCardio = true;
+                  } else if (cardioKeywords.some(kw => nameLower.includes(kw))) {
+                    isCardio = true;
+                  }
+
+                  const wType = isCardio ? 'cardio' : 'strength';
+
+                  // Preserve sets if they exist, otherwise default for strength only
                   const existingSets = w.sets && w.sets.length > 0 ? w.sets : null;
                   const defaultSets = [{ reps: 10, weight: 0 }];
+
+                  // For cardio, ensure minutes exists (default to 30 if not set)
+                  const minutes = isCardio ? (w.minutes || w.duration || 30) : 0;
 
                   return {
                     ...w,
                     workoutId: w.workoutId || w.id || w._id,
                     workoutType: wType,
-                    // Ensure sets exist for strength
-                    sets: (wType === 'strength') ? (existingSets || defaultSets) : []
+                    sets: isCardio ? [] : (existingSets || defaultSets),
+                    minutes: minutes
                   };
                 })
             };
