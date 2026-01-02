@@ -259,6 +259,14 @@ export const usePlanState = (goalWeight: string) => {
                         setAllPlans((prev: any[]) => prev.map(p =>
                             p._id === planId ? { ...p, name: planName } : p
                         ));
+
+                        // CRITICAL: If plan is active, reset daily screen contexts
+                        // so they fetch fresh data when user navigates to them
+                        if (planStatus === 'active') {
+                            console.log('🔄 Active plan synced, resetting daily contexts...');
+                            resetMeals();
+                            resetWorkouts();
+                        }
                     } catch (err) {
                         console.warn('❌ Auto-sync failed:', err);
                     }
@@ -266,7 +274,7 @@ export const usePlanState = (goalWeight: string) => {
             }, 2000); // 2s debounce for better performance, especially on Android
             return () => clearTimeout(timeoutId);
         }
-    }, [hasChanges, planName, planDays, planId, planStatus, saving, saveDraft]);
+    }, [hasChanges, planName, planDays, planId, planStatus, saving, saveDraft, resetMeals, resetWorkouts]);
 
     const handleSavePlan = useCallback(async () => {
         try {
