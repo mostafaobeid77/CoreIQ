@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const UserPreferences = require('../models/UserPreferences');
 const PasswordResetToken = require('../models/PasswordResetToken');
 const EmailVerificationToken = require('../models/EmailVerificationToken');
+const AuditLog = require('../models/AuditLog');
 const jwt = require('jsonwebtoken');
 const { sendMail } = require('../utils/mailer');
 
@@ -112,6 +113,18 @@ exports.register = async (req, res) => {
 
     await sendVerificationEmail(user.email, code);
 
+    // Log user signup for admin activity feed
+    await AuditLog.log({
+      action: 'user.signup',
+      actorType: 'user',
+      actorId: user._id,
+      actorName: user.username,
+      targetType: 'user',
+      targetId: user._id,
+      details: `New user "${user.username}" registered`,
+      metadata: { email: user.email }
+    });
+
     res.status(201).json({
       message: 'User registered successfully. Verification code sent to email.',
       user: {
@@ -198,6 +211,18 @@ exports.login = async (req, res) => {
         profilePhoto: hasPhoto ? `/api/users/${user._id}/photo?v=${user.updatedAt ? new Date(user.updatedAt).getTime() : Date.now()}` : null
       }
     };
+
+    // Log user login for admin activity feed
+    await AuditLog.log({
+      action: 'user.login',
+      actorType: 'user',
+      actorId: user._id,
+      actorName: user.username,
+      targetType: 'user',
+      targetId: user._id,
+      details: `User "${user.username}" logged in`,
+      metadata: { email: user.email }
+    });
 
     console.log(`[Login] Total request time: ${Date.now() - start}ms`);
     return res.json(response);
