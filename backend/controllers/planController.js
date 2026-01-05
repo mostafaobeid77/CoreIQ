@@ -10,8 +10,8 @@ const normalizeMealType = (type) => {
   const t = type.toLowerCase();
   if (t === 'breakfast' || t === 'lunch' || t === 'dinner') return type; // Keep standard
   if (t.includes('morning')) return 'Snack 1';
-  if (t.includes('afternoon')) return 'Snack 2';
-  if (t.includes('evening') || t.includes('night')) return 'Snack 3';
+  if (t.includes('afternoon') || t.includes('mid-day')) return 'Snack 2';
+  if (t.includes('evening') || t.includes('night') || t.includes('late')) return 'Snack 3';
   if (t === 'snack') return 'Snack 1';
   // If it's already Snack 1, Snack 2, etc, leave it
   if (t.startsWith('snack')) return type;
@@ -476,10 +476,15 @@ exports.activatePlan = async (req, res) => {
           continue;
         }
 
+        const normalizedType = normalizeMealType(mealItem.mealType);
+        if (mealItem.mealType && mealItem.mealType.toLowerCase().includes('snack')) {
+          console.log(`[ACTIVATE] Mapping snack: "${mealItem.mealType}" -> "${normalizedType}"`);
+        }
+
         mealEntries.push(new Meal({
           userId: req.userId,
           date: day.date,
-          mealType: normalizeMealType(mealItem.mealType),
+          mealType: normalizedType,
           foodId: resolvedId || null, // Allow null if using name-only custom meal
           name: mealItem.name,
           brand: food?.brand || mealItem.brand || 'Generic',
