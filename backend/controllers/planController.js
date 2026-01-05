@@ -5,6 +5,19 @@ const Food = require('../models/Food');
 const Workout = require('../models/Workout');
 const AuditLog = require('../models/AuditLog');
 
+const normalizeMealType = (type) => {
+  if (!type) return 'Snack 1';
+  const t = type.toLowerCase();
+  if (t === 'breakfast' || t === 'lunch' || t === 'dinner') return type; // Keep standard
+  if (t.includes('morning')) return 'Snack 1';
+  if (t.includes('afternoon')) return 'Snack 2';
+  if (t.includes('evening') || t.includes('night')) return 'Snack 3';
+  if (t === 'snack') return 'Snack 1';
+  // If it's already Snack 1, Snack 2, etc, leave it
+  if (t.startsWith('snack')) return type;
+  return 'Snack 1'; // Default fallback
+};
+
 // Get all plans for user
 exports.getAllPlans = async (req, res) => {
   try {
@@ -268,7 +281,7 @@ exports.updatePlan = async (req, res) => {
               mealEntries.push({
                 userId: req.userId,
                 date: day.date,
-                mealType: meal.mealType,
+                mealType: normalizeMealType(meal.mealType),
                 foodId: meal.foodId,
                 name: meal.name,
                 brand: meal.brand || 'Generic',
@@ -466,7 +479,7 @@ exports.activatePlan = async (req, res) => {
         mealEntries.push(new Meal({
           userId: req.userId,
           date: day.date,
-          mealType: mealItem.mealType,
+          mealType: normalizeMealType(mealItem.mealType),
           foodId: resolvedId || null, // Allow null if using name-only custom meal
           name: mealItem.name,
           brand: food?.brand || mealItem.brand || 'Generic',
