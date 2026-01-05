@@ -1,6 +1,19 @@
 import { adminCache } from '../utils/adminCache';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const getApiBase = () => {
+    let url = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    // Remove trailing slash if present
+    if (url.endsWith('/')) {
+        url = url.slice(0, -1);
+    }
+    // Append /api if missing (heuristic: if it doesn't end in /api)
+    if (!url.endsWith('/api')) {
+        url = `${url}/api`;
+    }
+    return url;
+};
+
+const API_BASE = getApiBase();
 
 interface LoginResponse {
     message: string;
