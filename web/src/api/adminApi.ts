@@ -177,6 +177,18 @@ export const adminApi = {
         return data;
     },
 
+    updateWorkout: async (id: string, payload: Partial<Workout>) => {
+        const response = await fetch(`${API_BASE}/admin/content/workouts/${id}`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        adminCache.invalidate('workouts');
+        return data;
+    },
+
     updateWorkoutStatus: async (id: string, status: 'approved' | 'rejected', reason?: string) => {
         const response = await fetch(`${API_BASE}/admin/content/workouts/${id}/status`, {
             method: 'PATCH',

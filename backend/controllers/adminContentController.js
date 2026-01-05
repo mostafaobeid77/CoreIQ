@@ -67,6 +67,37 @@ exports.createWorkout = async (req, res) => {
   }
 };
 
+exports.updateWorkout = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, category, muscle_group, equipment } = req.body || {};
+
+    const workout = await Workout.findByIdAndUpdate(
+      id,
+      {
+        name: sanitizeString(name),
+        description: sanitizeString(description),
+        category: sanitizeString(category),
+        muscle_group: sanitizeString(muscle_group),
+        equipment: sanitizeString(equipment || ''),
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!workout) {
+      return res.status(404).json({ message: 'Workout not found' });
+    }
+
+    return res.json({
+      message: 'Workout updated successfully.',
+      workout,
+    });
+  } catch (error) {
+    console.error('Admin update workout error:', error.message);
+    return res.status(500).json({ message: 'Failed to update workout', error: error.message });
+  }
+};
+
 exports.deleteWorkout = async (req, res) => {
   try {
     const { id } = req.params;

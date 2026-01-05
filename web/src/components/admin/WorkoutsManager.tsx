@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, CheckCircle, XCircle, AlertCircle, Plus, Trash2, ChevronDown, RefreshCw, X } from 'lucide-react'
+import { Search, CheckCircle, XCircle, AlertCircle, Plus, Trash2, ChevronDown, RefreshCw, X, Edit3 } from 'lucide-react'
 import { adminApi, type Workout } from '../../api/adminApi'
 import { adminCache } from '../../utils/adminCache'
 
@@ -24,9 +24,36 @@ export function WorkoutsManager() {
     const [newWorkout, setNewWorkout] = useState({ name: '', description: '', category: 'strength', muscle_group: 'Chest', equipment: '' })
     const [saving, setSaving] = useState(false)
 
+    // Edit Workout Modal
+    const [editingWorkout, setEditingWorkout] = useState<Workout | null>(null)
+
     useEffect(() => {
         loadData()
     }, [subTab, muscleGroup, refreshTrigger])
+
+    // ...
+
+    const handleUpdateWorkout = async () => {
+        if (!editingWorkout || !editingWorkout.name || !editingWorkout.description) return
+        setSaving(true)
+        try {
+            await adminApi.updateWorkout(editingWorkout._id, {
+                name: editingWorkout.name,
+                description: editingWorkout.description,
+                category: editingWorkout.category,
+                muscle_group: editingWorkout.muscle_group,
+                equipment: editingWorkout.equipment
+            })
+            adminCache.invalidate('workouts')
+            setEditingWorkout(null)
+            setRefreshTrigger(prev => prev + 1)
+        } catch (error) {
+            console.error(error)
+            alert('Failed to update workout')
+        } finally {
+            setSaving(false)
+        }
+    }
 
 
 
@@ -212,9 +239,14 @@ export function WorkoutsManager() {
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <button onClick={() => handleDelete(w._id)} className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-white/10" title="Delete">
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
+                                                <div className="flex items-center gap-1">
+                                                    <button onClick={() => setEditingWorkout(w)} className="p-2 rounded-lg text-slate-500 hover:text-white hover:bg-white/10" title="Edit">
+                                                        <Edit3 className="w-4 h-4" />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(w._id)} className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-white/10" title="Delete">
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
                                             )}
                                         </td>
                                     </tr>
@@ -239,6 +271,77 @@ export function WorkoutsManager() {
                         <div className="flex justify-end gap-3 mt-4">
                             <button onClick={() => setRejectingId(null)} className="px-4 py-2 text-slate-400 hover:text-white">Cancel</button>
                             <button onClick={handleReject} disabled={!rejectionReason.trim()} className="px-4 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white rounded-lg font-medium">Reject</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Workout Modal */}
+            {editingWorkout && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="bg-slate-900 border border-white/10 p-6 rounded-2xl w-full max-w-lg">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-lg font-bold text-white">Edit Workout</h3>
+                            <button onClick={() => setEditingWorkout(null)} className="p-2 hover:bg-white/10 rounded-lg text-slate-400">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Name *</label>
+                                <input
+                                    type="text"
+                                    value={editingWorkout.name}
+                                    onChange={e => setEditingWorkout({ ...editingWorkout, name: e.target.value })}
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Description *</label>
+                                <textarea
+                                    value={editingWorkout.description}
+                                    onChange={e => setEditingWorkout({ ...editingWorkout, description: e.target.value })}
+                                    rows={3}
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none resize-none"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Category</label>
+                                    <select
+                                        value={editingWorkout.category}
+                                        onChange={e => setEditingWorkout({ ...editingWorkout, category: e.target.value })}
+                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none cursor-pointer"
+                                    >
+                                        {CATEGORIES.map(c => <option key={c} value={c} className="bg-slate-900 capitalize">{c}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Target Muscle</label>
+                                    <select
+                                        value={editingWorkout.muscle_group}
+                                        onChange={e => setEditingWorkout({ ...editingWorkout, muscle_group: e.target.value })}
+                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none cursor-pointer"
+                                    >
+                                        {MUSCLE_GROUPS.filter(m => m !== 'All').map(m => <option key={m} value={m} className="bg-slate-900">{m}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Equipment (optional)</label>
+                                <input
+                                    type="text"
+                                    value={editingWorkout.equipment || ''}
+                                    onChange={e => setEditingWorkout({ ...editingWorkout, equipment: e.target.value })}
+                                    className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-violet-500/50 outline-none"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-3 mt-6">
+                            <button onClick={() => setEditingWorkout(null)} className="px-4 py-2.5 text-slate-400 hover:text-white">Cancel</button>
+                            <button onClick={handleUpdateWorkout} disabled={saving} className="px-6 py-2.5 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white rounded-xl font-medium">
+                                {saving ? 'Saving...' : 'Save Changes'}
+                            </button>
                         </div>
                     </div>
                 </div>
