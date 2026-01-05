@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, useSpring, AnimatePresence, useMotionValueEvent, type MotionValue } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Activity, Apple, Brain, Target, Trophy, Calendar, TrendingUp, ArrowUpRight } from 'lucide-react'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 
 interface PhoneMockupProps {
     externalProgress?: MotionValue<number>
@@ -14,21 +15,23 @@ export function PhoneMockup({ externalProgress }: PhoneMockupProps) {
     })
 
     const scrollYProgress = externalProgress || internalProgress
+    const isMobile = useMediaQuery('(max-width: 768px)')
 
     // Smooth values for 3D tilt - optimized spring config for less jank
     const smoothProgress = useSpring(scrollYProgress, { stiffness: 50, damping: 20, restDelta: 0.01 })
 
     // Parallax values for layers - CLAMPED to avoid jitter/overshoot
-    const phoneRotateY = useTransform(smoothProgress, [0, 1], [-25, 25], { clamp: true })
-    const phoneRotateX = useTransform(smoothProgress, [0, 1], [15, -15], { clamp: true })
+    // If mobile, keep it static to save GPU
+    const phoneRotateY = useTransform(smoothProgress, [0, 1], isMobile ? [0, 0] : [-25, 25], { clamp: true })
+    const phoneRotateX = useTransform(smoothProgress, [0, 1], isMobile ? [0, 0] : [15, -15], { clamp: true })
 
     // UI elements fly further - defined at component level, not in render
-    const uiTranslateZ = useTransform(smoothProgress, [0, 1], [40, 120], { clamp: true })
-    const uiRotateY = useTransform(smoothProgress, [0, 1], [-5, 15], { clamp: true })
+    const uiTranslateZ = useTransform(smoothProgress, [0, 1], isMobile ? [0, 0] : [40, 120], { clamp: true })
+    const uiRotateY = useTransform(smoothProgress, [0, 1], isMobile ? [0, 0] : [-5, 15], { clamp: true })
 
     // Secondary widget transforms - moved out of render props
-    const neuralTranslateZ = useTransform(smoothProgress, [0, 1], [80, 180], { clamp: true })
-    const neuralRotateY = useTransform(smoothProgress, [0, 1], [-10, 10], { clamp: true })
+    const neuralTranslateZ = useTransform(smoothProgress, [0, 1], isMobile ? [0, 0] : [80, 180], { clamp: true })
+    const neuralRotateY = useTransform(smoothProgress, [0, 1], isMobile ? [0, 0] : [-10, 10], { clamp: true })
 
     // Use React state for screen switching - more performant than .get() in render
     const [activeScreen, setActiveScreen] = useState<'plan' | 'track' | 'results'>('plan')
@@ -85,67 +88,70 @@ export function PhoneMockup({ externalProgress }: PhoneMockupProps) {
                     </div>
                 </div>
 
-                {/* 3. Functional Widgets (Floating 3D) */}
+                {/* 3. Functional Widgets (Floating 3D) - HIDDEN ON MOBILE */}
+                {!isMobile && (
+                    <>
+                        {/* Macro Distribution Widget */}
+                        <motion.div
+                            style={{
+                                translateZ: uiTranslateZ,
+                                rotateY: uiRotateY,
+                                transformStyle: "preserve-3d"
+                            }}
+                            className="absolute -right-16 top-24 w-52 bg-slate-900/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.6)] p-4 flex flex-col gap-3"
+                        >
+                            <div className="flex items-center justify-between">
+                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Macro Dist.</span>
+                                <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">ON TRACK</span>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                {/* CSS Doughnut Chart */}
+                                <div className="relative w-12 h-12 rounded-full border-4 border-slate-700 flex items-center justify-center"
+                                    style={{ background: 'conic-gradient(#8b5cf6 0% 45%, #ec4899 45% 75%, #10b981 75% 100%)', borderRadius: '50%' }}>
+                                    <div className="w-8 h-8 bg-slate-900 rounded-full" />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-violet-500" /><span className="text-[9px] font-medium text-slate-300">Prot 45%</span></div>
+                                    <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-pink-500" /><span className="text-[9px] font-medium text-slate-300">Carb 30%</span></div>
+                                    <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /><span className="text-[9px] font-medium text-slate-300">Fats 25%</span></div>
+                                </div>
+                            </div>
+                        </motion.div>
 
-                {/* Macro Distribution Widget */}
-                <motion.div
-                    style={{
-                        translateZ: uiTranslateZ,
-                        rotateY: uiRotateY,
-                        transformStyle: "preserve-3d"
-                    }}
-                    className="absolute -right-16 top-24 w-52 bg-slate-900/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.6)] p-4 flex flex-col gap-3"
-                >
-                    <div className="flex items-center justify-between">
-                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Macro Dist.</span>
-                        <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">ON TRACK</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        {/* CSS Doughnut Chart */}
-                        <div className="relative w-12 h-12 rounded-full border-4 border-slate-700 flex items-center justify-center"
-                            style={{ background: 'conic-gradient(#8b5cf6 0% 45%, #ec4899 45% 75%, #10b981 75% 100%)', borderRadius: '50%' }}>
-                            <div className="w-8 h-8 bg-slate-900 rounded-full" />
-                        </div>
-                        <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-violet-500" /><span className="text-[9px] font-medium text-slate-300">Prot 45%</span></div>
-                            <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-pink-500" /><span className="text-[9px] font-medium text-slate-300">Carb 30%</span></div>
-                            <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /><span className="text-[9px] font-medium text-slate-300">Fats 25%</span></div>
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* Neural Confidence Widget */}
-                <motion.div
-                    style={{
-                        translateZ: neuralTranslateZ,
-                        rotateY: neuralRotateY,
-                        transformStyle: "preserve-3d"
-                    }}
-                    className="absolute -left-20 bottom-32 w-60 bg-violet-950/90 backdrop-blur-3xl border border-white/20 rounded-2xl shadow-[0_40px_80px_rgba(139,92,246,0.3)] p-5"
-                >
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                            <Brain className="w-4 h-4 text-white" />
-                        </div>
-                        <div className="flex flex-col">
-                            <div className="text-[10px] font-black text-white uppercase tracking-widest">Neural Conf.</div>
-                            <div className="text-[8px] font-medium text-violet-300">Prediction Model v4.2</div>
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <div className="flex items-end justify-between">
-                            <span className="text-3xl font-black text-white">98%</span>
-                            <span className="text-[10px] font-bold text-emerald-400 mb-1">HIGH FIDELITY</span>
-                        </div>
-                        <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
-                            <motion.div className="h-full bg-gradient-to-r from-violet-500 to-emerald-400" initial={{ width: 0 }} animate={{ width: '98%' }} transition={{ duration: 1.5 }} />
-                        </div>
-                        <div className="flex justify-between pt-1">
-                            <span className="text-[8px] font-bold text-slate-400">Streak: 14 Days</span>
-                            <span className="text-[8px] font-bold text-slate-400">Next: 2h 14m</span>
-                        </div>
-                    </div>
-                </motion.div>
+                        {/* Neural Confidence Widget */}
+                        <motion.div
+                            style={{
+                                translateZ: neuralTranslateZ,
+                                rotateY: neuralRotateY,
+                                transformStyle: "preserve-3d"
+                            }}
+                            className="absolute -left-20 bottom-32 w-60 bg-violet-950/90 backdrop-blur-3xl border border-white/20 rounded-2xl shadow-[0_40px_80px_rgba(139,92,246,0.3)] p-5"
+                        >
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                                    <Brain className="w-4 h-4 text-white" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <div className="text-[10px] font-black text-white uppercase tracking-widest">Neural Conf.</div>
+                                    <div className="text-[8px] font-medium text-violet-300">Prediction Model v4.2</div>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex items-end justify-between">
+                                    <span className="text-3xl font-black text-white">98%</span>
+                                    <span className="text-[10px] font-bold text-emerald-400 mb-1">HIGH FIDELITY</span>
+                                </div>
+                                <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                                    <motion.div className="h-full bg-gradient-to-r from-violet-500 to-emerald-400" initial={{ width: 0 }} animate={{ width: '98%' }} transition={{ duration: 1.5 }} />
+                                </div>
+                                <div className="flex justify-between pt-1">
+                                    <span className="text-[8px] font-bold text-slate-400">Streak: 14 Days</span>
+                                    <span className="text-[8px] font-bold text-slate-400">Next: 2h 14m</span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
 
                 {/* Reflection/Glare */}
                 <div className="absolute inset-0 rounded-[3.5rem] bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none z-50" />

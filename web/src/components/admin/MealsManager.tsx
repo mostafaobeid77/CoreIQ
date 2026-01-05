@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Search, Utensils, Plus, Trash2, ChevronDown, RefreshCw, X, Edit3, Flame, Droplets } from 'lucide-react'
 import { adminApi, type Food } from '../../api/adminApi'
+import { adminCache } from '../../utils/adminCache'
 
 const MEAL_CATEGORIES = ['All', 'Proteins', 'Grains/Carbs', 'Vegetables', 'Fruits', 'Salads', 'Fast Foods', 'Drinks']
 
@@ -21,14 +22,29 @@ export function MealsManager() {
         loadData()
     }, [category, refreshTrigger])
 
+
+
     const loadData = async () => {
         setLoading(true)
         try {
-            const data = await adminApi.getFoods({
+            const params = {
                 category: category !== 'All' ? category : undefined,
                 search: searchTerm || undefined
-            })
+            }
+
+            // Check cache
+            const cached = adminCache.get<{ foods: Food[] }>('foods', params)
+            if (cached) {
+                setFoods(cached.foods)
+                setLoading(false)
+                return
+            }
+
+            const data = await adminApi.getFoods(params)
             setFoods(data.foods)
+
+            // Set cache
+            adminCache.set('foods', params, data)
         } catch (error) {
             console.error(error)
         } finally {
@@ -44,6 +60,7 @@ export function MealsManager() {
         if (!window.confirm('Delete this meal?')) return
         try {
             await adminApi.deleteFood(id)
+            adminCache.invalidate('foods')
             setRefreshTrigger(prev => prev + 1)
             setSelectedFood(null)
         } catch { alert('Failed') }
@@ -57,6 +74,7 @@ export function MealsManager() {
         setSaving(true)
         try {
             await adminApi.createFood(newMeal)
+            adminCache.invalidate('foods')
             setShowAddModal(false)
             setNewMeal({ name: '', description: '', category: 'Proteins', calories: 0, protein: 0, carbs: 0, fat: 0 })
             setRefreshTrigger(prev => prev + 1)

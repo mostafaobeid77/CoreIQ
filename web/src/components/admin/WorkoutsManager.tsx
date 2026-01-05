@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Search, CheckCircle, XCircle, AlertCircle, Plus, Trash2, ChevronDown, RefreshCw, X } from 'lucide-react'
 import { adminApi, type Workout } from '../../api/adminApi'
+import { adminCache } from '../../utils/adminCache'
 
 // These match the actual values in the database
 const MUSCLE_GROUPS = ['All', 'Abs', 'Back', 'Biceps', 'Cardio', 'Chest', 'Forearms', 'Legs', 'Shoulders', 'Triceps']
@@ -27,16 +28,32 @@ export function WorkoutsManager() {
         loadData()
     }, [subTab, muscleGroup, refreshTrigger])
 
+
+
     const loadData = async () => {
         setLoading(true)
         try {
             const status = subTab === 'pending' ? 'pending' : 'official'
-            const data = await adminApi.getWorkouts({
+            const params = {
                 status,
                 muscle_group: muscleGroup !== 'All' ? muscleGroup : undefined,
                 search: searchTerm || undefined
-            })
+            }
+
+            // Check cache
+            const cached = adminCache.get<{ workouts: Workout[] }>('workouts', params)
+            if (cached) {
+                setWorkouts(cached.workouts)
+                setLoading(false)
+                // Optional: Background refresh if needed, but for now we trust the cache until invalidated
+                return
+            }
+
+            const data = await adminApi.getWorkouts(params)
             setWorkouts(data.workouts)
+
+            // Set cache
+            adminCache.set('workouts', params, data)
         } catch (error) {
             console.error(error)
         } finally {
@@ -50,6 +67,7 @@ export function WorkoutsManager() {
         if (!window.confirm('Approve this workout?')) return
         try {
             await adminApi.updateWorkoutStatus(id, 'approved')
+            adminCache.invalidate('workouts')
             setRefreshTrigger(prev => prev + 1)
         } catch { alert('Failed') }
     }
@@ -58,6 +76,7 @@ export function WorkoutsManager() {
         if (!rejectingId || !rejectionReason) return
         try {
             await adminApi.updateWorkoutStatus(rejectingId, 'rejected', rejectionReason)
+            adminCache.invalidate('workouts')
             setRejectingId(null)
             setRejectionReason('')
             setRefreshTrigger(prev => prev + 1)
@@ -68,6 +87,7 @@ export function WorkoutsManager() {
         if (!window.confirm('Delete this workout?')) return
         try {
             await adminApi.deleteWorkout(id)
+            adminCache.invalidate('workouts')
             setRefreshTrigger(prev => prev + 1)
         } catch { alert('Failed') }
     }
@@ -80,6 +100,7 @@ export function WorkoutsManager() {
         setSaving(true)
         try {
             await adminApi.createWorkout(newWorkout)
+            adminCache.invalidate('workouts')
             setShowAddModal(false)
             setNewWorkout({ name: '', description: '', category: 'strength', muscle_group: 'Chest', equipment: '' })
             setRefreshTrigger(prev => prev + 1)

@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import { Search, User } from 'lucide-react'
 import { adminApi } from '../../api/adminApi'
 
+import { adminCache } from '../../utils/adminCache'
+
+// ...
+
 export function UserDirectory() {
     const [users, setUsers] = useState<any[]>([])
     const [loading, setLoading] = useState(false)
@@ -11,8 +15,21 @@ export function UserDirectory() {
         const fetchUsers = async () => {
             setLoading(true)
             try {
-                const data = await adminApi.getUsers({ search: searchTerm })
+                const params = { search: searchTerm }
+
+                // Check cache
+                const cached = adminCache.get<{ users: any[] }>('users', params)
+                if (cached) {
+                    setUsers(cached.users)
+                    setLoading(false)
+                    return
+                }
+
+                const data = await adminApi.getUsers(params)
                 setUsers(data.users)
+
+                // Set cache
+                adminCache.set('users', params, data)
             } catch (error) {
                 console.error(error)
             } finally {

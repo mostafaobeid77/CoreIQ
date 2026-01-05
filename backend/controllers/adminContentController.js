@@ -12,7 +12,7 @@ exports.getWorkouts = async (req, res) => {
 
     const query = {};
     if (search) {
-      query.name = { $regex: search, $options: 'i' };
+      query.$text = { $search: search };
     }
     if (category) {
       query.category = category;
@@ -90,7 +90,7 @@ exports.getFoods = async (req, res) => {
 
     const query = {};
     if (search) {
-      query.name = { $regex: search, $options: 'i' };
+      query.$text = { $search: search };
     }
     if (category) {
       query.category = category;

@@ -13,9 +13,24 @@ const AuditLog = require('../models/AuditLog');
 /**
  * Get dashboard statistics
  */
+let statsCache = {
+    data: null,
+    timestamp: 0
+};
+
 exports.getDashboardStats = async (req, res) => {
     try {
         const now = new Date();
+        const CACHE_TTL = 60 * 1000; // 60 seconds
+
+        // Return cached data if fresh
+        if (statsCache.data && (now - statsCache.timestamp < CACHE_TTL)) {
+            return res.json({
+                stats: statsCache.data,
+                generatedAt: new Date(statsCache.timestamp).toISOString(),
+                cached: true
+            });
+        }
 
         // Run all counts in parallel for performance
         const [
@@ -36,17 +51,26 @@ exports.getDashboardStats = async (req, res) => {
             Food.countDocuments()
         ]);
 
+        const statsData = {
+            totalUsers,
+            activeAdmins,
+            totalAdmins,
+            activePlans,
+            totalWorkouts,
+            pendingWorkouts,
+            totalMeals
+        };
+
+        // Update cache
+        statsCache = {
+            data: statsData,
+            timestamp: now.getTime()
+        };
+
         return res.json({
-            stats: {
-                totalUsers,
-                activeAdmins,
-                totalAdmins,
-                activePlans,
-                totalWorkouts,
-                pendingWorkouts,
-                totalMeals
-            },
-            generatedAt: now.toISOString()
+            stats: statsData,
+            generatedAt: now.toISOString(),
+            cached: false
         });
     } catch (error) {
         console.error('getDashboardStats error:', error.message);

@@ -58,6 +58,7 @@ const AuditLogSchema = new mongoose.Schema({
 // Index for efficient querying of recent events
 AuditLogSchema.index({ createdAt: -1 });
 AuditLogSchema.index({ actorType: 1, createdAt: -1 });
+AuditLogSchema.index({ actorId: 1, createdAt: -1 });
 
 // Static helper to log events
 AuditLogSchema.statics.log = async function (data) {
