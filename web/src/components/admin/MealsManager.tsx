@@ -20,6 +20,9 @@ export function MealsManager() {
     // Add Meal Modal
     const [showAddModal, setShowAddModal] = useState(false)
     const [newMeal, setNewMeal] = useState({ name: '', description: '', category: 'Proteins', calories: 0, protein: 0, carbs: 0, fat: 0 })
+    const [baseUnit, setBaseUnit] = useState('g')
+    const [newServings, setNewServings] = useState<any[]>([])
+    const [servingInput, setServingInput] = useState({ size: '', calories: 0, protein: 0, carbs: 0, fat: 0 })
     const [saving, setSaving] = useState(false)
 
     useEffect(() => {
@@ -64,7 +67,6 @@ export function MealsManager() {
             }
 
             // Check cache - simplified to invalidate on search/page change for now or use complex key
-            const cacheKey = JSON.stringify(params)
             const cached = adminCache.get<{ foods: Food[], pagination: any }>('foods', params)
 
             if (cached) {
@@ -101,6 +103,16 @@ export function MealsManager() {
         } catch { alert('Failed') }
     }
 
+    const handleAddServing = () => {
+        if (!servingInput.size) return
+        setNewServings([...newServings, { ...servingInput }])
+        setServingInput({ size: '', calories: 0, protein: 0, carbs: 0, fat: 0 })
+    }
+
+    const handleRemoveServing = (index: number) => {
+        setNewServings(newServings.filter((_, i) => i !== index))
+    }
+
     const handleAddMeal = async () => {
         if (!newMeal.name || !newMeal.description) {
             alert('Please fill in name and description')
@@ -108,10 +120,24 @@ export function MealsManager() {
         }
         setSaving(true)
         try {
-            await adminApi.createFood(newMeal)
+            const payload = {
+                ...newMeal,
+                baseQuantity: {
+                    amount: 100,
+                    unit: baseUnit,
+                    basis: 'per100g' // Schema default, implies per 100 units
+                },
+                servings: newServings
+            }
+            await adminApi.createFood(payload)
             adminCache.invalidate('foods')
             setShowAddModal(false)
+            // Reset Form
             setNewMeal({ name: '', description: '', category: 'Proteins', calories: 0, protein: 0, carbs: 0, fat: 0 })
+            setBaseUnit('g')
+            setNewServings([])
+            setServingInput({ size: '', calories: 0, protein: 0, carbs: 0, fat: 0 })
+
             setRefreshTrigger(prev => prev + 1)
         } catch (error) {
             console.error(error)
@@ -262,42 +288,122 @@ export function MealsManager() {
                                     {MEAL_CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c} className="bg-slate-900">{c}</option>)}
                                 </select>
                             </div>
-                            <div className="grid grid-cols-4 gap-3">
-                                <div>
-                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Calories</label>
-                                    <input
-                                        type="number"
-                                        value={newMeal.calories}
-                                        onChange={e => setNewMeal({ ...newMeal, calories: parseFloat(e.target.value) || 0 })}
-                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-3 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
-                                    />
+                            <div className="bg-white/5 rounded-xl p-4 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Base Nutrition (per 100{baseUnit})</label>
+                                    <div className="flex bg-black/40 rounded-lg p-1">
+                                        <button
+                                            onClick={() => setBaseUnit('g')}
+                                            className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${baseUnit === 'g' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                                        >
+                                            Grams (g)
+                                        </button>
+                                        <button
+                                            onClick={() => setBaseUnit('ml')}
+                                            className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${baseUnit === 'ml' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                                        >
+                                            Milliliters (ml)
+                                        </button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Protein (g)</label>
-                                    <input
-                                        type="number"
-                                        value={newMeal.protein}
-                                        onChange={e => setNewMeal({ ...newMeal, protein: parseFloat(e.target.value) || 0 })}
-                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-3 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
-                                    />
+                                <div className="grid grid-cols-4 gap-3">
+                                    <div>
+                                        <label className="text-[10px] text-slate-500 uppercase tracking-wider">Calories</label>
+                                        <input
+                                            type="number"
+                                            value={newMeal.calories}
+                                            onChange={e => setNewMeal({ ...newMeal, calories: parseFloat(e.target.value) || 0 })}
+                                            className="w-full mt-1 bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] text-slate-500 uppercase tracking-wider">Protein (g)</label>
+                                        <input
+                                            type="number"
+                                            value={newMeal.protein}
+                                            onChange={e => setNewMeal({ ...newMeal, protein: parseFloat(e.target.value) || 0 })}
+                                            className="w-full mt-1 bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] text-slate-500 uppercase tracking-wider">Carbs (g)</label>
+                                        <input
+                                            type="number"
+                                            value={newMeal.carbs}
+                                            onChange={e => setNewMeal({ ...newMeal, carbs: parseFloat(e.target.value) || 0 })}
+                                            className="w-full mt-1 bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] text-slate-500 uppercase tracking-wider">Fat (g)</label>
+                                        <input
+                                            type="number"
+                                            value={newMeal.fat}
+                                            onChange={e => setNewMeal({ ...newMeal, fat: parseFloat(e.target.value) || 0 })}
+                                            className="w-full mt-1 bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Carbs (g)</label>
+                            </div>
+
+                            {/* Servings Section */}
+                            <div className="bg-white/5 rounded-xl p-4 space-y-3">
+                                <label className="text-xs text-slate-400 uppercase tracking-wider">Serving Sizes (Optional)</label>
+
+                                {newServings.length > 0 && (
+                                    <div className="flex flex-wrap gap-2 mb-2">
+                                        {newServings.map((s, i) => (
+                                            <div key={i} className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-lg pl-3 pr-2 py-1.5">
+                                                <div className="text-xs text-white">
+                                                    <span className="font-medium">{s.size}</span>
+                                                    <span className="text-slate-500 ml-1">({s.calories}kcal)</span>
+                                                </div>
+                                                <button onClick={() => handleRemoveServing(i)} className="text-slate-500 hover:text-red-400">
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-6 gap-2 items-end">
+                                    <div className="col-span-2">
+                                        <input
+                                            type="text"
+                                            placeholder="Label (e.g. 1 Cup)"
+                                            value={servingInput.size}
+                                            onChange={e => setServingInput({ ...servingInput, size: e.target.value })}
+                                            className="w-full bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-xs focus:border-emerald-500/50 outline-none"
+                                        />
+                                    </div>
                                     <input
                                         type="number"
-                                        value={newMeal.carbs}
-                                        onChange={e => setNewMeal({ ...newMeal, carbs: parseFloat(e.target.value) || 0 })}
-                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-3 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                        placeholder="Kcal"
+                                        value={servingInput.calories || ''}
+                                        onChange={e => setServingInput({ ...servingInput, calories: parseFloat(e.target.value) || 0 })}
+                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-xs focus:border-emerald-500/50 outline-none"
                                     />
-                                </div>
-                                <div>
-                                    <label className="text-xs text-slate-400 uppercase tracking-wider">Fat (g)</label>
                                     <input
                                         type="number"
-                                        value={newMeal.fat}
-                                        onChange={e => setNewMeal({ ...newMeal, fat: parseFloat(e.target.value) || 0 })}
-                                        className="w-full mt-1 bg-black/50 border border-white/10 rounded-xl px-3 py-3 text-white text-sm focus:border-emerald-500/50 outline-none"
+                                        placeholder="P"
+                                        value={servingInput.protein || ''}
+                                        onChange={e => setServingInput({ ...servingInput, protein: parseFloat(e.target.value) || 0 })}
+                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-xs focus:border-emerald-500/50 outline-none"
                                     />
+                                    <input
+                                        type="number"
+                                        placeholder="C"
+                                        value={servingInput.carbs || ''}
+                                        onChange={e => setServingInput({ ...servingInput, carbs: parseFloat(e.target.value) || 0 })}
+                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-xs focus:border-emerald-500/50 outline-none"
+                                    />
+                                    <button
+                                        onClick={handleAddServing}
+                                        disabled={!servingInput.size}
+                                        className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg py-2 flex items-center justify-center transition-colors"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                    </button>
                                 </div>
                             </div>
                         </div>
