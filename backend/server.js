@@ -100,6 +100,12 @@ try {
 } catch (e) { console.error('❌ workoutRoutes:', e.message); }
 
 try {
+    const submissionRoutes = require('./routes/submissionRoutes');
+    app.use('/api/submissions', submissionRoutes);
+    console.log('✅ submissionRoutes loaded');
+} catch (e) { console.error('❌ submissionRoutes:', e.message); }
+
+try {
     const adminAuthRoutes = require('./routes/adminAuthRoutes');
     app.use('/api/admin/auth', adminAuthRoutes);
     console.log('✅ adminAuthRoutes loaded');
