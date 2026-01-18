@@ -1,7 +1,7 @@
 import { adminCache } from '../utils/adminCache';
 
 const getApiBase = () => {
-    let url = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    let url = import.meta.env.VITE_API_URL || 'https://coreiq-backend.onrender.com/api';
     // Remove trailing slash if present
     if (url.endsWith('/')) {
         url = url.slice(0, -1);

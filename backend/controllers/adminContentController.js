@@ -7,7 +7,7 @@ const sanitizeString = (value = '') => value.trim();
 
 exports.getWorkouts = async (req, res) => {
   try {
-    const { page = 1, limit = 50, search, category, muscle_group } = req.query;
+    const { page = 1, limit = 50, search, category, muscle_group, status } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const query = {};
@@ -19,6 +19,9 @@ exports.getWorkouts = async (req, res) => {
     }
     if (muscle_group) {
       query.muscle_group = muscle_group;
+    }
+    if (status) {
+      query.status = status;
     }
 
     const [workouts, total] = await Promise.all([
@@ -43,7 +46,7 @@ exports.getWorkouts = async (req, res) => {
 
 exports.createWorkout = async (req, res) => {
   try {
-    const { name, description, category, muscle_group, equipment } = req.body || {};
+    const { name, description, category, muscle_group, equipment, status } = req.body || {};
 
     if (!name || !description || !category || !muscle_group) {
       return res.status(400).json({ message: 'Please provide name, description, category, and muscle group.' });
@@ -55,6 +58,7 @@ exports.createWorkout = async (req, res) => {
       category: sanitizeString(category),
       muscle_group: sanitizeString(muscle_group),
       equipment: sanitizeString(equipment || ''),
+      status: status || 'official',
     });
 
     return res.status(201).json({
@@ -70,7 +74,7 @@ exports.createWorkout = async (req, res) => {
 exports.updateWorkout = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, category, muscle_group, equipment } = req.body || {};
+    const { name, description, category, muscle_group, equipment, status } = req.body || {};
 
     const workout = await Workout.findByIdAndUpdate(
       id,
@@ -80,6 +84,7 @@ exports.updateWorkout = async (req, res) => {
         category: sanitizeString(category),
         muscle_group: sanitizeString(muscle_group),
         equipment: sanitizeString(equipment || ''),
+        ...(status && { status }),
       },
       { new: true, runValidators: true }
     );
