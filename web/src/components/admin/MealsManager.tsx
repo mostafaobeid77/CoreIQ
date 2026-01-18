@@ -13,35 +13,72 @@ export function MealsManager() {
     const [refreshTrigger, setRefreshTrigger] = useState(0)
     const [selectedFood, setSelectedFood] = useState<Food | null>(null)
 
+    const [page, setPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
+
     // Add Meal Modal
     const [showAddModal, setShowAddModal] = useState(false)
     const [newMeal, setNewMeal] = useState({ name: '', description: '', category: 'Proteins', calories: 0, protein: 0, carbs: 0, fat: 0 })
     const [saving, setSaving] = useState(false)
 
     useEffect(() => {
-        loadData()
-    }, [category, refreshTrigger])
+        setPage(1) // Reset to page 1 on filter change
+    }, [category, searchTerm])
 
+    useEffect(() => {
+        loadData()
+    }, [page, category, refreshTrigger]) // Trigger load on page change
+
+    // Debounce search would be ideal, but for now we rely on the user typing or hitting enter if we wanted. 
+    // Actually the previous code didn't debounce search separately, it used it in loadData directly.
+    // We need to trigger loadData when search changes too, handled by the dependency above (conceptually).
+    // But `searchTerm` is in the dependency of the reset effect, which resets page to 1. 
+    // We need another effect or stricter control. 
+    // Let's add a debounced search effect or just a manual trigger?
+    // The previous code had `onKeyDown={(e) => e.key === 'Enter' && setRefreshTrigger(p => p + 1)}` for workout, but for meals it was just typing?
+    // Ah, previous meals manager just used `searchTerm` in `loadData` but `loadData` was dependent on `[category, refreshTrigger]`.
+    // It did NOT depend on `searchTerm`. 
+    // So search ONLY worked if client-side filtered?
+    // Wait, line 32: `search: searchTerm || undefined`. But `useEffect` only watched `[category, refreshTrigger]`.
+    // So `searchTerm` was passed to API but `loadData` wasn't re-called when typing!
+    // AND there was client side filtering: `const filteredFoods = searchTerm ? ...`
+    // So previously it fetched ALL (limit 50 default) and THEN filtered locally? That's broken if the item isn't in top 50.
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            loadData()
+        }, 500)
+        return () => clearTimeout(timer)
+    }, [searchTerm])
 
 
     const loadData = async () => {
         setLoading(true)
         try {
             const params = {
+                page,
+                limit: 24, // Matches grid nicely (4x6 or 3x8)
                 category: category !== 'All' ? category : undefined,
                 search: searchTerm || undefined
             }
 
-            // Check cache
-            const cached = adminCache.get<{ foods: Food[] }>('foods', params)
+            // Check cache - simplified to invalidate on search/page change for now or use complex key
+            const cacheKey = JSON.stringify(params)
+            const cached = adminCache.get<{ foods: Food[], pagination: any }>('foods', params)
+
             if (cached) {
                 setFoods(cached.foods)
+                setTotalPages(cached.pagination.pages)
+                setTotalItems(cached.pagination.total)
                 setLoading(false)
                 return
             }
 
             const data = await adminApi.getFoods(params)
             setFoods(data.foods)
+            setTotalPages(data.pagination.pages)
+            setTotalItems(data.pagination.total)
 
             // Set cache
             adminCache.set('foods', params, data)
@@ -52,9 +89,7 @@ export function MealsManager() {
         }
     }
 
-    const filteredFoods = searchTerm
-        ? foods.filter(f => f.name?.toLowerCase().includes(searchTerm.toLowerCase()))
-        : foods
+    const filteredFoods = foods // Server side filtered now
 
     const handleDelete = async (id: string) => {
         if (!window.confirm('Delete this meal?')) return
@@ -93,7 +128,7 @@ export function MealsManager() {
                 <div>
                     <h2 className="text-xl font-bold text-white">Meals Library</h2>
                     <p className="text-sm text-slate-500">
-                        <span className="text-white font-medium">{filteredFoods.length}</span> of {foods.length} meals
+                        <span className="text-white font-medium">{totalItems}</span> total meals
                     </p>
                 </div>
 
@@ -138,11 +173,38 @@ export function MealsManager() {
                 ) : filteredFoods.length === 0 ? (
                     <div className="flex items-center justify-center h-40 text-slate-500">No meals found</div>
                 ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 max-h-[600px] overflow-y-auto">
-                        {filteredFoods.map((food: any) => (
-                            <FoodCard key={food._id} food={food} onClick={() => setSelectedFood(food)} />
-                        ))}
-                    </div>
+                    <>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 max-h-[600px] overflow-y-auto">
+                            {filteredFoods.map((food: any) => (
+                                <FoodCard key={food._id} food={food} onClick={() => setSelectedFood(food)} />
+                            ))}
+                        </div>
+                        {/* Pagination Controls */}
+                        <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-4">
+                            <div className="text-xs text-slate-500">
+                                Showing <span className="text-white font-medium">{filteredFoods.length}</span> items on page {page} of {totalPages} (Total: {totalItems})
+                            </div>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    disabled={page === 1}
+                                    className="px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Previous
+                                </button>
+                                <div className="flex items-center gap-1">
+                                    <span className="text-xs text-slate-400">Page {page}</span>
+                                </div>
+                                <button
+                                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                    disabled={page === totalPages}
+                                    className="px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
 
