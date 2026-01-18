@@ -1,5 +1,6 @@
 const Workout = require('../models/Workout');
 const Food = require('../models/Food');
+const WorkoutSubmission = require('../models/WorkoutSubmission');
 
 const sanitizeString = (value = '') => value.trim();
 
@@ -20,17 +21,40 @@ exports.getWorkouts = async (req, res) => {
     if (muscle_group) {
       query.muscle_group = muscle_group;
     }
-    if (status) {
-      query.status = status;
+    // Note: status filter handled by collection selection below
+
+    let items = [];
+    let total = 0;
+
+    if (status === 'pending') {
+      // Query Submissions for PENDING
+      const submissionQuery = { ...query, status: 'pending' };
+      // Map search to name regex if text search not available on submissions yet or consistent
+      if (search) {
+        delete submissionQuery.$text;
+        submissionQuery.name = { $regex: search, $options: 'i' };
+      }
+
+      [items, total] = await Promise.all([
+        WorkoutSubmission.find(submissionQuery).skip(skip).limit(parseInt(limit)).sort({ createdAt: -1 }),
+        WorkoutSubmission.countDocuments(submissionQuery)
+      ]);
+
+      // Add a flag to indicate these are submissions
+      items = items.map(item => ({ ...item.toObject(), isSubmission: true }));
+
+    } else {
+      // Query Workouts for OFFICIAL (or other statuses if we had them)
+      if (status) query.status = status;
+
+      [items, total] = await Promise.all([
+        Workout.find(query).skip(skip).limit(parseInt(limit)).sort({ name: 1 }),
+        Workout.countDocuments(query)
+      ]);
     }
 
-    const [workouts, total] = await Promise.all([
-      Workout.find(query).skip(skip).limit(parseInt(limit)).sort({ name: 1 }),
-      Workout.countDocuments(query)
-    ]);
-
     return res.json({
-      workouts,
+      workouts: items, // Frontend expects 'workouts' key
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),
@@ -76,7 +100,8 @@ exports.updateWorkout = async (req, res) => {
     const { id } = req.params;
     const { name, description, category, muscle_group, equipment, status } = req.body || {};
 
-    const workout = await Workout.findByIdAndUpdate(
+    // Try finding existing OFFICIAL workout first
+    let workout = await Workout.findByIdAndUpdate(
       id,
       {
         name: sanitizeString(name),
@@ -89,14 +114,65 @@ exports.updateWorkout = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    if (!workout) {
+    if (workout) {
+      return res.json({
+        message: 'Workout updated successfully.',
+        workout,
+      });
+    }
+
+    // If not found, check if it is a pending SUBMISSION being approved
+    const submission = await WorkoutSubmission.findById(id);
+
+    if (!submission) {
       return res.status(404).json({ message: 'Workout not found' });
     }
 
-    return res.json({
-      message: 'Workout updated successfully.',
-      workout,
-    });
+    // It is a submission. Are we approving it?
+    if (status === 'official' || status === 'approved') {
+      // Create new OFFICIAL workout
+      workout = await Workout.create({
+        name: sanitizeString(name || submission.name),
+        description: sanitizeString(description || submission.description),
+        category: sanitizeString(category || submission.category),
+        muscle_group: sanitizeString(muscle_group || submission.muscle_group),
+        equipment: sanitizeString(equipment || submission.equipment),
+        status: 'official'
+      });
+
+      // Mark submission as approved
+      submission.status = 'approved';
+      submission.reviewedBy = req.userId; // Assuming auth middleware sets this
+      submission.reviewedAt = new Date();
+      await submission.save();
+
+      return res.json({
+        message: 'Workout submission approved and created.',
+        workout
+      });
+    } else if (status === 'rejected') {
+      submission.status = 'rejected';
+      submission.reviewedBy = req.userId;
+      submission.reviewedAt = new Date();
+      await submission.save();
+      return res.json({ message: 'Workout submission rejected.' });
+    } else {
+      // Just updating the submission details without approving yet?
+      // Or user trying to update a submission?
+      // For now, let's allow updating the submission content
+      submission.name = sanitizeString(name || submission.name);
+      submission.description = sanitizeString(description || submission.description);
+      submission.category = sanitizeString(category || submission.category);
+      submission.muscle_group = sanitizeString(muscle_group || submission.muscle_group);
+      submission.equipment = sanitizeString(equipment || submission.equipment);
+      await submission.save();
+
+      return res.json({
+        message: 'Submission updated.',
+        workout: submission // Frontend expects 'workout' key
+      });
+    }
+
   } catch (error) {
     console.error('Admin update workout error:', error.message);
     return res.status(500).json({ message: 'Failed to update workout', error: error.message });
