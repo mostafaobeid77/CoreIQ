@@ -131,7 +131,7 @@ exports.getFoods = async (req, res) => {
     if (category) {
       // API sends Title Case (e.g., 'Fast Foods'), DB uses snake_case and has typos
       const categoryMap = {
-        'Proteins': 'protiens', // specific typo in DB
+        'Proteins': 'proteins', // DB actually uses correct spelling despite filename typo
         'Grains/Carbs': 'grains_carbs',
         'Fast Foods': 'fast_foods',
         'Vegetables': 'vegetables',
@@ -140,8 +140,14 @@ exports.getFoods = async (req, res) => {
         'Drinks': 'drinks'
       };
 
-      // Use map if exists, otherwise lowercase and replace space with underscore
-      query.category = categoryMap[category] || category.toLowerCase().replace(/ /g, '_');
+      const mappedCategory = categoryMap[category] || category.toLowerCase().replace(/ /g, '_');
+
+      // Special case for Proteins due to mixed data in DB (typo 'protiens' vs correct 'proteins')
+      if (mappedCategory === 'proteins') {
+        query.category = { $in: ['proteins', 'protiens'] };
+      } else {
+        query.category = mappedCategory;
+      }
     }
 
     const [foods, total] = await Promise.all([
