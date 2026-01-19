@@ -75,12 +75,12 @@ export function AdminLoginPage() {
                     transition={{ delay: 0.2, duration: 0.8 }}
                 >
                     <form onSubmit={handleLogin} className="space-y-10">
-                        {/* Email Field */}
+                        {/* Email/Username Field */}
                         <div className="relative group">
                             <div className="flex items-center gap-3 mb-2">
                                 <Mail className={`w-4 h-4 transition-colors duration-300 ${activeField === 'email' ? 'text-violet-400' : 'text-slate-500'}`} />
                                 <label className={`text-sm font-medium transition-colors duration-300 ${activeField === 'email' ? 'text-violet-200' : 'text-slate-400'}`}>
-                                    Email Address
+                                    Username or Email
                                 </label>
                             </div>
                             <input
@@ -90,7 +90,7 @@ export function AdminLoginPage() {
                                 onFocus={() => setActiveField('email')}
                                 onBlur={() => setActiveField(null)}
                                 className="w-full bg-transparent border-b border-white/10 py-3 text-lg text-white focus:outline-none focus:border-violet-500 transition-all duration-300 placeholder:text-slate-700/50"
-                                placeholder="admin@coreiq.com"
+                                placeholder="username or email@example.com"
                                 required
                             />
                         </div>

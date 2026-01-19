@@ -8,6 +8,7 @@ const Admin = require('../models/Admin');
 const Plan = require('../models/Plan');
 const Workout = require('../models/Workout');
 const Food = require('../models/Food');
+const AuditLog = require('../models/AuditLog');
 const WorkoutSubmission = require('../models/WorkoutSubmission');
 
 // ...
