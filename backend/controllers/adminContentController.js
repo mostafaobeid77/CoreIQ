@@ -193,6 +193,53 @@ exports.deleteWorkout = async (req, res) => {
   }
 };
 
+exports.updateWorkoutStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, rejectionReason } = req.body;
+
+    if (!['approved', 'rejected'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    const submission = await WorkoutSubmission.findById(id);
+    if (!submission) {
+      return res.status(404).json({ message: 'Submission not found' });
+    }
+
+    if (status === 'approved') {
+      const workout = await Workout.create({
+        name: submission.name,
+        description: submission.description,
+        category: submission.category,
+        muscle_group: submission.muscle_group,
+        equipment: submission.equipment,
+        status: 'official'
+      });
+
+      submission.status = 'approved';
+      submission.reviewedBy = req.adminId; // Middleware provides this
+      submission.reviewedAt = new Date();
+      await submission.save();
+
+      return res.json({ message: 'Workout approved', workout });
+    } else {
+      submission.status = 'rejected';
+      submission.rejectionReason = rejectionReason;
+      submission.reviewedBy = req.adminId;
+      submission.reviewedAt = new Date();
+      await submission.save();
+
+      return res.json({ message: 'Workout rejected' });
+    }
+
+  } catch (error) {
+    console.error('Update status error:', error.message);
+    return res.status(500).json({ message: 'Failed to update status', error: error.message });
+  }
+};
+
+
 // --- FOODS (Meals) ---
 
 exports.getFoods = async (req, res) => {

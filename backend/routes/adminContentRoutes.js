@@ -6,6 +6,7 @@ const adminContentController = require('../controllers/adminContentController');
 router.get('/workouts', adminContentController.getWorkouts);
 router.post('/workouts', adminContentController.createWorkout);
 router.put('/workouts/:id', adminContentController.updateWorkout);
+router.patch('/workouts/:id/status', adminContentController.updateWorkoutStatus);
 router.delete('/workouts/:id', adminContentController.deleteWorkout);
 
 // Meals (Foods)

@@ -8,15 +8,9 @@ const Admin = require('../models/Admin');
 const Plan = require('../models/Plan');
 const Workout = require('../models/Workout');
 const Food = require('../models/Food');
-const AuditLog = require('../models/AuditLog');
+const WorkoutSubmission = require('../models/WorkoutSubmission');
 
-/**
- * Get dashboard statistics
- */
-let statsCache = {
-    data: null,
-    timestamp: 0
-};
+// ...
 
 exports.getDashboardStats = async (req, res) => {
     try {
@@ -47,7 +41,7 @@ exports.getDashboardStats = async (req, res) => {
             Admin.countDocuments(),
             Plan.countDocuments({ endDate: { $gte: now } }),
             Workout.countDocuments(),
-            Workout.countDocuments({ status: 'pending' }),
+            WorkoutSubmission.countDocuments({ status: 'pending' }),
             Food.countDocuments()
         ]);
 
