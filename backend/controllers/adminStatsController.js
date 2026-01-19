@@ -13,6 +13,14 @@ const WorkoutSubmission = require('../models/WorkoutSubmission');
 
 // ...
 
+/**
+ * Get dashboard statistics
+ */
+let statsCache = {
+    data: null,
+    timestamp: 0
+};
+
 exports.getDashboardStats = async (req, res) => {
     try {
         const now = new Date();
