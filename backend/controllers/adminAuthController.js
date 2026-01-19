@@ -53,4 +53,28 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.getMe = async (req, res) => {
+  try {
+    const admin = req.admin;
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+    return res.json({
+      admin: {
+        id: admin._id,
+        username: admin.username,
+        email: admin.email,
+        role: admin.role,
+      },
+    });
+  } catch (error) {
+    console.error('Get Me error:', error.message);
+    return res.status(500).json({
+      message: 'Server error fetching admin details',
+      error: error.message,
+    });
+  }
+};
+
+
 
