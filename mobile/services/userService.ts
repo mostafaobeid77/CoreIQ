@@ -58,6 +58,10 @@ class UserService {
   async deleteAccount(): Promise<{ message: string }> {
     return api.delete('/users/account');
   }
+
+  async submitAdminRequest(data: { username: string; email: string; reason: string }): Promise<{ message: string }> {
+    return api.post('/admin/requests', data);
+  }
 }
 
 export const userService = new UserService();

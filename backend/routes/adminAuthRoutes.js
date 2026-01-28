@@ -7,6 +7,10 @@ const { requireAdmin } = require('../middleware/adminMiddleware');
 router.post('/login', adminAuthController.login);
 router.get('/me', requireAdmin, adminAuthController.getMe);
 
+// Admin Management (Protected)
+router.get('/list', requireAdmin, adminAuthController.listAdmins);
+router.delete('/delete/:id', requireAdmin, adminAuthController.deleteAdmin);
+
 module.exports = router;
 
 

@@ -3,7 +3,10 @@ const router = express.Router();
 const adminStatsController = require('../controllers/adminStatsController');
 const { requireAdmin, requireSuperadmin } = require('../middleware/adminMiddleware');
 
-// Dashboard stats (all admins)
+// Reports (Date Range Analytics)
+router.get('/reports', requireAdmin, adminStatsController.getReportStats);
+
+// Dashboard Stats (Cached)
 router.get('/dashboard', requireAdmin, adminStatsController.getDashboardStats);
 
 // Events (all admins)

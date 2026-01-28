@@ -1,6 +1,6 @@
 import { NavBar } from '../components/NavBar'
 import { Footer } from '../components/Footer'
-import { Download } from '../sections/Download'
+import { JoinTeamSection } from '../sections/JoinTeamSection'
 import { Features } from '../sections/Features'
 import { Hero } from '../sections/Hero'
 import { Particles } from '../components/Particles'
@@ -27,7 +27,7 @@ export function HomePage() {
 					<Hero />
 					<Features />
 					<PinnedSteps />
-					<Download />
+					<JoinTeamSection />
 				</SmoothScroll>
 			</main>
 			<Footer />

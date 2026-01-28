@@ -46,6 +46,11 @@ export function Footer() {
 								<li><a href="#" className="hover:text-white transition-colors">About</a></li>
 								<li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
 								<li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+								<li>
+									<a href="/join-team" className="hover:text-violet-400 transition-colors">
+										Join Admin Team
+									</a>
+								</li>
 							</ul>
 						</div>
 						<div>

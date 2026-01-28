@@ -1,6 +1,7 @@
 const Workout = require('../models/Workout');
 const Food = require('../models/Food');
 const WorkoutSubmission = require('../models/WorkoutSubmission');
+const { invalidateStatsCache } = require('./adminStatsController');
 
 const sanitizeString = (value = '') => value.trim();
 
@@ -222,6 +223,7 @@ exports.updateWorkoutStatus = async (req, res) => {
       submission.reviewedAt = new Date();
       await submission.save();
 
+      invalidateStatsCache();
       return res.json({ message: 'Workout approved', workout });
     } else {
       submission.status = 'rejected';
@@ -230,6 +232,7 @@ exports.updateWorkoutStatus = async (req, res) => {
       submission.reviewedAt = new Date();
       await submission.save();
 
+      invalidateStatsCache();
       return res.json({ message: 'Workout rejected' });
     }
 

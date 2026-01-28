@@ -56,7 +56,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             <View style={{
               width: 40,
               height: 40,
-              borderRadius: 20, // Perfect circle
+              borderRadius: 50, // Perfect circle
               backgroundColor: 'white', // Explicit White
               justifyContent: 'center',
               alignItems: 'center',

@@ -1,7 +1,7 @@
 import { adminCache } from '../utils/adminCache';
 
 const getApiBase = () => {
-    let url = import.meta.env.VITE_API_URL || 'https://coreiq-backend.onrender.com/api';
+    let url = import.meta.env.VITE_API_URL || 'https://coreiq-backend.onrender.com/api'; // 'http://localhost:5000/api';
     // Remove trailing slash if present
     if (url.endsWith('/')) {
         url = url.slice(0, -1);
@@ -83,6 +83,7 @@ export interface DashboardStats {
     activePlans: number;
     totalWorkouts: number;
     pendingWorkouts: number;
+    pendingAdminRequests: number;
     totalMeals: number;
 }
 
@@ -295,6 +296,16 @@ export const adminApi = {
         return data;
     },
 
+    deleteAdmin: async (adminId: string) => {
+        const response = await fetch(`${API_BASE}/admin/auth/delete/${adminId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        return data;
+    },
+
     isAuthenticated: () => {
         return !!localStorage.getItem('adminToken');
     },
@@ -339,6 +350,27 @@ export const adminApi = {
         return new EventSource(`${API_BASE}/admin/stats/events/stream?token=${token}`);
     },
 
+    getReportStats: async (startDate: Date, endDate: Date) => {
+        const params = new URLSearchParams({
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString()
+        });
+        const response = await fetch(`${API_BASE}/admin/stats/reports?${params}`, {
+            headers: getAuthHeaders()
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        return data as {
+            range: { start: string, end: string },
+            metrics: {
+                acquisition: { newUsers: number, label: string },
+                engagement: { newPlans: number, loginSessions: number, label: string },
+                content: { newWorkouts: number, newMeals: number, label: string },
+                team: { decisionsMade: number, label: string }
+            }
+        };
+    },
+
     getUserDetails: async (userId: string): Promise<{ user: UserDetail; plans: any[]; recentActivity: AuditEvent[] }> => {
         const response = await fetch(`${API_BASE}/admin/stats/users/${userId}`, {
             headers: getAuthHeaders(),
@@ -350,4 +382,55 @@ export const adminApi = {
 
     // --- Invite Codes (Superadmin) ---
 
+    // --- Admin Requests ---
+    submitAdminRequest: async (payload: { username: string; email: string; reason: string }) => {
+        // Public endpoint, no auth headers needed
+        const response = await fetch(`${API_BASE}/admin/requests`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        return data;
+    },
+
+    getAdminRequests: async (status?: string) => {
+        const url = status ? `${API_BASE}/admin/requests?status=${status}` : `${API_BASE}/admin/requests`;
+        const response = await fetch(url, { headers: getAuthHeaders() });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        return data as { requests: any[] };
+    },
+
+    approveAdminRequest: async (id: string) => {
+        const response = await fetch(`${API_BASE}/admin/requests/${id}/approve`, {
+            method: 'POST',
+            headers: getAuthHeaders()
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        return data;
+    },
+
+    rejectAdminRequest: async (id: string, reason: string) => {
+        const response = await fetch(`${API_BASE}/admin/requests/${id}/reject`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ reason })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        return data;
+    },
+
+    deleteAdminRequest: async (id: string) => {
+        const response = await fetch(`${API_BASE}/admin/requests/${id}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+        return data;
+    }
 };

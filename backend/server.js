@@ -131,6 +131,12 @@ try {
     console.log('✅ adminUserRoutes loaded');
 } catch (e) { console.error('❌ adminUserRoutes:', e.message); }
 
+try {
+    const adminRequestRoutes = require('./routes/adminRequestRoutes');
+    app.use('/api/admin/requests', adminRequestRoutes);
+    console.log('✅ adminRequestRoutes loaded');
+} catch (e) { console.error('❌ adminRequestRoutes:', e.message); }
+
 // Basic route
 app.get('/', (req, res) => {
     res.send('CoreIQ Backend API Running');

@@ -1,9 +1,9 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Badge } from '../components/ui/Badge'
 import { Section } from '../components/ui/Section'
-import { MagneticButton } from '../components/ui/MagneticButton'
+import { DownloadBadges } from '../components/DownloadBadges'
 import { PhoneMockup } from '../components/PhoneMockup'
-import { Sparkles, ArrowRight } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import { useRef } from 'react'
 import { LANDING_CONFIG } from '../config/landing'
 
@@ -55,21 +55,14 @@ export function Hero() {
 					</motion.p>
 
 					<motion.div
-						className="flex flex-wrap gap-6 justify-center lg:justify-start"
+						className="flex flex-col gap-6"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.8, delay: 0.2 }}
 					>
-						<a href="#download">
-							<MagneticButton variant="primary" className="group !px-10 !py-5">
-								Get Started <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-							</MagneticButton>
-						</a>
-						<a href="#features">
-							<MagneticButton variant="glass" className="!px-10 !py-5">
-								See Features
-							</MagneticButton>
-						</a>
+						<div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+							<DownloadBadges />
+						</div>
 					</motion.div>
 
 					<motion.div

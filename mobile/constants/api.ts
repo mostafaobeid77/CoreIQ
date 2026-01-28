@@ -36,10 +36,11 @@ const fromEnv = (process.env.EXPO_PUBLIC_API_URL || process.env.API_URL || '').t
 const IS_DEVELOPMENT = true; // Set to false when ready to publish APK
 
 export const API_URLS: string[] = [
-	// LOCAL DEVELOPMENT (uncomment for local testing)
-	// 'http://192.168.1.103:5000',
-	// PRODUCTION (comment out when testing locally)
-	'https://coreiq-backend.onrender.com'
+	// PRODUCTION
+	'https://coreiq-backend.onrender.com',
+	// LOCAL DEVELOPMENT (Physical Device)
+	// 'http://192.168.1.100:5000',
+	// 'http://10.0.2.2:5000', // Emulator
 ];
 
 export function buildApiUrl(path: string): string[] {

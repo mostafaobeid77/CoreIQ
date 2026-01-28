@@ -11,6 +11,7 @@ import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import DeleteAccountModal from '../components/settings/DeleteAccountModal';
+import AdminRequestModal from '../components/settings/AdminRequestModal';
 import { userService } from '../services/userService';
 
 const SettingScreen = () => {
@@ -25,6 +26,7 @@ const SettingScreen = () => {
   const [notifyWellness, setNotifyWellness] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [adminRequestModalVisible, setAdminRequestModalVisible] = useState(false);
   const prevNotifyWater = React.useRef<boolean | null>(null);
   const prevNotifyWellness = React.useRef<boolean | null>(null);
 
@@ -312,6 +314,13 @@ const SettingScreen = () => {
           {/* Support */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Support</Text>
+            <TouchableOpacity style={styles.row} activeOpacity={0.8} onPress={() => setAdminRequestModalVisible(true)}>
+              <View style={styles.rowLeft}>
+                <Ionicons name="shield-checkmark" size={18} color="#8b5cf6" style={styles.rowIcon} />
+                <Text style={styles.rowLabel}>Join Admin Team</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color="#8a8a8a" />
+            </TouchableOpacity>
             <TouchableOpacity style={styles.row} activeOpacity={0.8} onPress={() => Alert.alert('Report a Bug', 'Feature coming soon.')}>
               <View style={styles.rowLeft}>
                 <Ionicons name="bug" size={18} color="#ef4444" style={styles.rowIcon} />
@@ -374,6 +383,14 @@ const SettingScreen = () => {
           </View>
         </ScrollView>
       )}
+      {/* Admin Request Modal */}
+      <AdminRequestModal
+        visible={adminRequestModalVisible}
+        onClose={() => setAdminRequestModalVisible(false)}
+        initialUsername={user?.username || ''}
+        initialEmail={user?.email || ''}
+      />
+
       {/* Legacy Account Modal (unused now) */}
       <Modal
         visible={isAccountModalVisible}
@@ -415,4 +432,7 @@ const SettingScreen = () => {
     </View>
   );
 };
+
+
+
 export default SettingScreen;
