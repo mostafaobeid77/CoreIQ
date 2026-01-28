@@ -25,6 +25,26 @@ let cachedWorkouts = null;
 let lastCacheTime = 0;
 const CACHE_DURATION = 1000 * 60 * 10; // 10 minutes
 
+// Helper to normalize food structures (smartBuffet vs raw DB)
+const normalizeFood = (food) => {
+    if (!food) return null;
+    // Already normalized? (smartBuffet format)
+    if (food.cal !== undefined && food.p !== undefined) return food;
+
+    // Raw Mongo object?
+    const n = food.nutrients || {};
+    return {
+        _id: food._id.toString(),
+        name: food.name,
+        category: food.category,
+        cal: Math.round(n.calories || 0),
+        p: Math.round(n.protein || 0),
+        c: Math.round(n.carbs || 0),
+        f: Math.round(n.fat || 0),
+        servings: food.servings || []
+    };
+};
+
 // ==========================================
 // CONVERSATION HANDLERS
 // ==========================================
@@ -532,11 +552,12 @@ Analyze the request and respond with JSON ONLY (no markdown):
                     for (const toAdd of aiPlan.foodsToAdd) {
                         if (!toAdd || !toAdd.name) continue;
 
-                        const foodMatch = smartBuffet.find(f =>
+                        let foodMatch = smartBuffet.find(f =>
                             f.name.toLowerCase().includes(toAdd.name.toLowerCase())
                         ) || findBestFoodMatch(toAdd.name, cachedFoods, userTargets);
 
                         if (foodMatch) {
+                            foodMatch = normalizeFood(foodMatch);
                             const mealKey = findMealKey(toAdd.mealType || 'snacks');
                             if (!modifiedDay.meals[mealKey]) {
                                 modifiedDay.meals[mealKey] = [];
@@ -546,10 +567,10 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             let qty = toAdd.quantity || 100;
                             let unit = foodMatch.category === 'drinks' ? 'ml' : 'grams';
                             let finalNutrition = {
-                                calories: Math.round(foodMatch.cal * (qty / 100)),
-                                protein: Math.round(foodMatch.p * (qty / 100)),
-                                carbs: Math.round(foodMatch.c * (qty / 100)),
-                                fats: Math.round(foodMatch.f * (qty / 100))
+                                calories: Math.round(foodMatch.cal * (qty / 100)) || 0,
+                                protein: Math.round(foodMatch.p * (qty / 100)) || 0,
+                                carbs: Math.round(foodMatch.c * (qty / 100)) || 0,
+                                fats: Math.round(foodMatch.f * (qty / 100)) || 0
                             };
 
                             if (foodMatch.category === 'drinks' && foodMatch.servings && foodMatch.servings.length > 0) {
@@ -591,11 +612,12 @@ Analyze the request and respond with JSON ONLY (no markdown):
                     for (const toAdd of aiPlan.foodsToAdd) {
                         if (!toAdd || !toAdd.name) continue;
 
-                        const foodMatch = smartBuffet.find(f =>
+                        let foodMatch = smartBuffet.find(f =>
                             f.name.toLowerCase().includes(toAdd.name.toLowerCase())
                         ) || findBestFoodMatch(toAdd.name, cachedFoods, userTargets);
 
                         if (foodMatch) {
+                            foodMatch = normalizeFood(foodMatch);
                             console.log(`[DEBUG] AI Edit found match for ${toAdd.name}:`, {
                                 name: foodMatch.name,
                                 category: foodMatch.category,
@@ -612,10 +634,10 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             let qty = toAdd.quantity || 100;
                             let unit = foodMatch.category === 'drinks' ? 'ml' : 'grams';
                             let finalNutrition = {
-                                calories: Math.round(foodMatch.cal * (qty / 100)),
-                                protein: Math.round(foodMatch.p * (qty / 100)),
-                                carbs: Math.round(foodMatch.c * (qty / 100)),
-                                fats: Math.round(foodMatch.f * (qty / 100))
+                                calories: Math.round(foodMatch.cal * (qty / 100)) || 0,
+                                protein: Math.round(foodMatch.p * (qty / 100)) || 0,
+                                carbs: Math.round(foodMatch.c * (qty / 100)) || 0,
+                                fats: Math.round(foodMatch.f * (qty / 100)) || 0
                             };
 
                             if (foodMatch.category === 'drinks' && foodMatch.servings && foodMatch.servings.length > 0) {
