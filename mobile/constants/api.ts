@@ -33,14 +33,13 @@ function resolveLanUrl(): string | null {
 const fromEnv = (process.env.EXPO_PUBLIC_API_URL || process.env.API_URL || '').trim();
 
 // Toggle between development and production
-const IS_DEVELOPMENT = true; // Set to false when ready to publish APK
+const IS_DEVELOPMENT = false; // Set to false to use production backend
 
 export const API_URLS: string[] = [
 	// PRODUCTION
 	'https://coreiq-backend.onrender.com',
-	// LOCAL DEVELOPMENT (Physical Device)
-	// 'http://192.168.1.100:5000',
-	// 'http://10.0.2.2:5000', // Emulator
+	// LOCAL DEVELOPMENT (Physical Device) fallback
+	'http://192.168.1.100:5000',
 ];
 
 export function buildApiUrl(path: string): string[] {

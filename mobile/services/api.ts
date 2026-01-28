@@ -4,6 +4,7 @@ import { API_URLS } from '../constants/api';
 const TOKEN_KEY = '@coreiq_token';
 // Use the active URL from constants (currently set to Render Production)
 export const BASE_URL = `${API_URLS[0]}/api`;
+console.log('[API] Initialized with BASE_URL:', BASE_URL);
 
 /**
  * Ensures profile photo URLs point to the current active host.
@@ -62,8 +63,8 @@ class ApiService {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const headers = await this.getHeaders();
     const url = `${BASE_URL}${endpoint}`;
-
-    console.log('Fetching:', url);
+    console.log(`[API] ${options.method || 'GET'} Request: ${url}`);
+    if (options.body && typeof options.body === 'string') console.log(`[API] Body: ${options.body.substring(0, 100)}...`);
 
     try {
       const response = await fetch(url, {
