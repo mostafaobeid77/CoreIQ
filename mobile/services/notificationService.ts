@@ -20,10 +20,10 @@ class NotificationService {
     private configure() {
         Notifications.setNotificationHandler({
             handleNotification: async () => ({
-                shouldShowAlert: false,
+                shouldShowAlert: true,
                 shouldPlaySound: true,
                 shouldSetBadge: true,
-                shouldShowBanner: false,
+                shouldShowBanner: true,
                 shouldShowList: true,
             }),
         });
