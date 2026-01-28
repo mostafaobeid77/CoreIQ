@@ -15,9 +15,15 @@ const generateDeterministicWorkouts = require('../services/workouts/generateDete
 const { validatePlan } = require('../services/validation/validatePlanSchema');
 const ensure14Days = require('../services/utils/ensure14Days');
 
-// Cache setup
+// Global Cache setup
 const planCache = new Map();
 const CACHE_TTL = 1000 * 60 * 60; // 1 hour
+
+// Memory cache for DB data
+let cachedFoods = null;
+let cachedWorkouts = null;
+let lastCacheTime = 0;
+const CACHE_DURATION = 1000 * 60 * 10; // 10 minutes
 
 // ==========================================
 // CONVERSATION HANDLERS
@@ -320,14 +326,7 @@ exports.editPlan = async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        // In-memory cache variables (Global scope in module)
-        let cachedFoods = null;
-        let cachedWorkouts = null;
-        let lastCacheTime = 0;
-        const CACHE_DURATION = 1000 * 60 * 10; // 10 minutes
-
-        // ... inside editPlan ...
-        // Check cache validity
+        // inside editPlan - use global cache
         const now = Date.now();
         if (!cachedFoods || !cachedWorkouts || (now - lastCacheTime > CACHE_DURATION)) {
             console.log('[AI PERFORMANCE] Cache miss - Fetching DB data...');
@@ -395,9 +394,10 @@ Analyze the request and respond with JSON ONLY (no markdown):
                 console.log('[AI EDIT] AI Response:', JSON.stringify(aiPlan, null, 2));
             } catch (err) {
                 console.warn('AI intent detection failed:', err.message);
+                console.log('[AI EDIT] Falling back to basic pattern matching...');
             }
         } else {
-            console.log('[AI EDIT] Groq not available, using fallback');
+            console.log('[AI EDIT] Groq not available or returned no plan, using fallback. String input:', instruction);
         }
 
         // Fallback to basic intent detection
@@ -530,12 +530,14 @@ Analyze the request and respond with JSON ONLY (no markdown):
                     }
 
                     for (const toAdd of aiPlan.foodsToAdd) {
+                        if (!toAdd || !toAdd.name) continue;
+
                         const foodMatch = smartBuffet.find(f =>
                             f.name.toLowerCase().includes(toAdd.name.toLowerCase())
                         ) || findBestFoodMatch(toAdd.name, cachedFoods, userTargets);
 
                         if (foodMatch) {
-                            const mealKey = findMealKey(toAdd.mealType);
+                            const mealKey = findMealKey(toAdd.mealType || 'snacks');
                             if (!modifiedDay.meals[mealKey]) {
                                 modifiedDay.meals[mealKey] = [];
                             }
@@ -587,6 +589,8 @@ Analyze the request and respond with JSON ONLY (no markdown):
                 // Add new meal items
                 if (aiPlan.foodsToAdd) {
                     for (const toAdd of aiPlan.foodsToAdd) {
+                        if (!toAdd || !toAdd.name) continue;
+
                         const foodMatch = smartBuffet.find(f =>
                             f.name.toLowerCase().includes(toAdd.name.toLowerCase())
                         ) || findBestFoodMatch(toAdd.name, cachedFoods, userTargets);
@@ -755,12 +759,12 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             if (isCardio) {
                                 let duration = 30;
                                 if (specificUpdate?.duration) {
-                                    duration = specificUpdate.duration;
+                                    duration = parseInt(specificUpdate.duration) || 30;
                                 } else {
                                     // Try to extract duration from the requested name (e.g. "Running 25 mins")
                                     const durMatch = workoutName.match(/(\d+)\s*(min|minute)/i);
                                     if (durMatch) {
-                                        duration = parseInt(durMatch[1]);
+                                        duration = parseInt(durMatch[1]) || 30;
                                         console.log(`[AI EDIT] Extracted duration from name: ${duration} min`);
                                     }
                                 }
@@ -771,9 +775,9 @@ Analyze the request and respond with JSON ONLY (no markdown):
                                 const repVal = Math.max(1, parseInt(specificUpdate?.reps) || 10);
                                 const weightVal = Math.max(0, parseFloat(specificUpdate?.weight) || 0);
 
-                                workoutEntry.sets = Array(numSets).fill(null).map(() => ({
-                                    reps: repVal,
-                                    weight: weightVal
+                                workoutEntry.sets = Array(isNaN(numSets) ? 3 : numSets).fill(null).map(() => ({
+                                    reps: isNaN(repVal) ? 10 : repVal,
+                                    weight: isNaN(weightVal) ? 0 : weightVal
                                 }));
                                 console.log(`[AI EDIT] Added as strength with ${numSets} sets of ${repVal} at ${weightVal}kg`);
                             }
@@ -848,6 +852,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             // INTELLIGENT MATCHING
                             // Use scoring to find the BEST match, not just the first one
                             const findBestWorkoutMatch = (query, workouts) => {
+                                if (!query) return null;
                                 const q = query.toLowerCase().trim();
                                 const qWords = q.split(/\s+/).filter(w => w.length > 2);
 
@@ -1057,11 +1062,12 @@ Analyze the request and respond with JSON ONLY (no markdown):
         });
 
     } catch (error) {
-        console.error('[AI EDIT] Error:', error);
+        console.error('[AI EDIT] Critical Error:', error);
         res.status(500).json({
             success: false,
-            message: 'AI edit failed',
-            error: error.message
+            message: `AI edit failed: ${error.message}`,
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 };

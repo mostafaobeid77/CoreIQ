@@ -59,9 +59,22 @@ async function generateJson(systemPrompt, userPrompt) {
         }));
 
         const completion = await Promise.race([apiCall, timeoutPromise]);
+        const rawContent = completion.choices[0].message.content;
 
-        const result = JSON.parse(completion.choices[0].message.content);
-        return result;
+        // Clean JSON formatting - Extract object using Regex
+        let cleanedJson = rawContent;
+        const jsonMatch = rawContent.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+        if (jsonMatch) {
+            cleanedJson = jsonMatch[0];
+        }
+
+        try {
+            const result = JSON.parse(cleanedJson);
+            return result;
+        } catch (parseErr) {
+            console.error('❌ JSON Parse Failed. Raw content was:', rawContent);
+            throw new Error('AI returned an invalid format');
+        }
     } catch (err) {
         // Log ORIGINAL error FIRST for debugging
         console.error('❌ Groq Original Error:', {
