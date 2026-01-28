@@ -588,6 +588,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             modifiedDay.meals[mealKey].push({
                                 foodId: foodMatch._id,
                                 name: foodMatch.name,
+                                mealType: mealKey, // Required by Plan schema
                                 category: foodMatch.category,
                                 quantity: qty,
                                 unit: unit,
@@ -601,6 +602,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                                 fatsPer100g: foodMatch.f
                             });
                             changesMade.push(`Added ${foodMatch.name} to ${mealKey}`);
+
                         }
                     }
                 }
@@ -655,6 +657,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                             modifiedDay.meals[mealKey].push({
                                 foodId: foodMatch._id,
                                 name: foodMatch.name,
+                                mealType: mealKey, // Required by Plan schema
                                 category: foodMatch.category,
                                 quantity: qty,
                                 unit: unit,
@@ -668,6 +671,7 @@ Analyze the request and respond with JSON ONLY (no markdown):
                                 fatsPer100g: foodMatch.f
                             });
                             changesMade.push(`Added ${foodMatch.name} (${qty}g) to ${mealKey}`);
+
                         }
                     }
                 }
