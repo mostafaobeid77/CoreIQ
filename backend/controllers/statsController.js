@@ -149,7 +149,6 @@ exports.updateStats = async (req, res) => {
     if (stats) {
       // Update existing stats
       Object.assign(stats, updateData);
-      await stats.save();
     } else {
       // Create new entry - first get previous stats to carry over persistent values
       const previousStats = await DailyStats.findOne({
@@ -185,9 +184,34 @@ exports.updateStats = async (req, res) => {
       stats.goalWeight = 'Not set';
     }
 
-    await stats.save();
+    try {
+      await stats.save();
+    } catch (error) {
+      if (error.code === 11000) {
+        // Race condition: Document created by another request
+        console.log('[updateStats] Race condition detected. Fetching existing and applying update...');
+        stats = await DailyStats.findOne({ userId: req.userId, date: new Date(date) });
+        if (stats) {
+          Object.assign(stats, updateData);
+          // Re-calculate derived fields
+          if (updateData.walking !== undefined) {
+            stats.caloriesBurnedSteps = calculateCaloriesFromSteps(stats.walking);
+            stats.totalCaloriesBurned = (stats.caloriesBurnedWorkouts || 0) + stats.caloriesBurnedSteps;
+          }
+          if (stats.weight && stats.goalWeight && checkGoalAchieved(stats.weight, stats.goalWeight)) {
+            stats.goalWeight = 'Not set';
+          }
+          await stats.save();
+        } else {
+          throw error; // Should not happen
+        }
+      } else {
+        throw error;
+      }
+    }
 
     res.json({ message: 'Stats updated successfully', stats });
+
   } catch (error) {
     console.error('Update stats error:', error.message);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -209,7 +233,6 @@ exports.patchStats = async (req, res) => {
     if (stats) {
       // Update existing stats
       Object.assign(stats, updateData);
-      await stats.save();
     } else {
       // Create new entry - first get previous stats to carry over persistent values
       const previousStats = await DailyStats.findOne({
@@ -245,9 +268,34 @@ exports.patchStats = async (req, res) => {
       stats.goalWeight = 'Not set';
     }
 
-    await stats.save();
+    try {
+      await stats.save();
+    } catch (error) {
+      if (error.code === 11000) {
+        // Race condition: Document created by another request
+        console.log('[patchStats] Race condition detected. Fetching existing and applying update...');
+        stats = await DailyStats.findOne({ userId: req.userId, date: new Date(date) });
+        if (stats) {
+          Object.assign(stats, updateData);
+          // Re-calculate derived fields
+          if (updateData.walking !== undefined) {
+            stats.caloriesBurnedSteps = calculateCaloriesFromSteps(stats.walking);
+            stats.totalCaloriesBurned = (stats.caloriesBurnedWorkouts || 0) + stats.caloriesBurnedSteps;
+          }
+          if (stats.weight && stats.goalWeight && checkGoalAchieved(stats.weight, stats.goalWeight)) {
+            stats.goalWeight = 'Not set';
+          }
+          await stats.save();
+        } else {
+          throw error; // Should not happen
+        }
+      } else {
+        throw error;
+      }
+    }
 
     res.json({ message: 'Stats updated successfully', stats });
+
   } catch (error) {
     console.error('Patch stats error:', error.message);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -390,12 +438,30 @@ exports.applyEstimatedWeight = async (req, res) => {
       stats.weightSource = 'estimated';
       await stats.save();
     } else {
-      await DailyStats.create({
-        userId: req.userId,
-        date: dateObj,
-        ...updateData
-      });
+      try {
+        await DailyStats.create({
+          userId: req.userId,
+          date: dateObj,
+          ...updateData
+        });
+      } catch (error) {
+        if (error.code === 11000) {
+          // Race condition: Document created by another request
+          console.log('[applyEstimatedWeight] Race condition detected. Updating existing...');
+          stats = await DailyStats.findOne({ userId: req.userId, date: dateObj });
+          if (stats) {
+            stats.weight = weight;
+            stats.weightSource = 'estimated';
+            await stats.save();
+          } else {
+            throw error;
+          }
+        } else {
+          throw error;
+        }
+      }
     }
+
 
     // Also update user's profile weight
     const User = require('../models/User');

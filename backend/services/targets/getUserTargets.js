@@ -65,8 +65,28 @@ async function getUserTargets(userId, date = new Date()) {
             goalWeight,
             water: targets.water
         });
-        await stats.save();
-        console.log(`[TARGETS] Calculated and SAVED new targets: ${targets.targetCalories}kcal`);
+
+        try {
+            await stats.save();
+            console.log(`[TARGETS] Calculated and SAVED new targets: ${targets.targetCalories}kcal`);
+        } catch (error) {
+            if (error.code === 11000) {
+                // Race condition: Stats were created by another request in parallel
+                console.log('[TARGETS] Race condition detected: DailyStats already created. Fetching existing...');
+                stats = await DailyStats.findOne({
+                    userId: userId,
+                    date: {
+                        $gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
+                        $lt: new Date(new Date(date).setHours(23, 59, 59, 999))
+                    }
+                });
+                // If somehow still null (shouldn't happen), rethrow
+                if (!stats) throw error;
+            } else {
+                throw error;
+            }
+        }
+
 
         return {
             calories: targets.targetCalories,
