@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import { useTheme } from "../context/themeContext";
 import { usePreferences } from "../context/PreferencesContext";
 import { useAuth } from "../context/AuthContext";
-import * as Notifications from 'expo-notifications';
+import { notificationService, NOTIFICATION_TYPES } from '../services/notificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import DeleteAccountModal from '../components/settings/DeleteAccountModal';
@@ -67,117 +67,23 @@ const SettingScreen = () => {
     Linking.openURL(url).catch(() => Alert.alert('Error', 'Unable to open link'));
   };
 
-  const scheduleWaterReminders = async () => {
-    // Cancel existing water reminders to avoid duplicates
-    await cancelWaterReminders();
-    // Schedule ONE repeating reminder every 2 hours (7200 seconds)
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: '💧 Time to drink water!',
-        body: 'Stay hydrated! Log your water intake.',
-        sound: true,
-        priority: Notifications.AndroidNotificationPriority.MAX,
-      },
-      trigger: {
-        seconds: 7200, // 2 hours
-        repeats: true,
-        channelId: 'reminders',
-      } as Notifications.NotificationTriggerInput,
-    });
-  };
-
-  const cancelWaterReminders = async () => {
-    const all = await Notifications.getAllScheduledNotificationsAsync();
-    for (const n of all) {
-      if (n.content.title === '💧 Time to drink water!') {
-        await Notifications.cancelScheduledNotificationAsync(n.identifier);
-      }
-    }
-  };
-
-  const scheduleWellnessReminders = async () => {
-    // Cancel existing wellness reminders to avoid duplicates
-    await cancelWellnessReminders();
-    // Schedule ONE repeating reminder every 6 hours (21600 seconds)
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: '🌱 Wellness Reminder',
-        body: 'Time for a workout, meal, or a motivational check-in!',
-        sound: true,
-        priority: Notifications.AndroidNotificationPriority.MAX,
-      },
-      trigger: {
-        seconds: 21600, // 6 hours
-        repeats: true,
-        channelId: 'reminders',
-      } as Notifications.NotificationTriggerInput,
-    });
-  };
-
-  const cancelWellnessReminders = async () => {
-    const all = await Notifications.getAllScheduledNotificationsAsync();
-    for (const n of all) {
-      if (n.content.title === '🌱 Wellness Reminder') {
-        await Notifications.cancelScheduledNotificationAsync(n.identifier);
-      }
-    }
-  };
-
-  const registerNotificationChannels = async () => {
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
-
-      await Notifications.setNotificationChannelAsync('reminders', {
-        name: 'Reminders',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#2563eb',
-      });
-    }
-  };
-
-  // Request notification permissions
-  const requestNotificationPermission = async () => {
-    const { status } = await Notifications.getPermissionsAsync();
-    if (status !== 'granted') {
-      const { status: reqStatus } = await Notifications.requestPermissionsAsync();
-      return reqStatus === 'granted';
-    }
-    return true;
-  };
-
-  // Show notifications in foreground
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-      shouldShowBanner: true,
-      shouldShowList: true,
-    }),
-  });
-
   // Replace the useEffect for loading switches with useFocusEffect
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
       (async () => {
-        await registerNotificationChannels();
+        await notificationService.registerChannels();
         const water = await AsyncStorage.getItem('notifyWater');
         if (water !== null && isActive) setNotifyWater(JSON.parse(water));
         const wellness = await AsyncStorage.getItem('notifyWellness');
         if (wellness !== null && isActive) setNotifyWellness(JSON.parse(wellness));
         setLoading(false);
-        await requestNotificationPermission();
+        await notificationService.requestPermissions();
       })();
       return () => { isActive = false; };
     }, [])
   );
+
   // Water reminders effect
   useEffect(() => {
     if (loading) return;
@@ -189,12 +95,12 @@ const SettingScreen = () => {
     prevNotifyWater.current = notifyWater;
 
     if (notifyWater) {
-      requestNotificationPermission().then(granted => {
-        if (granted) scheduleWaterReminders();
+      notificationService.requestPermissions().then(granted => {
+        if (granted) notificationService.scheduleWaterReminders();
         else setNotifyWater(false);
       });
     } else {
-      cancelWaterReminders();
+      notificationService.cancelNotificationsByType(NOTIFICATION_TYPES.WATER);
     }
   }, [notifyWater, loading]);
 
@@ -209,12 +115,12 @@ const SettingScreen = () => {
     prevNotifyWellness.current = notifyWellness;
 
     if (notifyWellness) {
-      requestNotificationPermission().then(granted => {
-        if (granted) scheduleWellnessReminders();
+      notificationService.requestPermissions().then(granted => {
+        if (granted) notificationService.scheduleWellnessReminders();
         else setNotifyWellness(false);
       });
     } else {
-      cancelWellnessReminders();
+      notificationService.cancelNotificationsByType(NOTIFICATION_TYPES.WELLNESS);
     }
   }, [notifyWellness, loading]);
 
