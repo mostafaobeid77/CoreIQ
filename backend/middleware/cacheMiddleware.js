@@ -8,7 +8,7 @@ exports.cache = (duration = CACHE_DURATION) => {
             return next();
         }
 
-        const key = `__express__${req.originalUrl || req.url}`;
+        const key = `__express__${req.originalUrl || req.url}__${req.userId || 'public'}`;
         const cachedResponse = cache.get(key);
 
         if (cachedResponse) {
@@ -25,15 +25,18 @@ exports.cache = (duration = CACHE_DURATION) => {
         // Cache miss - hijack res.send/res.json
         res.set('X-Cache', 'MISS');
         const originalSend = res.send;
-        res.send = (body) => {
-            // Store in cache
-            cache.set(key, {
-                body,
-                timestamp: Date.now()
-            });
+        res.send = function (body) {
+            // Only cache successful 200 OK responses
+            if (res.statusCode === 200) {
+                cache.set(key, {
+                    body,
+                    timestamp: Date.now()
+                });
+            }
             // Restore original send and call it
-            originalSend.call(res, body);
+            originalSend.call(this, body);
         };
+
 
         next();
     };
