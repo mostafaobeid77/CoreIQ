@@ -461,6 +461,14 @@ exports.activatePlan = async (req, res) => {
       { status: 'draft' }
     );
 
+    // IDEMPOTENCY FIX: Delete any existing entries for this plan ID before re-inserting
+    // This handles cases where a previous activation failed halfway (e.g., inserted meals but failed on workouts)
+    await Promise.all([
+      Meal.deleteMany({ planId: plan._id }),
+      WorkoutEntry.deleteMany({ planId: plan._id })
+    ]);
+
+
     // 3. Create Meal entries
     const mealEntries = [];
     let skippedMeals = 0;
