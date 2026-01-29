@@ -593,8 +593,13 @@ exports.activatePlan = async (req, res) => {
     console.error('Activate plan error:', error.message);
     console.error('Activate plan error stack:', error.stack);
     console.error('Activate plan full error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({
+      message: `Activate failed: ${error.message}`,
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
+
 };
 
 // Deactivate plan (doesn't delete entries, just changes status)
