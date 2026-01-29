@@ -73,9 +73,10 @@ const WorkoutEntrySchema = new mongoose.Schema({
   planDay: {
     type: Number,
     min: 1,
-    max: 14,
+    max: 90,
     default: null
   }
+
 }, {
   timestamps: true
 });
