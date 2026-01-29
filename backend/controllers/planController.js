@@ -12,7 +12,7 @@ const normalizeMealType = (type) => {
   if (t.includes('morning')) return 'Snack 1';
   if (t.includes('afternoon') || t.includes('mid-day')) return 'Snack 2';
   if (t.includes('evening') || t.includes('night') || t.includes('late')) return 'Snack 3';
-  if (t === 'snack') return 'Snack 1';
+  if (t === 'snack' || t === 'snacks') return 'Snack 1';
   // If it's already Snack 1, Snack 2, etc, leave it
   if (t.startsWith('snack')) return type;
   return 'Snack 1'; // Default fallback
