@@ -377,14 +377,19 @@ exports.activatePlan = async (req, res) => {
     // Use client provided date if available (format YYYY-MM-DD) to respect user's timezone.
     let today;
     if (req.body && req.body.startDate) {
-      // Create UTC midnight from the client string "YYYY-MM-DD"
-      today = new Date(req.body.startDate);
-      // Ensure it is treated as UTC midnight
-      today = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+      // Parse YYYY-MM-DD strictly as UTC
+      const parts = req.body.startDate.split('-');
+      if (parts.length === 3) {
+        today = new Date(Date.UTC(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])));
+      } else {
+        // Fallback
+        today = new Date(req.body.startDate);
+      }
     } else {
       const now = new Date();
       today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
     }
+
 
     plan.startDate = today;
     const endDate = new Date(today);
