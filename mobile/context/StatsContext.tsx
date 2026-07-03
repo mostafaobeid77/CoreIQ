@@ -83,6 +83,13 @@ export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       goalWeight: stats.goalWeight ?? defaultStats.goalWeight,
       workoutsCompleted: stats.workoutsCompleted ?? defaultStats.workoutsCompleted,
       workoutsTotal: stats.workoutsTotal ?? defaultStats.workoutsTotal,
+      targetCalories: stats.targetCalories ?? defaultStats.targetCalories,
+      targetProtein: stats.targetProtein ?? defaultStats.targetProtein,
+      targetCarbs: stats.targetCarbs ?? defaultStats.targetCarbs,
+      targetFats: stats.targetFats ?? defaultStats.targetFats,
+      caloriesBurnedWorkouts: stats.caloriesBurnedWorkouts ?? defaultStats.caloriesBurnedWorkouts,
+      caloriesBurnedSteps: stats.caloriesBurnedSteps ?? defaultStats.caloriesBurnedSteps,
+      totalCaloriesBurned: stats.totalCaloriesBurned ?? defaultStats.totalCaloriesBurned,
     };
   }, []);
 
