@@ -37,7 +37,7 @@ const IS_DEVELOPMENT = false; // Set to false to use production backend
 
 export const API_URLS: string[] = [
 	// PRODUCTION
-	'https://coreiq-backend.onrender.com',
+	'https://coreiq-backend-22dy.onrender.com',
 	// LOCAL DEVELOPMENT (Physical Device) fallback
 	'http://192.168.1.100:5000',
 ];
