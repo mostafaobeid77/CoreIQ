@@ -29,7 +29,7 @@ export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [loadingDates, setLoadingDates] = useState<LoadingState>({});
   const loadedDatesRef = useRef<Record<string, boolean>>({});
   const loadingDatesRef = useRef<Record<string, boolean>>({});
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   const calculateAge = useCallback((birthDate?: string) => {
     if (!birthDate) return defaultStats.age;
@@ -87,14 +87,11 @@ export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       targetProtein: stats.targetProtein ?? defaultStats.targetProtein,
       targetCarbs: stats.targetCarbs ?? defaultStats.targetCarbs,
       targetFats: stats.targetFats ?? defaultStats.targetFats,
-      caloriesBurnedWorkouts: stats.caloriesBurnedWorkouts ?? defaultStats.caloriesBurnedWorkouts,
-      caloriesBurnedSteps: stats.caloriesBurnedSteps ?? defaultStats.caloriesBurnedSteps,
-      totalCaloriesBurned: stats.totalCaloriesBurned ?? defaultStats.totalCaloriesBurned,
     };
   }, []);
 
   const loadStatsForDate = useCallback(
-    async (dateKey: string, force = false) => {
+    async (dateKey: string, force: boolean = false) => {
       if (
         !user ||
         (!force && loadedDatesRef.current[dateKey]) ||
@@ -171,8 +168,25 @@ export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       try {
-        // Update DailyStats as usual
-        await statsService.patchStats(dateKey, payload);
+        const response = await statsService.patchStats(dateKey, payload);
+        const serverStats = (response as any)?.stats ?? response;
+
+        setStatsByDate((prev) => {
+          const current = prev[dateKey] || mergeStats();
+          return {
+            ...prev,
+            [dateKey]: mergeStats({
+              ...current,
+              ...mapResponseToStats(serverStats),
+              ...updates,
+            }),
+          };
+        });
+        loadedDatesRef.current[dateKey] = true;
+
+        // Always refetch from the server after a save so the dashboard UI
+        // reflects the latest persisted values for water, steps, sleep, and goals.
+        await loadStatsForDate(dateKey, true);
 
         // If weight, height, activityLevel, or goalWeight changed, update User model
         const userStatsChanged =
@@ -196,12 +210,31 @@ export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             targetCarbs: result.user.targetCarbs,
             targetFats: result.user.targetFats,
           });
+
+          // Push the new targets into global user state so the UI reflects them
+          setUser((prevUser) => (prevUser ? { ...prevUser, ...result.user } : prevUser));
+
+          // Also stamp the new targets onto this date's local stats so any
+          // screen reading stats.targetCalories/targetProtein/etc updates immediately
+          setStatsByDate((prev) => {
+            const current = prev[dateKey] || mergeStats();
+            return {
+              ...prev,
+              [dateKey]: mergeStats({
+                ...current,
+                targetCalories: result.user.targetCalories,
+                targetProtein: result.user.targetProtein,
+                targetCarbs: result.user.targetCarbs,
+                targetFats: result.user.targetFats,
+              }),
+            };
+          });
         }
       } catch (error) {
         console.error("Failed to update stats:", (error as Error)?.message);
       }
     },
-    [mergeStats, user]
+    [mergeStats, user, setUser]
   );
 
   const value = useMemo(
@@ -228,4 +261,4 @@ export function useStats() {
     throw new Error('useStats must be used within a StatsProvider');
   }
   return context;
-} 
+}

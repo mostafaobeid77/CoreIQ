@@ -30,6 +30,17 @@ mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://
     .then(() => console.log('✅ Connected to MongoDB'))
     .catch(err => console.error('❌ MongoDB connection error:', err));
 
+// Run seeders after successful DB connection
+const { seedAll } = require('./scripts/seedInitialData');
+mongoose.connection.once('open', async () => {
+    try {
+        console.log('DB open - checking initial seed');
+        await seedAll();
+    } catch (err) {
+        console.error('Initial seeding error:', err.message);
+    }
+});
+
 // Test each route one by one
 console.log('Testing route imports...');
 

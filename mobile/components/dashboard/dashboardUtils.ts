@@ -47,13 +47,6 @@ export const defaultStats: DashboardStats = {
   goalWeight: 'Not set',
   age: 25,
   sex: 'male',
-  targetCalories: 0,
-  targetProtein: 0,
-  targetCarbs: 0,
-  targetFats: 0,
-  caloriesBurnedWorkouts: 0,
-  caloriesBurnedSteps: 0,
-  totalCaloriesBurned: 0,
 };
 
 export function getMostRecentValues(statsByDate: { [date: string]: DashboardStats }) {
