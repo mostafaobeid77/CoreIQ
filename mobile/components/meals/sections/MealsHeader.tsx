@@ -24,6 +24,7 @@ const MealsHeader: React.FC<MealsHeaderProps> = ({
     userName={''}
     greetingEmoji={''}
     avatarSource={null}
+    isDefaultAvatar={true}
     selectedDate={selectedDate}
     showDatePicker={showDatePicker}
     changeDay={changeDay}

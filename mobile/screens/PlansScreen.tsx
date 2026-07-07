@@ -303,7 +303,7 @@ export default function PlansScreen({ autoOpenWizard, onWizardReset }: PlansScre
         let fullFoodData = { ...meal };
         try {
             const results = await searchMeals(meal.name);
-            const exactMatch = results.find(r => r.name.toLowerCase() === meal.name.toLowerCase() || r.id === meal.foodId);
+            const exactMatch = results.find((r: any) => r.name.toLowerCase() === meal.name.toLowerCase() || r.id === meal.foodId);
             if (exactMatch) {
                 // Merge fresh servings data into our editing item
                 fullFoodData = {

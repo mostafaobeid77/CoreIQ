@@ -13,6 +13,7 @@ interface WorkoutDetailsModalProps {
     description: string;
     muscle_group: string;
     category?: string;
+    workoutType?: string;
     sets?: { reps: number; weight: number }[];
     minutes?: number;
   } | null;
@@ -37,7 +38,7 @@ const WorkoutDetailsModal: React.FC<WorkoutDetailsModalProps> = ({ visible, onCl
   const isCardio =
     (workout?.category?.toLowerCase() === 'cardio') ||
     (workout?.muscle_group?.toLowerCase() === 'cardio') ||
-    (workout?.workoutType?.toLowerCase() === 'cardio') ||
+    (workout?.workoutType?.toLowerCase?.() === 'cardio') ||
     (workout?.name && cardioNames.some(c => workout.name.toLowerCase().includes(c)));
 
   const showDuration = isCardio || isHoldExercise;

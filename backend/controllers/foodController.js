@@ -143,7 +143,20 @@ exports.getFoods = async (req, res) => {
       });
     }
 
-    // Default (No search term)
+    // Default projection and sort for food list
+    const projection = {
+      name: 1,
+      brand: 1,
+      calories: 1,
+      protein: 1,
+      carbs: 1,
+      fats: 1,
+      servingSize: 1,
+      servings: 1,
+      _id: 1,
+    };
+    const sort = { name: 1 };
+
     const [foods, total] = await Promise.all([
       Food.find(query, projection).sort(sort).skip(skip).limit(limit).lean(),
       Food.countDocuments(query)

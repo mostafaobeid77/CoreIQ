@@ -26,6 +26,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
     userName={''}
     greetingEmoji={''}
     avatarSource={null}
+    isDefaultAvatar={true}
     selectedDate={selectedDate}
     showDatePicker={showDatePicker}
     changeDay={changeDay}
